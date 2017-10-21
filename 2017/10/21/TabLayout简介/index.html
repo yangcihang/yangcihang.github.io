@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Android," />
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="无喵不欢">
+<meta name="description" content="在app的主页等地方加入tabs是很常见的，它有许多实现方式，比如自定义控件等。在Google的Design库中，推出了TabLayout这么一个布局来方便开发者们实现tab的效果。TabLayout提供了一个水平的布局用来展示Tabs。参考链接 TabLayout的相关属性 改变选中字体的颜色  122. 改变未选中字体的颜色	```app:tabTextColor=&amp;quot;@color/c">
+<meta name="keywords" content="Android">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Lover">
-<meta property="og:url" content="http://yoursite.com/2017/10/21/Lover/index.html">
+<meta property="og:title" content="TabLayout简介">
+<meta property="og:url" content="http://yoursite.com/2017/10/21/TabLayout简介/index.html">
 <meta property="og:site_name" content="猫的储物间">
-<meta property="og:description" content="无喵不欢">
+<meta property="og:description" content="在app的主页等地方加入tabs是很常见的，它有许多实现方式，比如自定义控件等。在Google的Design库中，推出了TabLayout这么一个布局来方便开发者们实现tab的效果。TabLayout提供了一个水平的布局用来展示Tabs。参考链接 TabLayout的相关属性 改变选中字体的颜色  122. 改变未选中字体的颜色	```app:tabTextColor=&amp;quot;@color/c">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-21T09:31:19.000Z">
+<meta property="og:updated_time" content="2017-10-21T15:13:05.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Lover">
-<meta name="twitter:description" content="无喵不欢">
+<meta name="twitter:title" content="TabLayout简介">
+<meta name="twitter:description" content="在app的主页等地方加入tabs是很常见的，它有许多实现方式，比如自定义控件等。在Google的Design库中，推出了TabLayout这么一个布局来方便开发者们实现tab的效果。TabLayout提供了一个水平的布局用来展示Tabs。参考链接 TabLayout的相关属性 改变选中字体的颜色  122. 改变未选中字体的颜色	```app:tabTextColor=&amp;quot;@color/c">
 
 
 
@@ -119,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2017/10/21/Lover/"/>
+  <link rel="canonical" href="http://yoursite.com/2017/10/21/TabLayout简介/"/>
 
 
 
 
 
-  <title>Lover | 猫的储物间</title>
+  <title>TabLayout简介 | 猫的储物间</title>
   
 
 
@@ -240,7 +241,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/21/Lover/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/21/TabLayout简介/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Catango">
@@ -257,7 +258,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Lover</h1>
+          <h1 class="post-title" itemprop="name headline">TabLayout简介</h1>
         
 
         <div class="post-meta">
@@ -269,7 +270,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T17:31:19+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T23:12:48+08:00">
                 2017-10-21
               </time>
             
@@ -307,7 +308,26 @@
       
 
       
-        
+        <p>在app的主页等地方加入tabs是很常见的，它有许多实现方式，比如自定义控件等。在Google的Design库中，推出了TabLayout这么一个布局来方便开发者们实现tab的效果。TabLayout提供了一个水平的布局用来展示Tabs。<a href="http://www.jianshu.com/p/2b2bb6be83a8" title="参考链接" target="_blank" rel="external">参考链接</a></p>
+<h2 id="TabLayout的相关属性"><a href="#TabLayout的相关属性" class="headerlink" title="TabLayout的相关属性"></a>TabLayout的相关属性</h2><ol>
+<li><p>改变选中字体的颜色</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">2. 改变未选中字体的颜色</div><div class="line">	```app:tabTextColor=&quot;@color/colorPrimary&quot;</div></pre></td></tr></table></figure>
+</li>
+<li><p>改变指示器下标的颜色</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">4. 改变整个TabLayout的颜色</div><div class="line">	```app:tabBackground=&quot;color&quot;</div></pre></td></tr></table></figure>
+</li>
+<li><p>改变指示器下表高度</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">6. （代码中）添加tab</div><div class="line">	```tabLayout.addTab(tabLayout.newTab().setText(&quot;123&quot;))</div></pre></td></tr></table></figure>
+</li>
+<li><p>（布局文件中）添加tab<br> 在TabLaytou标签下面，添加TabItem标签即可。</p>
+</li>
+<li><p>添加图标</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">9. 设置模式</div><div class="line">	有固定和滚动模式可选择</div><div class="line">	```app:tabMode = &quot;scrollable&quot;</div></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">10. Tab宽度限制</div><div class="line">	```app:tabMaxWidth=&quot;xxxdp&quot;</div></pre></td></tr></table></figure>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">11. 最重要的，和ViewPager联动</div><div class="line">	和ViewPager联动，需要重写adapter 的getPagerTitle方法,否则无法显示TabLayout上的标签</div><div class="line">	```tabLayout.setupWithViewPager(vp)</div></pre></td></tr></table></figure>
+</li>
+</ol>
+
       
     </div>
     
@@ -322,6 +342,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          
+        </div>
+      
 
       
       
@@ -331,8 +357,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/10/21/hello-world/" rel="next" title="Hello World">
-                <i class="fa fa-chevron-left"></i> Hello World
+              <a href="/2017/10/21/自定义Notification/" rel="next" title="自定义Notification">
+                <i class="fa fa-chevron-left"></i> 自定义Notification
               </a>
             
           </div>
@@ -341,8 +367,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/10/21/利用RecyclerView实现简单的布局混搭/" rel="prev" title="利用RecyclerView实现简单的布局混搭">
-                利用RecyclerView实现简单的布局混搭 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/10/21/Android消息机制/" rel="prev" title="Android消息机制">
+                Android消息机制 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -395,8 +421,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -449,6 +484,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TabLayout的相关属性"><span class="nav-number">1.</span> <span class="nav-text">TabLayout的相关属性</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       

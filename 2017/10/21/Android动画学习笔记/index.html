@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="动画效果一直是人机交互的一个非常重要的部分，动画效果的引入，会让交互变得更加友好，让用户获得更加愉悦的体验。作为一个前端开发者，动画也是一个必会的技能。 View AnimationView Animation包含了Tween Animation、Frame Animation（Drawable Animation）。这些都是在安卓3.0之前的两种动画。 帧动画帧动画有时也叫Drawable动画，">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android动画学习笔记">
+<meta property="og:url" content="http://yoursite.com/2017/10/21/Android动画学习笔记/index.html">
+<meta property="og:site_name" content="猫的储物间">
+<meta property="og:description" content="动画效果一直是人机交互的一个非常重要的部分，动画效果的引入，会让交互变得更加友好，让用户获得更加愉悦的体验。作为一个前端开发者，动画也是一个必会的技能。 View AnimationView Animation包含了Tween Animation、Frame Animation（Drawable Animation）。这些都是在安卓3.0之前的两种动画。 帧动画帧动画有时也叫Drawable动画，">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-10-21T15:15:56.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android动画学习笔记">
+<meta name="twitter:description" content="动画效果一直是人机交互的一个非常重要的部分，动画效果的引入，会让交互变得更加友好，让用户获得更加愉悦的体验。作为一个前端开发者，动画也是一个必会的技能。 View AnimationView Animation包含了Tween Animation、Frame Animation（Drawable Animation）。这些都是在安卓3.0之前的两种动画。 帧动画帧动画有时也叫Drawable动画，">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/21/Android动画学习笔记/"/>
+
+
+
+
+
+  <title>Android动画学习笔记 | 猫的储物间</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<!-- 背景 -->
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <!-- head -->
+    <a href="https://github.com/yangcihang/">
+      <img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png">
+    </a>
+    <header id="header" 
+    class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">猫的储物间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我是Android喵</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/21/Android动画学习笔记/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Catango">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="猫的储物间">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android动画学习笔记</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T23:15:28+08:00">
+                2017-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>动画效果一直是人机交互的一个非常重要的部分，动画效果的引入，会让交互变得更加友好，让用户获得更加愉悦的体验。作为一个前端开发者，动画也是一个必会的技能。</p>
+<h2 id="View-Animation"><a href="#View-Animation" class="headerlink" title="View Animation"></a>View Animation</h2><p>View Animation包含了Tween Animation、Frame Animation（Drawable Animation）。这些都是在安卓3.0之前的两种动画。</p>
+<h3 id="帧动画"><a href="#帧动画" class="headerlink" title="帧动画"></a>帧动画</h3><p>帧动画有时也叫Drawable动画，它允许你实现像播放幻灯片一样的效果，这种动画的实质其实是Drawable，所以这种动画的XML定义方式文件 <strong>一般放在res/drawable/目录下。</strong>帧动画的动画本质呢就是我们的视觉残留。</p>
+<p>一般我们会先在Drawable下面将动画资源引用好，然后在代码中调用start()/stop()来开始或者停止播放动画。当然我们也可以在Java代码中创建逐帧动画，创建AnimationDrawable对象，然后调用 addFrame(Drawable frame,int duration)向动画中添加帧，接着调用start()和stop()而已~推荐是使用XML来定义动画。</p>
+<p>具体的标签有：</p>
+<ul>
+<li><code>&lt;animation-list&gt;</code>：必须是根节点，包含多个<code>&lt; item&gt;</code>元素。属性有android:oneshot true代表只执行一次，false循环执行。</li>
+<li><code>&lt; item&gt;</code>:animation-list的子项，包含的属性有：<ul>
+<li>android:drawable 一个frame的Drawable资源。</li>
+<li>android:duration 一个frame显示多长时间。</li>
+</ul>
+</li>
+</ul>
+<p>举个例子，我们在drawable中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt; ?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div><div class="line"></div><div class="line">&lt; animation-list xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:oneshot=&quot;false&quot;&gt;</div><div class="line">    &lt; item android:drawable=&quot;@color/black&quot; android:duration=&quot;300&quot;/&gt;</div><div class="line">    &lt; item android:drawable=&quot;@color/white&quot; android:duration=&quot;300&quot;/&gt;</div><div class="line">&lt; /animation-list&gt;</div></pre></td></tr></table></figure>
+<p>然后在kotlin中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">img_test.apply &#123;</div><div class="line">          setBackgroundResource(R.drawable.test_frame)</div><div class="line">          setOnClickListener &#123;</div><div class="line">              if ((background as AnimationDrawable).isRunning)</div><div class="line">                  (background as AnimationDrawable).stop()</div><div class="line">              else (background as AnimationDrawable).start()</div><div class="line">          &#125;</div><div class="line">      &#125;</div></pre></td></tr></table></figure>
+<p>这样当我们点击图片的时候就会自动播放在drawable中设置的资源了。<br><strong>注意，Animation的start方法不能在Activity的onCreate方法中调用，因为AnimationDrawable还未完全附着到Window上。</strong></p>
+<h3 id="补间动画"><a href="#补间动画" class="headerlink" title="补间动画"></a>补间动画</h3><p> Tween Animation(补间动画)只能应用于View对象，而且只支持一部分属性，如支持缩放旋转而不支持背景颜色的改变。而且对于Tween Animation，并不改变属性的值，它只是改变了View对象绘制的位置，而没有改变View对象本身，比如，你有一个Button，坐标（100,100），Width:100,Height:100，而你有一个动画使其移动（200，200），你会发现动画过程中触发按钮点击的区域仍是(100,100)-(200,200)。 </p>
+<p>补间动画通过XML或Android代码定义，建议还是使用XML文件定义，因为它更具可读性、可重用性。这里说一下，补间动画的所有父类都是它：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public abstract class Animation implements Cloneable</div></pre></td></tr></table></figure>
+<p>这个注意和属性动画的父类区分。</p>
+<table>
+<thead>
+<tr>
+<th>java类名</th>
+<th>xml关键字</th>
+<th>描述信息</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>AlphaAnimation</td>
+<td><alpha> 放置在res/anim/目录下</alpha></td>
+<td>渐变透明度动画效果</td>
+</tr>
+<tr>
+<td>RotateAnimation</td>
+<td><rotate> 放置在res/anim/目录下</rotate></td>
+<td>画面转移旋转动画效果</td>
+</tr>
+<tr>
+<td>ScaleAnimation</td>
+<td><scale> 放置在res/anim/目录下</scale></td>
+<td>渐变尺寸伸缩动画效果</td>
+</tr>
+<tr>
+<td>TranslateAnimation</td>
+<td><translate> 放置在res/anim/目录下</translate></td>
+<td>画面转换位置移动动画效果</td>
+</tr>
+<tr>
+<td>AnimationSet</td>
+<td><set> 放置在res/anim/目录下</set></td>
+<td>一个持有其它动画元素alpha、scale、translate、rotate或者其它set元素的容器</td>
+</tr>
+</tbody>
+</table>
+<h4 id="Animation属性"><a href="#Animation属性" class="headerlink" title="Animation属性"></a>Animation属性</h4><table>
+<thead>
+<tr>
+<th>xml属性</th>
+<th>java方法</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>android:detachWallpaper</td>
+<td>setDetachWallpaper(boolean)</td>
+<td>是否在壁纸上运行</td>
+</tr>
+<tr>
+<td>android:duration</td>
+<td>setDuration(long)</td>
+<td>动画持续时间，毫秒为单位</td>
+</tr>
+<tr>
+<td>android:fillAfter</td>
+<td>setFillAfter(boolean)</td>
+<td>控件动画结束时是否保持动画最后的状态</td>
+</tr>
+<tr>
+<td>android:fillBefore</td>
+<td>setFillBefore(boolean)</td>
+<td>控件动画结束时是否还原到开始动画前的状态</td>
+</tr>
+<tr>
+<td>android:fillEnabled</td>
+<td>setFillEnabled(boolean)</td>
+<td>与android:fillBefore效果相同</td>
+</tr>
+<tr>
+<td>android:interpolator</td>
+<td>setInterpolator(Interpolator)</td>
+<td>设定插值器（指定的动画效果，譬如回弹等）</td>
+</tr>
+<tr>
+<td>android:repeatCount</td>
+<td>setRepeatCount(int)</td>
+<td>重复次数</td>
+</tr>
+<tr>
+<td>android:repeatMode</td>
+<td>setRepeatMode(int)</td>
+<td>重复类型有两个值，reverse表示倒序回放，restart表示从头播放</td>
+</tr>
+<tr>
+<td>android:startOffset</td>
+<td>setStartOffset(long)</td>
+<td>调用start函数之后等待开始运行的时间，单位为毫秒</td>
+</tr>
+<tr>
+<td>android:zAdjustment</td>
+<td>setZAdjustment(int)</td>
+<td>表示被设置动画的内容运行时在Z轴上的位置（top/bottom/normal），默认为normal</td>
+</tr>
+</tbody>
+</table>
+<h4 id="Alpha属性"><a href="#Alpha属性" class="headerlink" title="Alpha属性"></a>Alpha属性</h4><table>
+<thead>
+<tr>
+<th>xml属性</th>
+<th>java方法</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>android:fromAlpha</td>
+<td>AlphaAnimation(float fromAlpha, …)</td>
+<td>动画开始的透明度（0.0到1.0，0.0是全透明，1.0是不透明）</td>
+</tr>
+<tr>
+<td>android:toAlpha</td>
+<td>AlphaAnimation(…, float toAlpha)</td>
+<td>动画结束的透明度，同上</td>
+</tr>
+</tbody>
+</table>
+<h4 id="Rotate属性"><a href="#Rotate属性" class="headerlink" title="Rotate属性"></a>Rotate属性</h4><table>
+<thead>
+<tr>
+<th>xml属性</th>
+<th>java方法</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>android:fromDegrees</td>
+<td>RotateAnimation(float fromDegrees, …)</td>
+<td>旋转开始角度，正代表顺时针度数，负代表逆时针度数</td>
+</tr>
+<tr>
+<td>android:toDegrees</td>
+<td>RotateAnimation(…, float toDegrees, …)</td>
+<td>旋转结束角度，正代表顺时针度数，负代表逆时针度数</td>
+</tr>
+<tr>
+<td>android:pivotX</td>
+<td>RotateAnimation(…, float pivotX, …)</td>
+<td>缩放起点X坐标（数值、百分数、百分数p，譬如50表示以当前View左上角坐标加50px为初始点、50%表示以当前View的左上角加上当前View宽高的50%做为初始点、50%p表示以当前View的左上角加上父控件宽高的50%做为初始点）</td>
+</tr>
+<tr>
+<td>android:pivotY</td>
+<td>RotateAnimation(…, float pivotY)</td>
+<td>缩放起点Y坐标，同上规律</td>
+</tr>
+</tbody>
+</table>
+<h4 id="Scale属性"><a href="#Scale属性" class="headerlink" title="Scale属性"></a>Scale属性</h4><table>
+<thead>
+<tr>
+<th>xml属性</th>
+<th>java方法</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>android:fromXScale</td>
+<td>ScaleAnimation(float fromX, …)</td>
+<td>初始X轴缩放比例，1.0表示无变化</td>
+</tr>
+<tr>
+<td>android:toXScale</td>
+<td>ScaleAnimation(…, float toX, …)</td>
+<td>结束X轴缩放比例</td>
+</tr>
+<tr>
+<td>android:fromYScale</td>
+<td>ScaleAnimation(…, float fromY, …)</td>
+<td>初始Y轴缩放比例</td>
+</tr>
+<tr>
+<td>android:toYScale</td>
+<td>ScaleAnimation(…, float toY, …)</td>
+<td>结束Y轴缩放比例</td>
+</tr>
+<tr>
+<td>android:pivotX</td>
+<td>ScaleAnimation(…, float pivotX, …)</td>
+<td>缩放起点X轴坐标（数值、百分数、百分数p，譬如50表示以当前View左上角坐标加50px为初始点、50%表示以当前View的左上角加上当前View宽高的50%做为初始点、50%p表示以当前View的左上角加上父控件宽高的50%做为初始点）</td>
+</tr>
+<tr>
+<td>android:pivotY</td>
+<td>ScaleAnimation(…, float pivotY)</td>
+<td>缩放起点Y轴坐标，同上规律</td>
+</tr>
+</tbody>
+</table>
+<h4 id="Translate属性详解"><a href="#Translate属性详解" class="headerlink" title="Translate属性详解"></a>Translate属性详解</h4><table>
+<thead>
+<tr>
+<th>xml属性</th>
+<th>java方法</th>
+<th>解释</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>android:fromXDelta</td>
+<td>TranslateAnimation(float fromXDelta, …)</td>
+<td>起始点X轴坐标（数值、百分数、百分数p，譬如50表示以当前View左上角坐标加50px为初始点、50%表示以当前View的左上角加上当前View宽高的50%做为初始点、50%p表示以当前View的左上角加上父控件宽高的50%做为初始点）</td>
+</tr>
+<tr>
+<td>android:fromYDelta</td>
+<td>TranslateAnimation(…, float fromYDelta, …)</td>
+<td>起始点Y轴从标，同上规律</td>
+</tr>
+<tr>
+<td>android:toXDelta</td>
+<td>TranslateAnimation(…, float toXDelta, …)</td>
+<td>结束点X轴坐标，同上规律</td>
+</tr>
+<tr>
+<td>android:toYDelta</td>
+<td>TranslateAnimation(…, float toYDelta)</td>
+<td>结束点Y轴坐标，同上规律</td>
+</tr>
+</tbody>
+</table>
+<h4 id="插值器"><a href="#插值器" class="headerlink" title="插值器"></a>插值器</h4><p>插值器是用来控制动画的变化速度，可以理解成动画渲染器，当然我们也可以自己实现Interpolator 接口，自行来控制动画的变化速度，而Android中已经为我们提供了五个可供选择的实现类:</p>
+<ul>
+<li>LinearInterpolator：动画以均匀的速度改变</li>
+<li>AccelerateInterpolator：在动画开始的地方改变速度较慢，然后开始加速</li>
+<li>AccelerateDecelerateInterpolator：在动画开始、结束的地方改变速度较慢，中间时加速</li>
+<li>CycleInterpolator：动画循环播放特定次数，变化速度按正弦曲线改变： Math.sin(2 <em> mCycles </em> Math.PI * input)</li>
+<li>DecelerateInterpolator：在动画开始的地方改变速度较快，然后开始减速</li>
+<li>AnticipateInterpolator：反向，先向相反方向改变一段再加速播放</li>
+<li>AnticipateOvershootInterpolator：开始的时候向后然后向前甩一定值后返回最后的值</li>
+<li>BounceInterpolator： 跳跃，快到目的值时值会跳跃，如目的值100，后面的值可能依次为85，77，70，80，90，100</li>
+<li>OvershottInterpolator：回弹，最后超出目的值然后缓慢改变到目的值</li>
+</ul>
+<h4 id="使用简介："><a href="#使用简介：" class="headerlink" title="使用简介："></a>使用简介：</h4><p>上面这些都是补间动画的一些xml和java方法的简介，这些方法属性记不住不要紧，咱们可以随时查看的。最重要的还是怎么去用。其实用法也是特别简单的，十分的套路，我们只需要记住套路就可以。我们就举个简单的旋转动画的例子吧。</p>
+<p>首先是XML</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt; ?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div><div class="line">&lt; rotate xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</div><div class="line">        android:interpolator=&quot;@android:anim/accelerate_decelerate_interpolator&quot;</div><div class="line">        android:fromDegrees=&quot;0&quot;</div><div class="line">        android:toDegrees=&quot;360&quot;</div><div class="line">        android:duration=&quot;1000&quot;</div><div class="line">        android:pivotX=&quot;50%&quot;</div><div class="line">        android:pivotY=&quot;50%&quot;</div><div class="line">        android:repeatCount=&quot;infinite&quot;</div><div class="line">    /&gt;</div></pre></td></tr></table></figure>
+<p>其中我们用了<code>@android:animaccelerate_decelerate_interpolator</code>这个插值器，就是上面所说的DecelerateInterpolator在动画开始的地方改变速度较快，然后开始减速。</p>
+<p>写完XML后，在java代码中</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Animation animation = AnimationUtils.loadAnimation(this, R.anim.anim_rotate);</div><div class="line">testImg.setAnimation(animation);</div><div class="line">animation.start();</div><div class="line">animation.cancel();</div></pre></td></tr></table></figure>
+<p>我们可以看到，先创建了一个Animation对象，然后在用AnimationUtils的loadAnimation方法将XML里定义的动画加载到animation对象中，然后通过View的setAnimation方法将animation传入，这样就将这个动画绑定到view上面了。最后通过animation的start和cancel方法来开始或者取消动画。  其中我们可以为animation设置动画的监听，这个特别简单就不再这赘述了…</p>
+<h2 id="Property-Animation"><a href="#Property-Animation" class="headerlink" title="Property Animation"></a>Property Animation</h2><p>Android 3.0以后引入了属性动画，属性动画可以轻而易举的实现许多View动画做不到的事。其实说白了，记住一点就行，属性动画实现原理就是修改控件的属性值实现的动画。当然，功能强大的代价就是使用起来要比较复杂。</p>
+<p>属性动画所有的父类是它：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public abstract class Animator implements Cloneable</div></pre></td></tr></table></figure>
+<p>这个注意要和补间动画来区分。</p>
+<p>接下来介绍一下相关的API：</p>
+<ul>
+<li>Animator  创建属性动画的基类，一般不直接用，而是用他的两个子类</li>
+<li>ValueAnimator  Animator的直接派生类。其内部采用一种时间循环的机制来计算值与值之间的动画过度，我们只需将初始值以及结束值提供给该类，并告诉其动画所需时间长度，该类就会自动帮我们从初始值平滑过度到结束。该类还能管理动画的播放次数、模式和监听器等。</li>
+<li>AnimatorSet  Animator的直接派生类，可以组合多个Animator，并制定Animator的播放次序。</li>
+<li>ObjectAnimator  ValueAnimator的子类，允许我们对指定对象的属性执行动画，用起来更简单，实际中用得较多。</li>
+<li>Evaluator  计算器，告诉动画系统如何从初始值过度到结束值。提供了一下的几种Evaluator：<ul>
+<li>IntEvaluator:用于计算int属性</li>
+<li>FloatEvaluator:用于计算float属性</li>
+<li>ArgbEvaluator：用于计算16进制表示颜色值的计算器</li>
+<li>TypeEvaluator：上述计算类的公共接口，可以自己实现接口完成自定义。</li>
+</ul>
+</li>
+</ul>
+<h3 id="ValueAnimator"><a href="#ValueAnimator" class="headerlink" title="ValueAnimator"></a>ValueAnimator</h3><p>使用流程：</p>
+<ol>
+<li>调用ValueAnimator的ofInt()，ofFloat()或ofObject()静态方法创建ValueAnimator实例</li>
+<li>调用实例的setXxx方法设置动画持续时间，插值方式，重复次数等</li>
+<li>调用实例的addUpdateListener添加AnimatorUpdateListener监听器，在该监听器中 可以获得ValueAnimator计算出来的值，你可以值应用到指定对象上~</li>
+<li>调用实例的start()方法开启动画！ 另外我们可以看到ofInt和ofFloat都有个这样的参数：float/int… values代表可以多个值！</li>
+</ol>
+<p>举个例子:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">//按轨迹方程来运动</div><div class="line">  private void lineAnimator() &#123;</div><div class="line">      width = ly_root.getWidth();</div><div class="line">      height = ly_root.getHeight();</div><div class="line">      ValueAnimator xValue = ValueAnimator.ofInt(height,0,height / 4,height / 2,height / 4 * 3 ,height);</div><div class="line">      xValue.setDuration(3000L);</div><div class="line">      xValue.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">          @Override</div><div class="line">          public void onAnimationUpdate(ValueAnimator animation) &#123;</div><div class="line">              // 轨迹方程 x = width / 2</div><div class="line">              int y = (Integer) animation.getAnimatedValue();</div><div class="line">              int x = width / 2;</div><div class="line">              moveView(img_babi, x, y);</div><div class="line">          &#125;</div><div class="line">      &#125;);</div><div class="line">      xValue.setInterpolator(new LinearInterpolator());</div><div class="line">      xValue.start();</div><div class="line">  &#125;</div><div class="line">      </div><div class="line">      </div><div class="line">  private void moveView(View view, int rawX, int rawY) &#123;</div><div class="line">      int left = rawX - img_babi.getWidth() / 2;</div><div class="line">      int top = rawY - img_babi.getHeight();</div><div class="line">      int width = left + view.getWidth();</div><div class="line">      int height = top + view.getHeight();</div><div class="line">      view.layout(left, top, width, height);</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
+<p>其中moveView方法是将View重新布局，xValue的值从参数列表就可以看出，然后设置每次更新的监听，在监听中每次调用moveView方法来改变View的布局。如果是组合动画的话，我们可以这样：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">//缩放效果</div><div class="line">    private void scaleAnimator()&#123;</div><div class="line">    </div><div class="line">        final float scale = 0.5f;</div><div class="line">        AnimatorSet scaleSet = new AnimatorSet();</div><div class="line">        ValueAnimator valueAnimatorSmall = ValueAnimator.ofFloat(1.0f, scale);</div><div class="line">        valueAnimatorSmall.setDuration(500);</div><div class="line"></div><div class="line">        ValueAnimator valueAnimatorLarge = ValueAnimator.ofFloat(scale, 1.0f);</div><div class="line">        valueAnimatorLarge.setDuration(500);</div><div class="line"></div><div class="line">        valueAnimatorSmall.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">            @Override</div><div class="line">            public void onAnimationUpdate(ValueAnimator animation) &#123;</div><div class="line">                float scale = (Float) animation.getAnimatedValue();</div><div class="line">                img_babi.setScaleX(scale);</div><div class="line">                img_babi.setScaleY(scale);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        valueAnimatorLarge.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">            @Override</div><div class="line">            public void onAnimationUpdate(ValueAnimator animation) &#123;</div><div class="line">                float scale = (Float) animation.getAnimatedValue();</div><div class="line">                img_babi.setScaleX(scale);</div><div class="line">                img_babi.setScaleY(scale);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        scaleSet.play(valueAnimatorLarge).after(valueAnimatorSmall);</div><div class="line">        scaleSet.start();</div><div class="line">     &#125;</div></pre></td></tr></table></figure>
+<p>这个组合动画我们可以用play after来设定动画实例，然后动画就先执行play的动画再执行after的实例了。当然，类似的方法还有一个with，就是两个动画会一起播放。</p>
+<ul>
+<li>after(Animator anim)   将现有动画插入到传入的动画之后执行</li>
+<li>after(long delay)   将现有动画延迟指定毫秒后执行</li>
+<li>before(Animator anim)   将现有动画插入到传入的动画之前执行</li>
+<li>with(Animator anim)   将现有动画和传入的动画同时执行</li>
+</ul>
+<h3 id="ObjectAnimator"><a href="#ObjectAnimator" class="headerlink" title="ObjectAnimator"></a>ObjectAnimator</h3><p>相比于ValueAnimator，ObjectAnimator可能才是我们最常接触到的类，因为ValueAnimator只不过是对值进行了一个平滑的动画过渡，但我们实际使用到这种功能的场景好像并不多。而ObjectAnimator则就不同了，它是可以直接对任意对象的任意属性进行动画操作的，比如说View的alpha属性。还有ObjectAnimator在设计的时候就没有针对于View来进行设计，而是针对于任意对象的。</p>
+<p>既然ObjectAnimator是继承自ValueAnimator的，那么它的用法应该是和ValueAnimator相似的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ObjectAnimator.ofFloat(textview, &quot;alpha&quot;, 1f, 0f);</div></pre></td></tr></table></figure>
+<p>其实这段代码的意思就是ObjectAnimator会帮我们不断地改变textview对象中alpha属性的值，从1f变化到0f。然后textview对象需要根据alpha属性值的改变来不断刷新界面的显示，从而让用户可以看出淡入淡出的动画效果。</p>
+<p>那么textview对象中是不是有alpha属性这个值呢？没有，不仅textview没有这个属性，连它所有的父类也是没有这个属性的！这就奇怪了，textview当中并没有alpha这个属性，ObjectAnimator是如何进行操作的呢？其实ObjectAnimator内部的工作机制并不是直接对我们传入的属性名进行操作的，而是会去寻找这个属性名对应的get和set方法，因此alpha属性所对应的get和set方法应该就是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">public void setAlpha(float value);  </div><div class="line">public float getAlpha();</div></pre></td></tr></table></figure>
+<p>ObjectAnimator的使用相比ValueAnimator简单多了，我们只需要将它实例化后，其他的用法和ValueAnimator是一样的。</p>
+<h3 id="动画的监听"><a href="#动画的监听" class="headerlink" title="动画的监听"></a>动画的监听</h3><p>接下来要说下动画事件的监听，上面我们ValueAnimator的监听器是 AnimatorUpdateListener，当值状态发生改变时候会回调onAnimationUpdate方法！<br>除了这种事件外还有：动画进行状态的监听, AnimatorListener，我们可以调用addListener方法 添加监听器，然后重写下面四个回调方法：</p>
+<ul>
+<li>onAnimationStart()：动画开始</li>
+<li>onAnimationRepeat()：动画重复执行</li>
+<li>onAnimationEnd()：动画结束</li>
+<li>onAnimationCancel()：动画取消</li>
+</ul>
+<p>加入AnimatorListener的话，四个方法你都要重写，这样写起来很是麻烦，不过Android已经给我们提供好一个适配器类：AnimatorListenerAdapter，该类中已经把每个接口 方法都实现好了，所以我们这里只写一个回调方法也是可以的。</p>
+<h2 id="Evaluator"><a href="#Evaluator" class="headerlink" title="Evaluator"></a>Evaluator</h2><p>我们在调用属性动画的时候，用到了ofInt,ofFloat,ofObject这些静态方法来创建ValueAnimator的实例，在例子中，我们用到了ofInt,ofFloat，但是细心的同学可能发现了，ValueAnimator还有个ofObject方法来构造ValueAnimator实例，那么这个是干什么用的呢？</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">public static ValueAnimator ofObject(TypeEvaluator evaluator, Object... values) &#123;</div><div class="line">    ValueAnimator anim = new ValueAnimator();</div><div class="line">    anim.setObjectValues(values);</div><div class="line">    anim.setEvaluator(evaluator);</div><div class="line">    return anim;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>我们先戳进去看看这个源码的参数。第一个参数是名为TypeEvaluator的一个东西，这就是我们要说的计算器，他是来告诉动画系统如何从初始值过渡到结束值的。前面提到过，TypeEvaluator是所有Evaluator的基类，这里再重复一遍，系统提供了以下的几种Evaluator:</p>
+<ul>
+<li>IntEvaluator:用于计算int属性</li>
+<li>FloatEvaluator:用于计算float属性</li>
+<li>ArgbEvaluator：用于计算16进制表示颜色值的计算器</li>
+<li>TypeEvaluator：上述计算类的公共接口，可以自己实现接口完成自定义。</li>
+</ul>
+<p>当然，这些Evaluator都是TypeEvaluator实现。我们先来看看TypeEvaluator这个接口长什么样吧：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public interface TypeEvaluator&lt;T&gt; &#123;</div><div class="line">    public T evaluate(float fraction, T startValue, T endValue);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>就这个一个evaluate方法，简单吧？这里面的三个参数的含义依次是：</p>
+<ul>
+<li>fraction：动画的完成度，我们根据他来计算动画的值应该是多少</li>
+<li>startValue：动画的起始值</li>
+<li>endValue：动画的结束值</li>
+</ul>
+<p>那么我们来看看系统是如何实现TypeEvaluator这个接口的，咱们就从IntEvaluator说起：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public class IntEvaluator implements TypeEvaluator&lt;Integer&gt; &#123;</div><div class="line">    public Integer evaluate(float fraction, Integer startValue, Integer endValue) &#123;</div><div class="line">        int startInt = startValue;</div><div class="line">        return (int)(startInt + fraction * (endValue - startInt));</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>实现了TypeEvaluator接口，重写了evaluate方法，其中返回的是动画的值。动画的值是多少呢？我们从IntEvaluator的return语句中可以看出，<strong>动画的值 = 初始值 + 完成度 * (结束值 - 初始值)</strong> 这样当完成度为100%的时候，动画的值就是结束值了，同样的还有FloatEvaluator等。细心的同学也发现了，这个TypeEvaluator里面传入的是一个泛型，这个类型也就是我们接下来自定义的Object.</p>
+<p>现在我们举个自定义Evaluator的例子。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div></pre></td><td class="code"><pre><div class="line">package com.example.yang.testkotlin.widget;</div><div class="line"></div><div class="line">import android.animation.AnimatorSet;</div><div class="line">import android.animation.ObjectAnimator;</div><div class="line">import android.animation.TypeEvaluator;</div><div class="line">import android.animation.ValueAnimator;</div><div class="line">import android.content.Context;</div><div class="line">import android.graphics.Canvas;</div><div class="line">import android.graphics.Color;</div><div class="line">import android.graphics.Paint;</div><div class="line">import android.graphics.Point;</div><div class="line">import android.support.annotation.Nullable;</div><div class="line">import android.util.AttributeSet;</div><div class="line">import android.view.View;</div><div class="line"></div><div class="line">/**</div><div class="line"> * @author YangCihang</div><div class="line"> * @since 17/10/18.</div><div class="line"> * email yangcihang@hrsoft.net</div><div class="line"> */</div><div class="line"></div><div class="line">public class CircleAnimView extends View &#123;</div><div class="line">    public static final int RADIUS = 80;</div><div class="line">    private Point currentPoint;</div><div class="line">    private Paint mPaint;</div><div class="line">    private int mColor;//必须写这个属性的get和set，否则动画无法识别color属性</div><div class="line"></div><div class="line">    public CircleAnimView(Context context) &#123;</div><div class="line">        super(context);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public CircleAnimView(Context context, @Nullable AttributeSet attrs) &#123;</div><div class="line">        super(context, attrs);</div><div class="line">        init();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public CircleAnimView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) &#123;</div><div class="line">        super(context, attrs, defStyleAttr);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private void init() &#123;</div><div class="line">        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);</div><div class="line">        mPaint.setColor(Color.BLUE);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    protected void onDraw(Canvas canvas) &#123;</div><div class="line">        if (currentPoint == null) &#123;</div><div class="line">            currentPoint = new Point(RADIUS, RADIUS);</div><div class="line">            drawCircle(canvas);</div><div class="line">            startAnimation();</div><div class="line">        &#125; else &#123;</div><div class="line">            drawCircle(canvas);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private void drawCircle(Canvas canvas) &#123;</div><div class="line">        float x = currentPoint.x;</div><div class="line">        float y = currentPoint.y;</div><div class="line">        //用canvas draw，因此此控件大小应该为全屏大小才可以从左上到右下</div><div class="line">        canvas.drawCircle(x, y, RADIUS, mPaint);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private void startAnimation() &#123;</div><div class="line">        Point startPoint = new Point(RADIUS, RADIUS);</div><div class="line">        Point endPoint = new Point(getWidth() - RADIUS, getHeight() - RADIUS);</div><div class="line">        ValueAnimator anim = ValueAnimator.ofObject(new PointEvaluator(), startPoint, endPoint);</div><div class="line">        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">            @Override</div><div class="line">            public void onAnimationUpdate(ValueAnimator animation) &#123;</div><div class="line">                currentPoint = (Point) animation.getAnimatedValue();</div><div class="line">                invalidate();</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        ObjectAnimator objectAnimator = ObjectAnimator.ofObject(this, &quot;color&quot;, new ColorEvaluator(),</div><div class="line">                Color.BLUE, Color.RED);</div><div class="line">        //动画集合将两个动画加到一起，with同时播放</div><div class="line">        AnimatorSet animatorSet = new AnimatorSet();</div><div class="line">        animatorSet.play(anim).with(objectAnimator);</div><div class="line">        animatorSet.setStartDelay(1000L);</div><div class="line">        animatorSet.setDuration(3000L);</div><div class="line">        animatorSet.start();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 坐标变化</div><div class="line">     */</div><div class="line">    class PointEvaluator implements TypeEvaluator&lt;Point&gt; &#123;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public Point evaluate(float fraction, Point startValue, Point endValue) &#123;</div><div class="line">            //初始值 + 完成度 * (结束值 - 初始值)</div><div class="line">            int x = (int) (startValue.x + fraction * (endValue.x - startValue.x));</div><div class="line">            int y = (int) (startValue.y + fraction * (endValue.y - startValue.y));</div><div class="line">            return new Point(x, y);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 颜色变化</div><div class="line">     */</div><div class="line">    public class ColorEvaluator implements TypeEvaluator&lt;Integer&gt; &#123;</div><div class="line">        @Override</div><div class="line">        public Integer evaluate(float fraction, Integer startValue, Integer endValue) &#123;</div><div class="line">            int alpha = (int) (Color.alpha(startValue) + fraction *</div><div class="line">                    (Color.alpha(endValue) - Color.alpha(startValue)));</div><div class="line">            int red = (int) (Color.red(startValue) + fraction *</div><div class="line">                    (Color.red(endValue) - Color.red(startValue)));</div><div class="line">            int green = (int) (Color.green(startValue) + fraction *</div><div class="line">                    (Color.green(endValue) - Color.green(startValue)));</div><div class="line">            int blue = (int) (Color.blue(startValue) + fraction *</div><div class="line">                    (Color.blue(endValue) - Color.blue(startValue)));</div><div class="line">            return Color.argb(alpha, red, green, blue);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    //color的get和set方法~</div><div class="line">    public int getColor() &#123;</div><div class="line">        return mColor;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setColor(int color) &#123;</div><div class="line">        mColor = color;</div><div class="line">        mPaint.setColor(color);</div><div class="line">        invalidate();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>在这里我们定义了两个Evaluator类分别来表示坐标变化和颜色变化。注意，我们要改变color属性的时候，一定要写setColor和getColor方法，原因上面已经说过了。</p>
+<h2 id="Interpolator"><a href="#Interpolator" class="headerlink" title="Interpolator"></a>Interpolator</h2><p>Interpolator中文译名叫做插值器或者补间器。在补间动画的时候我们介绍了几个常用的插值器，我们可以回头去看看。补间动画和属性动画都可以用插值器的。而且补间动画还新增加了一个TimeInterpolator接口，该接口是用于兼容之前的Interpolator的(也就是Interpolator又继承了TimeInterpolator接口)，这使得所有过去的Interpolator实现类都可以直接拿过来 放到属性动画当中使用！我们可以调用动画对象的setInterpolator()方法设置不同的Interpolator。比如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">animatorSet.setInterpolator(new AccelerateInterpolator(2f))</div></pre></td></tr></table></figure>
+<p>括号里面的值用于控制加速度的。</p>
+<h3 id="自定义Interpolator"><a href="#自定义Interpolator" class="headerlink" title="自定义Interpolator"></a>自定义Interpolator</h3><p>我们自定义Interpolator其实就只要实现TimeInterpolator就可以了，重写也就只需要重写getInterpolation方法比如:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">private class DecelerateAccelerateInterpolator implements TimeInterpolator &#123;</div><div class="line">    @Override</div><div class="line">    public float getInterpolation(float input) &#123;</div><div class="line">        if (input &lt; 0.5) &#123;</div><div class="line">            return (float) (Math.sin(input * Math.PI) / 2);</div><div class="line">        &#125; else &#123;</div><div class="line">            return 1 - (float) (Math.sin(input * Math.PI) / 2);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>也是很简单的嘛。不过我们如果需要做一些复杂的速率变化，就得需要数学功底了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/21/事件分发机制/" rel="next" title="事件分发机制">
+                <i class="fa fa-chevron-left"></i> 事件分发机制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/21/Android蓝牙相关/" rel="prev" title="Android蓝牙相关">
+                Android蓝牙相关 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Catango</p>
+              <p class="site-description motion-element" itemprop="description">无喵不欢</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#View-Animation"><span class="nav-number">1.</span> <span class="nav-text">View Animation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#帧动画"><span class="nav-number">1.1.</span> <span class="nav-text">帧动画</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#补间动画"><span class="nav-number">1.2.</span> <span class="nav-text">补间动画</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Animation属性"><span class="nav-number">1.2.1.</span> <span class="nav-text">Animation属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Alpha属性"><span class="nav-number">1.2.2.</span> <span class="nav-text">Alpha属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Rotate属性"><span class="nav-number">1.2.3.</span> <span class="nav-text">Rotate属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Scale属性"><span class="nav-number">1.2.4.</span> <span class="nav-text">Scale属性</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Translate属性详解"><span class="nav-number">1.2.5.</span> <span class="nav-text">Translate属性详解</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#插值器"><span class="nav-number">1.2.6.</span> <span class="nav-text">插值器</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#使用简介："><span class="nav-number">1.2.7.</span> <span class="nav-text">使用简介：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Property-Animation"><span class="nav-number">2.</span> <span class="nav-text">Property Animation</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ValueAnimator"><span class="nav-number">2.1.</span> <span class="nav-text">ValueAnimator</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ObjectAnimator"><span class="nav-number">2.2.</span> <span class="nav-text">ObjectAnimator</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动画的监听"><span class="nav-number">2.3.</span> <span class="nav-text">动画的监听</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Evaluator"><span class="nav-number">3.</span> <span class="nav-text">Evaluator</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Interpolator"><span class="nav-number">4.</span> <span class="nav-text">Interpolator</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#自定义Interpolator"><span class="nav-number">4.1.</span> <span class="nav-text">自定义Interpolator</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Catango</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v="></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v="></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
+<script type="text/javascript" src="/js/src/post-details.js?v="></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v="></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

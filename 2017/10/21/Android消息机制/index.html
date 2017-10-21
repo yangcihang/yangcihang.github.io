@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Handler简介我们都知道Handler是Android消息机制的上层接口，用Handler可以将一个任务切换到Handler所在的线程去执行。Handler最最常见的操作就是在子线程中来更新UI线程的视图。常用的方法有：  void handleMessage(Message msg)处理消息的方法,通常是用于被重写 sendEmptyMessage(int what)sendEmptyMes">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android消息机制">
+<meta property="og:url" content="http://yoursite.com/2017/10/21/Android消息机制/index.html">
+<meta property="og:site_name" content="猫的储物间">
+<meta property="og:description" content="Handler简介我们都知道Handler是Android消息机制的上层接口，用Handler可以将一个任务切换到Handler所在的线程去执行。Handler最最常见的操作就是在子线程中来更新UI线程的视图。常用的方法有：  void handleMessage(Message msg)处理消息的方法,通常是用于被重写 sendEmptyMessage(int what)sendEmptyMes">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-10-21T15:13:43.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android消息机制">
+<meta name="twitter:description" content="Handler简介我们都知道Handler是Android消息机制的上层接口，用Handler可以将一个任务切换到Handler所在的线程去执行。Handler最最常见的操作就是在子线程中来更新UI线程的视图。常用的方法有：  void handleMessage(Message msg)处理消息的方法,通常是用于被重写 sendEmptyMessage(int what)sendEmptyMes">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/21/Android消息机制/"/>
+
+
+
+
+
+  <title>Android消息机制 | 猫的储物间</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<!-- 背景 -->
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <!-- head -->
+    <a href="https://github.com/yangcihang/">
+      <img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png">
+    </a>
+    <header id="header" 
+    class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">猫的储物间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我是Android喵</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/21/Android消息机制/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Catango">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="猫的储物间">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android消息机制</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T23:13:29+08:00">
+                2017-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Handler简介"><a href="#Handler简介" class="headerlink" title="Handler简介"></a>Handler简介</h2><p>我们都知道Handler是Android消息机制的上层接口，用Handler可以将一个任务切换到Handler所在的线程去执行。Handler最最常见的操作就是在子线程中来更新UI线程的视图。常用的方法有：</p>
+<ul>
+<li>void handleMessage(Message msg)处理消息的方法,通常是用于被重写</li>
+<li>sendEmptyMessage(int what)sendEmptyMessageDelayed(int what,long delayMillis) 发送空消息</li>
+<li>sendMessage(Message msg):sendMessageDelayed(Message msg):发送消息</li>
+<li>final boolean hasMessage(int what):检查消息队列中是否包含what属性为指定值的消息 如果是参数为(int what,Object object):除了判断what属性,还需要判断Object属性是否为指定对象的消息</li>
+<li>post(Runnable r),postDelayed(Runnable r, long delayMillis)Runnable的执行是在Handler对象所在的线程，因此如果Handler在主线程的话，还是别用这个方法来执行耗时操作了，不然就ANR。</li>
+</ul>
+<h2 id="消息机制"><a href="#消息机制" class="headerlink" title="消息机制"></a>消息机制</h2><p>Android消息机制其实上是Handler的运行机制及Handler附带的MessageQueue和Looper的工作过程。这里先说明一点，安卓UI控件是线程不安全的，因此不允许在子线程中对UI控件进行修改。那为啥设计的时候不加锁呢？可能是加锁会降低访问效率和阻塞线程的原因。</p>
+<p>Handler创建的时候会采用当前线程的Looper来构建内部的消息循环系统，如果当前线程没有Looper，就会报错。主线程默认会创建Looper。当Handler创建完毕后，这时候内部的Looper以及MessageQueue就可以和Handler一起工作了。然后通过Handler的post方法将一个Runnable传递到Looper中去处理，或者通过Handler的send方法发送消息，这个消息同样也会在Looper中去处理。其实post方法最终也是通过send方法来完成的。当Handler的send方法调用时，它会调用MessageQueue的enqueueMessage方法将这个消息放入消息队列，然后Looper发现有新的消息的时候，就会处理这个消息，最终消息的Runnable或者Handler的handleMessage方法就会被调用。在介绍这三个机制之前先说说java.lang包下面的ThreadLocal类吧。</p>
+<h3 id="ThreadLocal"><a href="#ThreadLocal" class="headerlink" title="ThreadLocal"></a>ThreadLocal</h3><p>什么是ThreadLocal呢？ThreadLocal是java.lang包下面的一个线程内部的数据存储类，通过它可以在指定线程存储指定数据，并且只有在指定线程中获得存储的数据。一般来说，当某些数据是以线程为作用域并且不同线程具有不同的数据副本时，就可以考虑ThreadLocal。举个栗子：监听器的传递，如果一个线程中做了大量工作而且需要一个监听器来贯穿整个线程的执行过程，就可以使用ThreadLocal，在线程内部使用ThreadLocal的get方法来获取到监听器。举个ThreadLocal简单的例子，在主线程中创建一个ThreadLocal的实例，类型选择为int型的，并且在主线程中用set方法设置为1，然后在子线程1中set为2，子线程2中不进行任何操作。如果将三个线程调用get方法，则在主线程中会显示1，在子线程1中显示2，在子线程2中则会显示null.虽然在不同线程中访问的是同一个ThreadLocal的对象，但是他们的值是不同的。为什么会这样呢？来看看get方法的源码：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">  public void set(T value) &#123;</div><div class="line">        Thread t = Thread.currentThread();</div><div class="line">        ThreadLocalMap map = getMap(t);</div><div class="line">        if (map != null)</div><div class="line">            map.set(this, value);</div><div class="line">        else</div><div class="line">            createMap(t, value);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">public T get() &#123;</div><div class="line">        Thread t = Thread.currentThread();</div><div class="line">        ThreadLocalMap map = getMap(t);</div><div class="line">        if (map != null) &#123;</div><div class="line">            ThreadLocalMap.Entry e = map.getEntry(this);</div><div class="line">            if (e != null)</div><div class="line">                return (T)e.value;</div><div class="line">        &#125;</div><div class="line">        return setInitialValue();</div><div class="line">    &#125;</div><div class="line">```    </div><div class="line">我们可以看到，每个Thread都会对应一个ThreadLocalMap，ThreadLocalMap其实是ThreadLocal的一个私有内部类，在ThreadLocal里面set的时候会调用map的set方法将数据存储在一个叫Entry的数组里面。为啥要先说这个ThreadLocal呢？因为等会介绍的Looper的作用域就是线程并且不同线程具有不同的Looper。</div><div class="line"></div><div class="line">### MessageQueue</div><div class="line">MessageQueue顾名思义，就是存放Message的队列，然而它内部的数据结构并不是队列，而是用单链表存储的消息列表，因为链表的插入删除很方便。主要有俩方法：enqueueMessage和next。其中enqueueMessage会在Handler每次发送Message时候调用，将Message加入链表之中。源码也是将Message插入链表的意思。然后主要是里面的next方法：</div></pre></td></tr></table></figure>
+<p>Message next() {<br>        // Return here if the message loop has already quit and been disposed.<br>        // This can happen if the application tries to restart a looper after quit<br>        // which is not supported.<br>        final long ptr = mPtr;<br>        if (ptr == 0) {<br>            return null;<br>        }</p>
+<pre><code>int pendingIdleHandlerCount = -1; // -1 only during first iteration
+int nextPollTimeoutMillis = 0;
+for (;;) {
+    if (nextPollTimeoutMillis != 0) {
+        Binder.flushPendingCommands();
+    }
+
+    nativePollOnce(ptr, nextPollTimeoutMillis);
+
+    synchronized (this) {
+        // Try to retrieve the next message.  Return if found.
+        final long now = SystemClock.uptimeMillis();
+        Message prevMsg = null;
+        Message msg = mMessages;
+        if (msg != null &amp;&amp; msg.target == null) {
+            // Stalled by a barrier.  Find the next asynchronous message in the queue.
+            do {
+                prevMsg = msg;
+                msg = msg.next;
+            } while (msg != null &amp;&amp; !msg.isAsynchronous());
+        }
+        if (msg != null) {
+            if (now &lt; msg.when) {
+                // Next message is not ready.  Set a timeout to wake up when it is ready.
+                nextPollTimeoutMillis = (int) Math.min(msg.when - now, Integer.MAX_VALUE);
+            } else {
+                // Got a message.
+                mBlocked = false;
+                if (prevMsg != null) {
+                    prevMsg.next = msg.next;
+                } else {
+                    mMessages = msg.next;
+                }
+                msg.next = null;
+                if (DEBUG) Log.v(TAG, &quot;Returning message: &quot; + msg);
+                msg.markInUse();
+                return msg;
+            }
+        } else {
+            // No more messages.
+            nextPollTimeoutMillis = -1;
+        }
+        ......
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">很明显这个next方法是个for无限循环的方法。如果没有消息的话会一直阻塞在这，当有消息到来时会将其从单链表中移除。这个next方法会在接下来的Looper的某一方法中调用。</div><div class="line"></div><div class="line">### Looper</div><div class="line">Looper是一个不停地在MessageQueue中查看是否有新消息的一个东西。如果没有新消息就会阻塞在那里。**在它的构造方法里面会创建一个本线程的MessageQueue**，然后将当前线程的对象保存起来。一般如果要在Android的非UI线程中进行跨线程的操作时，就需要创建一个Looper（因为UI线程的Looper比较特殊，会在一开始就创建）。Looper提供了quit和quitSafely方法，区别是前者是立即退出，后者是处理完MessageQueue中的所有Message后退出。当Looper退出后，Handler的sendMessage方法就会返回false。先看看Looper的prepare的方法：</div></pre></td></tr></table></figure>
+<p> public static void prepare() {<br>        prepare(true);<br>    }</p>
+<pre><code>private static void prepare(boolean quitAllowed) {
+    if (sThreadLocal.get() != null) {
+        throw new RuntimeException(&quot;Only one Looper may be created per thread&quot;);
+    }
+    sThreadLocal.set(new Looper(quitAllowed));
+}
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">可以看到，prepare的方法会调用ThreadLocal的set方法set一个Looper的一个对象。这样就保证了Looper在不同线程中有不同的Looper存在。然后咱们看看Looper中最核心的方法：loop</div></pre></td></tr></table></figure>
+<p>  public static void loop() {<br>        final Looper me = myLooper();<br>        if (me == null) {<br>            throw new RuntimeException(“No Looper; Looper.prepare() wasn’t called on this thread.”);<br>        }<br>        final MessageQueue queue = me.mQueue;</p>
+<pre><code>    // Make sure the identity of this thread is that of the local process,
+    // and keep track of what that identity token actually is.
+    Binder.clearCallingIdentity();
+    final long ident = Binder.clearCallingIdentity();
+
+    for (;;) {
+        Message msg = queue.next(); // might block
+        if (msg == null) {
+            // No message indicates that the message queue is quitting.
+            return;
+        }
+
+        // This must be in a local variable, in case a UI event sets the logger
+        final Printer logging = me.mLogging;
+        if (logging != null) {
+            logging.println(&quot;&gt;&gt;&gt;&gt;&gt; Dispatching to &quot; + msg.target + &quot; &quot; +
+                    msg.callback + &quot;: &quot; + msg.what);
+        }
+
+        final long traceTag = me.mTraceTag;
+        if (traceTag != 0 &amp;&amp; Trace.isTagEnabled(traceTag)) {
+            Trace.traceBegin(traceTag, msg.target.getTraceName(msg));
+        }
+        try {
+            msg.target.dispatchMessage(msg);
+        } finally {
+            if (traceTag != 0) {
+                Trace.traceEnd(traceTag);
+            }
+        }
+
+        if (logging != null) {
+            logging.println(&quot;&lt;&lt;&lt;&lt;&lt; Finished to &quot; + msg.target + &quot; &quot; + msg.callback);
+        }
+
+        // Make sure that during the course of dispatching the
+        // identity of the thread wasn&apos;t corrupted.
+        final long newIdent = Binder.clearCallingIdentity();
+        if (ident != newIdent) {
+            Log.wtf(TAG, &quot;Thread identity changed from 0x&quot;
+                    + Long.toHexString(ident) + &quot; to 0x&quot;
+                    + Long.toHexString(newIdent) + &quot; while dispatching to &quot;
+                    + msg.target.getClass().getName() + &quot; &quot;
+                    + msg.callback + &quot; what=&quot; + msg.what);
+        }
+
+        msg.recycleUnchecked();
+    }
+}
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">可以看到，loop中有一个for的无限循环，当MessageQueue的next方法返回为空时，退出这个循环。前面刚说过了这个next方法是一个阻塞的方法，当MessageQueue被标记为退出状态时，这个next就会返回一个null。其实Looper的quit方法就是调用MessageQueue方法中的quit来实现的。接下来当获取到消息的时候，会执行msg.target.dispatchMessage方法。这个target就是发送消息的Handler对象，这个dispatchMessage方法接下来会说。</div><div class="line"></div><div class="line">### Handler</div><div class="line">先说明一点，Handler中的post方法最终都会执行到sendMessageAtTime这个方法中去，然后将Message加入MessageQueue中。然后Looper会不停的循环这个MessageQueue，当取出消息后就会执行到Handler的dispatchMessage的方法中去。</div></pre></td></tr></table></figure>
+<pre><code>public void dispatchMessage(Message msg) {
+    if (msg.callback != null) {
+        handleCallback(msg);
+    } else {
+        if (mCallback != null) {
+            if (mCallback.handleMessage(msg)) {
+                return;
+            }
+        }
+        handleMessage(msg);
+    }
+}
+</code></pre><p>```<br>可以看到这个方法也是很简单就理解的。其中这个callback是一个Runnable对象，实际上就是Handler的post方法中的Runnable。然后检查这个Callback是否为空。这个Callback其实是一个接口，在handler初始化的时候传入的。这个接口可以实现处理Message的一些方法，其实和Handler的handlerMessage方法一样，用这个接口的话可以避免写Handler子类去做一些处理。最后调用的这个方法应该很熟悉吧？没错，平常创建Handler时候重写的那个方法，其实它是在dispatchMessage方法中进行回调的。</p>
+<p>参考文献：Android开发艺术探究</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/21/TabLayout简介/" rel="next" title="TabLayout简介">
+                <i class="fa fa-chevron-left"></i> TabLayout简介
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/21/AsyncTask/" rel="prev" title="AsyncTask">
+                AsyncTask <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Catango</p>
+              <p class="site-description motion-element" itemprop="description">无喵不欢</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Handler简介"><span class="nav-number">1.</span> <span class="nav-text">Handler简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#消息机制"><span class="nav-number">2.</span> <span class="nav-text">消息机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#ThreadLocal"><span class="nav-number">2.1.</span> <span class="nav-text">ThreadLocal</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Catango</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v="></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v="></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
+<script type="text/javascript" src="/js/src/post-details.js?v="></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v="></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

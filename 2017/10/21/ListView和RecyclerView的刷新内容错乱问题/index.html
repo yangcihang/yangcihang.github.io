@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="一、问题背景ListView和RecyclerView是最常用的控件，但是因为itemView的复用，会导致往返滑动后，EditText编辑或者RadioButton等控件会出现显示不正常的问题。这些问题都是因为第二次加载View的时候，缺少二次刷新后对控件的约束。因此解决问题的办法就是在初始化的时候添加约束。 二、问题展示因为RecyclerView可以适配多种布局，功能比ListView强，因">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ListView和RecyclerView的刷新内容错乱问题">
+<meta property="og:url" content="http://yoursite.com/2017/10/21/ListView和RecyclerView的刷新内容错乱问题/index.html">
+<meta property="og:site_name" content="猫的储物间">
+<meta property="og:description" content="一、问题背景ListView和RecyclerView是最常用的控件，但是因为itemView的复用，会导致往返滑动后，EditText编辑或者RadioButton等控件会出现显示不正常的问题。这些问题都是因为第二次加载View的时候，缺少二次刷新后对控件的约束。因此解决问题的办法就是在初始化的时候添加约束。 二、问题展示因为RecyclerView可以适配多种布局，功能比ListView强，因">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://wiki.hrsoft.net/uploads/201705/59258a9abf0e9_59258a9a.png">
+<meta property="og:image" content="http://wiki.hrsoft.net/uploads/201705/59258af4d792e_59258af4.png">
+<meta property="og:image" content="http://wiki.hrsoft.net/uploads/201705/59258b032da49_59258b03.png">
+<meta property="og:updated_time" content="2017-10-21T15:10:51.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ListView和RecyclerView的刷新内容错乱问题">
+<meta name="twitter:description" content="一、问题背景ListView和RecyclerView是最常用的控件，但是因为itemView的复用，会导致往返滑动后，EditText编辑或者RadioButton等控件会出现显示不正常的问题。这些问题都是因为第二次加载View的时候，缺少二次刷新后对控件的约束。因此解决问题的办法就是在初始化的时候添加约束。 二、问题展示因为RecyclerView可以适配多种布局，功能比ListView强，因">
+<meta name="twitter:image" content="http://wiki.hrsoft.net/uploads/201705/59258a9abf0e9_59258a9a.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/21/ListView和RecyclerView的刷新内容错乱问题/"/>
+
+
+
+
+
+  <title>ListView和RecyclerView的刷新内容错乱问题 | 猫的储物间</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<!-- 背景 -->
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <!-- head -->
+    <a href="https://github.com/yangcihang/">
+      <img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png">
+    </a>
+    <header id="header" 
+    class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">猫的储物间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我是Android喵</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/21/ListView和RecyclerView的刷新内容错乱问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Catango">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="猫的储物间">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ListView和RecyclerView的刷新内容错乱问题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T23:09:57+08:00">
+                2017-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一、问题背景"><a href="#一、问题背景" class="headerlink" title="一、问题背景"></a>一、问题背景</h2><p>ListView和RecyclerView是最常用的控件，但是因为itemView的复用，会导致往返滑动后，EditText编辑或者RadioButton等控件会出现显示不正常的问题。这些问题都是因为第二次加载View的时候，缺少二次刷新后对控件的约束。因此解决问题的办法就是在初始化的时候添加约束。</p>
+<h2 id="二、问题展示"><a href="#二、问题展示" class="headerlink" title="二、问题展示"></a>二、问题展示</h2><p>因为RecyclerView可以适配多种布局，功能比ListView强，因此以下例子都用RecyclerView示范。</p>
+<h3 id="RadioButton的错乱。"><a href="#RadioButton的错乱。" class="headerlink" title="RadioButton的错乱。"></a>RadioButton的错乱。</h3><p>布局很简单，List里面是单纯的RadioButton，Activity中单纯的就是RecyclerView，Adapter中，Creat和绑定Holder的代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line"> public TestHolder onCreateViewHolder(ViewGroup parent, int viewType) &#123;</div><div class="line">        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_rec_item,parent,false);</div><div class="line">        return new TestHolder(view);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void onBindViewHolder(TestHolder holder, int position) &#123;</div><div class="line">        String item = mlist.get(position);</div><div class="line">        holder.testRbtn.setText(item);</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
+<p>当点击5个RadioButton时：<br><img src="http://wiki.hrsoft.net/uploads/201705/59258a9abf0e9_59258a9a.png" alt=""><br>下拉后会发现：<br><img src="http://wiki.hrsoft.net/uploads/201705/59258af4d792e_59258af4.png" alt=""><br>然后再拉回：<br><img src="http://wiki.hrsoft.net/uploads/201705/59258b032da49_59258b03.png" alt=""><br>会发现没有选择过的button被选中了，拉回后选中的却又没了。</p>
+<h2 id="三、如何解决："><a href="#三、如何解决：" class="headerlink" title="三、如何解决："></a>三、如何解决：</h2><p>前面提到过，所有的错乱原因都是itemView的复用造成，举个例子：对于RadioButton，当下拉时，因为前5个是点击的状态，复用View后，没有新的RadioButton的选择状态未被初始化，因此会错乱。</p>
+<h3 id="解决方法："><a href="#解决方法：" class="headerlink" title="解决方法："></a>解决方法：</h3><p>对于每个view，用一bool数组来记录当前所有RadioButton是否选中的状态，然后在初始化的时候通过判断数组中每一个元素的状态来设置RadioButton的状态。代码如下：<br>1.在构造函数中，创建flagList的实例，默认全部设置为false<br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> <span class="title">TestAdapter</span><span class="params">(List&lt;String &gt; list)</span> </span>&#123;</div><div class="line">      mlist = list;</div><div class="line">      flagList = <span class="keyword">new</span> ArrayList&lt;&gt;();</div><div class="line">      <span class="keyword">for</span>(<span class="keyword">int</span> i =<span class="number">0</span> ;i&lt;list.size();i++) &#123;</div><div class="line">          flagList.add(<span class="keyword">false</span>);</div><div class="line">      &#125;</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>2.在BindViewHolder的函数中，</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="meta">@Override</span></div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onBindViewHolder</span><span class="params">(TestHolder holder, <span class="keyword">final</span> <span class="keyword">int</span> position)</span> </span>&#123;</div><div class="line">    String item = mlist.get(position);</div><div class="line">    holder.testRbtn.setText(item);</div><div class="line">    <span class="keyword">if</span>(flagList.get(position)) &#123;</div><div class="line">        holder.testRbtn.setChecked(<span class="keyword">true</span>);</div><div class="line">    &#125; <span class="keyword">else</span> &#123;</div><div class="line">        holder.testRbtn.setChecked(<span class="keyword">false</span>);</div><div class="line">    &#125;</div><div class="line">    holder.testRbtn.setOnClickListener(<span class="keyword">new</span> View.OnClickListener() &#123;</div><div class="line">        <span class="meta">@Override</span></div><div class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onClick</span><span class="params">(View v)</span> </span>&#123;</div><div class="line">            flagList.set(position,!flagList.get(position));</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>这里对每个RadioButton做了初始化，判断flagList的每个元素的状态来设置RadioButton的状态，并且设置点击监听，点击后更新flagList。这样设置后，运行程序，会发现错乱的问题得到了解决。<br><strong>这里特别特别要注意一点：代码里面的if和else缺一不可，必须对每种状态都得初始化，如果仅有if没有else，还是会出现错乱的情况。</strong></p>
+<h2 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h2><p>无论哪种的错位问题，都可以按照以上套路来。就是在加载每一项的View的时候将View中的控件初始化，比如EditText就添加TextChangedListener，文本改变后将文本存储在数组里面，然后加载View的时候取出，这样就可以避免错乱的情况了。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/21/利用RecyclerView实现简单的布局混搭/" rel="next" title="利用RecyclerView实现简单的布局混搭">
+                <i class="fa fa-chevron-left"></i> 利用RecyclerView实现简单的布局混搭
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/21/ScrollView嵌套ListView问题/" rel="prev" title="ScrollView嵌套ListView问题">
+                ScrollView嵌套ListView问题 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Catango</p>
+              <p class="site-description motion-element" itemprop="description">无喵不欢</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、问题背景"><span class="nav-number">1.</span> <span class="nav-text">一、问题背景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#二、问题展示"><span class="nav-number">2.</span> <span class="nav-text">二、问题展示</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#RadioButton的错乱。"><span class="nav-number">2.1.</span> <span class="nav-text">RadioButton的错乱。</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#三、如何解决："><span class="nav-number">3.</span> <span class="nav-text">三、如何解决：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#解决方法："><span class="nav-number">3.1.</span> <span class="nav-text">解决方法：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#四、总结"><span class="nav-number">4.</span> <span class="nav-text">四、总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Catango</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v="></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v="></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
+<script type="text/javascript" src="/js/src/post-details.js?v="></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v="></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

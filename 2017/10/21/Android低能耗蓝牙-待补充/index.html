@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="BLE分为三部分Service、Characteristic、Descriptor，这三部分都由UUID作为唯一标示符。一个蓝牙4.0的终端可以包含多个Service，一个Service可以包含多个Characteristic，一个Characteristic包含一个Value和多个Descriptor，一个Descriptor包含一个Value。一般来说，Characteristic是手机与BL">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android低能耗蓝牙(待补充)">
+<meta property="og:url" content="http://yoursite.com/2017/10/21/Android低能耗蓝牙-待补充/index.html">
+<meta property="og:site_name" content="猫的储物间">
+<meta property="og:description" content="BLE分为三部分Service、Characteristic、Descriptor，这三部分都由UUID作为唯一标示符。一个蓝牙4.0的终端可以包含多个Service，一个Service可以包含多个Characteristic，一个Characteristic包含一个Value和多个Descriptor，一个Descriptor包含一个Value。一般来说，Characteristic是手机与BL">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-10-21T15:17:47.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android低能耗蓝牙(待补充)">
+<meta name="twitter:description" content="BLE分为三部分Service、Characteristic、Descriptor，这三部分都由UUID作为唯一标示符。一个蓝牙4.0的终端可以包含多个Service，一个Service可以包含多个Characteristic，一个Characteristic包含一个Value和多个Descriptor，一个Descriptor包含一个Value。一般来说，Characteristic是手机与BL">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/21/Android低能耗蓝牙-待补充/"/>
+
+
+
+
+
+  <title>Android低能耗蓝牙(待补充) | 猫的储物间</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<!-- 背景 -->
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <!-- head -->
+    <a href="https://github.com/yangcihang/">
+      <img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png">
+    </a>
+    <header id="header" 
+    class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">猫的储物间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我是Android喵</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/21/Android低能耗蓝牙-待补充/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Catango">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="猫的储物间">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android低能耗蓝牙(待补充)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T23:17:27+08:00">
+                2017-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>BLE分为三部分Service、Characteristic、Descriptor，这三部分都由UUID作为唯一标示符。一个蓝牙4.0的终端可以包含多个Service，一个Service可以包含多个Characteristic，一个Characteristic包含一个Value和多个Descriptor，一个Descriptor包含一个Value。一般来说，Characteristic是手机与BLE终端交换数据的关键。另外，这些UUID都写在硬件里，我们通过BLE提供的API可以读取到。</p>
+<h2 id="大体流程"><a href="#大体流程" class="headerlink" title="大体流程"></a>大体流程</h2><ul>
+<li>打开蓝牙</li>
+<li>扫描设备</li>
+<li>连接设备</li>
+<li>写入数据，控制设备</li>
+<li>读取设备返回的数据</li>
+<li>断开设备</li>
+</ul>
+<h2 id="不一样的蓝牙搜索"><a href="#不一样的蓝牙搜索" class="headerlink" title="不一样的蓝牙搜索"></a>不一样的蓝牙搜索</h2><p>在传统的蓝牙上，我们使用BluetoothAdapter.startDiscovery的方法来进行蓝牙扫描。<strong>BluetoothAdapter.startDiscovery在大多数手机上是可以同时发现经典蓝牙和Ble的，但是startDiscovery的回调无法返回Ble的广播，所以无法通过广播识别设备，且startDiscovery扫描Ble的效率比StartLeScan低很多。</strong>所以在实际应用中，还是StartDiscovery和StartLeScan分开扫，前者扫传统蓝牙，后者扫低功耗蓝牙。因此本篇文章的扫描用StartLeScan方法来进行扫描的。</p>
+<h2 id="蓝牙扫描"><a href="#蓝牙扫描" class="headerlink" title="蓝牙扫描"></a>蓝牙扫描</h2><p>我们还得继续用到我们的老朋友BluetoothAdapter。首先打开蓝牙，这步操作和上篇文章一样，不必多说。主要是蓝牙扫描这一过程。首先，调用adapter的startLeScan(LeScanCallback callback)或者是startLeScan(final UUID[] serviceUuids, final LeScanCallback callback)方法，这两种方法的区别是前者没有指定UUID，后者是进行精准扫描，根据UUID来进行匹配。其中我们需要一个叫LeScanCallback的这一参数。这个回调接口需要我们自己去实现，主要的功能是实现扫描时的监听，类似传统方式用广播监听搜索时蓝牙设备的变化。对于这个callBack我们可以实现以下两个方法:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">new ScanDeviceCallback() &#123;</div><div class="line">            @Override</div><div class="line">            public void onScanFinish() &#123;</div><div class="line">             ToastUtil.showToast(&quot;没有找到设备&quot;);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            @Override</div><div class="line">            public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) &#123;</div><div class="line">                 ToastUtil.showToast(&quot;扫描到设备-------&quot;, device.getName());</div><div class="line">            &#125;</div><div class="line">        &#125;);</div></pre></td></tr></table></figure>
+<p>顾名思义，一个是搜索结束，一个是搜索过程中扫描到设备时回调。我们可以自己定义一个扫描时间，用handler进行延迟处理，当扫描结束时，调用scanDeviceCallback.onScanFinish()和bluetoothAdapter.stopLeScan(scanDeviceCallback)方法来结束扫描。<strong>这里还是要提醒一下，蓝牙设备的扫描是很耗费资源的，一定要手动停止。</strong></p>
+<h2 id="蓝牙连接和交互"><a href="#蓝牙连接和交互" class="headerlink" title="蓝牙连接和交互"></a>蓝牙连接和交互</h2><ul>
+<li>首先，我们需要获取到BluetoothDevice，和传统蓝牙蓝牙获取到远程设备的方式一样，都是通过在监听回调时获取到BluetoothDevice，如果得到BluetoothDevice的地址，也可以通过adapter.getRemoteDevice(device.getAddress())这种方式来获取。</li>
+<li>接下来是蓝牙连接的最重要的一步，连接蓝牙设备。我们需要创建一个BluetoothGatt对象，然后通过device的connectGatt(Context context, boolean autoConnect,BluetoothGattCallback callback）方法返回一个BluetoothGatt对象。第一个参数传入一个context，第二个参数是是否自动连接，一般传入false，第三个参数又是一个callback，这个callback监听的是连接时的状态。一般情况下重写这么几个函数:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">private BluetoothGattCallback bluetoothGattCallback = new BluetoothGattCallback() &#123;</div><div class="line">        @Override</div><div class="line">        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) &#123;</div><div class="line">           ToastUtil.showToast(&quot;连接状态发生改变&quot;);</div><div class="line">            if (status != BluetoothProfile.STATE_DISCONNECTED) &#123;</div><div class="line">                gatt.disconnect();</div><div class="line">                gatt.close();</div><div class="line">            &#125; else if (newState == BluetoothProfile.STATE_CONNECTED) &#123;</div><div class="line">                gatt.discoverServices();</div><div class="line">                ToastUtil.showToast(&quot;开始发现服务&quot;);</div><div class="line">            &#125; else &#123;</div><div class="line">                gatt.disconnect();</div><div class="line">                gatt.close();</div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void onServicesDiscovered(BluetoothGatt gatt, int status) &#123;</div><div class="line">            ToastUtil.showToast(&quot;服务已经发现);</div><div class="line">        &#125;</div><div class="line"></div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) &#123;</div><div class="line">        //在此写入数据</div><div class="line">            if (status == BluetoothGatt.GATT_SUCCESS) &#123;</div><div class="line">                ToastUtil.showToast(&quot;写入数据&quot;);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) &#123;</div><div class="line">        //在此可以接受到数据</div><div class="line">            ToastUtil.showToast( &quot;接受数据&quot;);</div><div class="line">        &#125;</div><div class="line">    &#125;;</div></pre></td></tr></table></figure>
+<ul>
+<li><p>当连接完成后，我们可以在这个callback里面监听到各种连接状况。我们可以看到其中有一个BluetoothGattCharacteristic参数。这个参数是干什么用呢？这个参数极其重要，Characteristic是手机与BLE终端交换数据的关键。我们可以在上述回调的这一步<figure class="highlight plain"><figcaption><span>gatt, int status)&#123;</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#125;```来实例化这个Characteristic,具体方式如下:</div></pre></td></tr></table></figure></p>
+<p>@Override</p>
+<pre><code>public void onServicesDiscovered(BluetoothGatt gatt, int status) {
+    ToastUtil.showToast(&quot;服务已经发现&quot;);
+    if (status == BluetoothGatt.GATT_SUCCESS) {
+        bluetoothGattCharacteristic = gatt.getService(Constant.UUID_SERVICE).getCharacteristic(Constant.UUID_CHAR);
+        bluetoothGatt.setCharacteristicNotification(bluetoothGattCharacteristic, true);
+        ToastUtil.showToast(&quot;设置Notification成功&quot;);
+    }
+}
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"> BluetoothGattCharacteristic实例是使用gatt.getService(Constant.UUID_SERVICE).getCharacteristic(Constant.UUID_CHAR);来获取当前的需要用到的Characteristic。注意，第一个方法getService(UUID uuid)返回的是一个service，service概况来说是一系列Characteristic的集合，我们通过设备指定的UUID才能获取到设备的service。然后再通过每一个Characteristic的UUID获取到这一特征属性的对象。举个例子：我们通过getService方法和UUID获取到了小米手环的service，然后又通过getCharacteristic方法和UUID获取到小米手环测量心率的一个特征。然后通过BluetoothGatt来设置Characteristic可通知，即我们可以接受到设备的写入操作。</div><div class="line">- 数据的交互  当我们获取到Characteristic后，我们就可以和设备进行交互了。交互方式举例如下:</div></pre></td></tr></table></figure>
+<p>  bluetoothGattCharacteristic.setValue(byte[]);<br>  bluetoothGatt.writeCharacteristic(bluetoothGattCharacteristic);<br>  ```<br>通过Characteristic的setValue方法和gatt的writeCharacteristic方法写入，然后就会触发到BluetoothGattCallback中的onCharacteristicWrite回调。<br>读取数据也是从BluetoothGattCallback的onCharacteristicChanged方法来获取到设备通知的数据，也是通过Characteristic来获取到data的。</p>
+</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/21/Android传统蓝牙/" rel="next" title="Android传统蓝牙">
+                <i class="fa fa-chevron-left"></i> Android传统蓝牙
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/21/Retrofit-JsonConverter/" rel="prev" title="Retrofit JsonConverter">
+                Retrofit JsonConverter <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Catango</p>
+              <p class="site-description motion-element" itemprop="description">无喵不欢</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#大体流程"><span class="nav-number">1.</span> <span class="nav-text">大体流程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#不一样的蓝牙搜索"><span class="nav-number">2.</span> <span class="nav-text">不一样的蓝牙搜索</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#蓝牙扫描"><span class="nav-number">3.</span> <span class="nav-text">蓝牙扫描</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#蓝牙连接和交互"><span class="nav-number">4.</span> <span class="nav-text">蓝牙连接和交互</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Catango</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v="></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v="></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
+<script type="text/javascript" src="/js/src/post-details.js?v="></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v="></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

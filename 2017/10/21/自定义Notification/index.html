@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="Notification简介Notification是安卓开发中常用的组件之一，不过Notification在每个版本里面都有差别（安卓8.0在前台服务设置Notification的话貌似有点问题，不知道为啥在服务中start不上去…）常见的创建有两种，一种是直接构造，另一种是使用builder模式来创建，最后都用manager来notify出来（不是本文重点）。不过原生的Notification">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="自定义Notification">
+<meta property="og:url" content="http://yoursite.com/2017/10/21/自定义Notification/index.html">
+<meta property="og:site_name" content="猫的储物间">
+<meta property="og:description" content="Notification简介Notification是安卓开发中常用的组件之一，不过Notification在每个版本里面都有差别（安卓8.0在前台服务设置Notification的话貌似有点问题，不知道为啥在服务中start不上去…）常见的创建有两种，一种是直接构造，另一种是使用builder模式来创建，最后都用manager来notify出来（不是本文重点）。不过原生的Notification">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-10-21T15:12:15.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="自定义Notification">
+<meta name="twitter:description" content="Notification简介Notification是安卓开发中常用的组件之一，不过Notification在每个版本里面都有差别（安卓8.0在前台服务设置Notification的话貌似有点问题，不知道为啥在服务中start不上去…）常见的创建有两种，一种是直接构造，另一种是使用builder模式来创建，最后都用manager来notify出来（不是本文重点）。不过原生的Notification">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/21/自定义Notification/"/>
+
+
+
+
+
+  <title>自定义Notification | 猫的储物间</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<!-- 背景 -->
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <!-- head -->
+    <a href="https://github.com/yangcihang/">
+      <img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png">
+    </a>
+    <header id="header" 
+    class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">猫的储物间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我是Android喵</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/21/自定义Notification/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Catango">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="猫的储物间">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">自定义Notification</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T23:12:03+08:00">
+                2017-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="Notification简介"><a href="#Notification简介" class="headerlink" title="Notification简介"></a>Notification简介</h2><p>Notification是安卓开发中常用的组件之一，不过Notification在每个版本里面都有差别（安卓8.0在前台服务设置Notification的话貌似有点问题，不知道为啥在服务中start不上去…）常见的创建有两种，一种是直接构造，另一种是使用builder模式来创建，最后都用manager来notify出来（不是本文重点）。不过原生的Notification样式肯定不在各个场合都适用，因此我们有时候需要自定义Notification样式来满足不同的需求。在此之前，先简单介绍Notification中需要的一些组件。</p>
+<h2 id="RemoteViews简介"><a href="#RemoteViews简介" class="headerlink" title="RemoteViews简介"></a>RemoteViews简介</h2><ul>
+<li>RemoteViews不是当前进程的View,是属于SystemServer进程.因此可以在一些前台操作中来使用，避免一直占用UI线程的资源。应用程序和RemoteViews之间可以通过Binder来实现进程的通信。</li>
+<li>应用程序与RemoteViews之间依赖Binder实现了进程间通信.RemoteViews使用最多的场合是通知栏和桌面小插件.</li>
+<li>RemoteViews并不能直接获得控件实例,然后对控件进行操作.它提供了<br>setTextViewText(viewId, text)、setImageViewResource(viewId, srcId)等方法进行操作,传入控件id和相应的修改内容. 常用的属性有：<ul>
+<li>setTextViewText(viewId, text)设置文本</li>
+<li>setTextColor(viewId, color)设置文本颜色</li>
+<li>setTextViewTextSize(viewId, units, size)设置文本大小 </li>
+<li>setImageViewBitmap(viewId, bitmap)设置图片</li>
+<li>setImageViewResource(viewId, srcId)根据图片资源设置图片</li>
+<li>setViewPadding(viewId, left, top, right, bottom)设置Padding间距<ul>
+<li>setOnClickPendingIntent(viewId, pendingIntent)设置点击事件 </li>
+</ul>
+</li>
+</ul>
+</li>
+<li>RemoteViews的实现底层原理  最好百度看看吧…挺有意思的，这儿不是本文的重点</li>
+</ul>
+<h2 id="PendingIntent简介"><a href="#PendingIntent简介" class="headerlink" title="PendingIntent简介"></a>PendingIntent简介</h2><ul>
+<li>如果你写过Notification的话，PendingIntent应该有一定的了解。这儿再介绍一下：PendingIntent是”延迟意图”的意思,就是当满足某一条件时出触发这个Intent，通过PendingIntent的getActivity、getBroadcast、getService等分别构建一个打开对应组件的延迟Intent. </li>
+<li>传入四个参数，context、intent、requestCode(自定义)、flag.<br>比如这样初始化：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">Intent intent=new Intent(MainActivity.this,MainActivity.class);</div><div class="line">PendingIntent mPendingIntent=PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);</div></pre></td></tr></table></figure>
+<ul>
+<li><p>PendingIntent有4种flag</p>
+<ul>
+<li>FLAG_ONE_SHOT                只执行一次，然后就被cancel了</li>
+<li>FLAG_NO_CREATE               若描述的Intent不存在则返回NULL值（不懂这个具体用来是干啥的）</li>
+<li>FLAG_CANCEL_CURRENT          如果描述的PendingIntent已经存在，则在产生新的Intent之前会先取消掉当前的PendingIntent。对于通知栏的消息来说，以前被取消的PendingIntent就无法启用。这种情况最常见的就是IM的后台消息提示了。</li>
+<li>FLAG_UPDATE_CURRENT          总是执行，表示描述的PendingIntent如果存在，那么它们都会更新。也就是说里面的intent的Extras会被更替为最新。</li>
+</ul>
+</li>
+<li>PendingIntent的匹配规则：requestCode表示PendingIentent发送方的请求码，多情况下设为0即可。requestCode会影响到flags效果。<br>如果两个PendingIntent它们内部的Intent相同并且requestCode也相同，那么这两个PendingIntent就是相同的。intent的匹配规则是：如果两个Intent的ComponentName和intent-filter都相同，那么这两个Intent就是相同的。注意Extras不参与Intent的匹配过程。这点很重要的，因为后面的RemoteViews的监听事件需要PendingIntent来具体实现。</li>
+<li>和intent的区别<ol>
+<li>Intent是立即使用的，而PendingIntent可以等到事件发生后触发，PendingIntent可以cancel</li>
+<li>Intent在程序结束后即终止，而PendingIntent在程序结束后依然有效</li>
+<li>PendingIntent自带Context，而Intent需要在某个Context内运行</li>
+<li>Intent在原task中运行，PendingIntent在新的task中运行</li>
+</ol>
+</li>
+</ul>
+<h2 id="自定义步骤"><a href="#自定义步骤" class="headerlink" title="自定义步骤"></a>自定义步骤</h2><ol>
+<li><p>自定义通知的布局。 这个没啥好说的。。。不过这个只支持部分组件<br>  Layout ：FrameLayout,LinearLayout,RelativeLayout，GridLayout<br>  View ：AnalogClock，Button，Chronometer，ImageButton，ImageView，ProgressBar，TextView，ViewFlipper，ListView，GridView，StackView，AdapterViewFilter，ViewStub。</p>
+</li>
+<li><p>使用RemoteView来加载这个布局。RemoteViews没有提供findViewById方法，因此无法直接访问里面的View元素。必须通过RemoteViews所提供的一些列set方法来完成。举个例子：</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">remoteView = new RemoteViews(this.getPackageName(), R.layout.view_music_player_notification);</div><div class="line">Intent intent = new Intent(BROADCAST_NAME);</div><div class="line">intent.putExtra(KEY_FLAG, FLAG_NEXT);</div><div class="line">PendingIntent nextPendingIntent = PendingIntent.getBroadcast(this, FLAG_NEXT, intent, FLAG_UPDATE_CURRENT);</div><div class="line">remoteView.setOnClickPendingIntent(R.id.img_next, nextPendingIntent);</div><div class="line">intent.putExtra(KEY_FLAG, FLAG_PRE);</div><div class="line">PendingIntent prePendingIntent = PendingIntent.getBroadcast(this, FLAG_PRE, intent, FLAG_UPDATE_CURRENT);</div><div class="line">remoteView.setOnClickPendingIntent(R.id.img_previous, prePendingIntent);</div><div class="line">intent.putExtra(KEY_FLAG, FLAG_PAUSE);</div><div class="line">PendingIntent pausePendingIntent = PendingIntent.getBroadcast(this, FLAG_PAUSE, intent, FLAG_UPDATE_CURRENT);</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>这是一个用广播来实现音乐播放器的例子。这个播放器就是通知栏展示的那种。</p>
+<ol>
+<li><p>使用RemoteView实例创建Notification。这个简单，如果是buider模式的话，调用setContent方法，此时的参数要求就是RemoteViews。如果是直接构造的话，将RemoteViews直接赋值给notification的ContentView。</p>
+</li>
+<li><p>处理事件。事件是通过intent的action来标识的，而intent是“嵌套”在PendingIntent中的，因此点击后，先根据PendingIntent的类型来决定的。这个时候可以用intent进行参数传递，再在相应的代码块中实现相应的方法。比如上面的PendingIntent是构建了一个打开广播的intent，因此我们可以在相应的BroadcastReceiver中进行相关方法的实现。</p>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/21/ScrollView嵌套ListView问题/" rel="next" title="ScrollView嵌套ListView问题">
+                <i class="fa fa-chevron-left"></i> ScrollView嵌套ListView问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/21/TabLayout简介/" rel="prev" title="TabLayout简介">
+                TabLayout简介 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Catango</p>
+              <p class="site-description motion-element" itemprop="description">无喵不欢</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Notification简介"><span class="nav-number">1.</span> <span class="nav-text">Notification简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RemoteViews简介"><span class="nav-number">2.</span> <span class="nav-text">RemoteViews简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#PendingIntent简介"><span class="nav-number">3.</span> <span class="nav-text">PendingIntent简介</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自定义步骤"><span class="nav-number">4.</span> <span class="nav-text">自定义步骤</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Catango</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v="></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v="></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
+<script type="text/javascript" src="/js/src/post-details.js?v="></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v="></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

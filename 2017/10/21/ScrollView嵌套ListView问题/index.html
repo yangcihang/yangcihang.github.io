@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="问题情形 当ListView外面嵌套一层ScrollView时，内层的ListView会有这样的问题：  ListView的尺寸无法正确测量。如果不将高度固定的话，ListView只会显示一个Item。 ListView的滑动事件被截止。如果内容超过了屏幕的大小的话，会截止ListView的滑动事件。  源码分析 通常情况下，ViewGroup是不拦截事件的，但是ScrollView在onInte">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ScrollView嵌套ListView问题">
+<meta property="og:url" content="http://yoursite.com/2017/10/21/ScrollView嵌套ListView问题/index.html">
+<meta property="og:site_name" content="猫的储物间">
+<meta property="og:description" content="问题情形 当ListView外面嵌套一层ScrollView时，内层的ListView会有这样的问题：  ListView的尺寸无法正确测量。如果不将高度固定的话，ListView只会显示一个Item。 ListView的滑动事件被截止。如果内容超过了屏幕的大小的话，会截止ListView的滑动事件。  源码分析 通常情况下，ViewGroup是不拦截事件的，但是ScrollView在onInte">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-10-21T15:11:40.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ScrollView嵌套ListView问题">
+<meta name="twitter:description" content="问题情形 当ListView外面嵌套一层ScrollView时，内层的ListView会有这样的问题：  ListView的尺寸无法正确测量。如果不将高度固定的话，ListView只会显示一个Item。 ListView的滑动事件被截止。如果内容超过了屏幕的大小的话，会截止ListView的滑动事件。  源码分析 通常情况下，ViewGroup是不拦截事件的，但是ScrollView在onInte">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/21/ScrollView嵌套ListView问题/"/>
+
+
+
+
+
+  <title>ScrollView嵌套ListView问题 | 猫的储物间</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<!-- 背景 -->
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <!-- head -->
+    <a href="https://github.com/yangcihang/">
+      <img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png">
+    </a>
+    <header id="header" 
+    class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">猫的储物间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我是Android喵</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/21/ScrollView嵌套ListView问题/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Catango">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="猫的储物间">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ScrollView嵌套ListView问题</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T23:11:20+08:00">
+                2017-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="问题情形"><a href="#问题情形" class="headerlink" title="问题情形"></a>问题情形</h2><p> 当ListView外面嵌套一层ScrollView时，内层的ListView会有这样的问题：</p>
+<ol>
+<li>ListView的尺寸无法正确测量。如果不将高度固定的话，ListView只会显示一个Item。</li>
+<li>ListView的滑动事件被截止。如果内容超过了屏幕的大小的话，会截止ListView的滑动事件。</li>
+</ol>
+<h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p> 通常情况下，ViewGroup是不拦截事件的，但是ScrollView在onInterceptTouchEvent方法中，有这么几句：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line">if ((action == MotionEvent.ACTION_MOVE) &amp;&amp; (mIsBeingDragged)) &#123;</div><div class="line">        return true;</div><div class="line">    &#125;</div><div class="line">//在动作事件中:</div><div class="line">  case MotionEvent.ACTION_MOVE: &#123;</div><div class="line"></div><div class="line">            final int activePointerId = mActivePointerId;</div><div class="line">            if (activePointerId == INVALID_POINTER) &#123;</div><div class="line">                // If we don&apos;t have a valid id, the touch down wasn&apos;t on content.</div><div class="line">                break;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            final int pointerIndex = ev.findPointerIndex(activePointerId);</div><div class="line">            if (pointerIndex == -1) &#123;</div><div class="line">                Log.e(TAG, &quot;Invalid pointerId=&quot; + activePointerId+ &quot; in onInterceptTouchEvent&quot;);</div><div class="line">                break;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            final int y = (int) ev.getY(pointerIndex);</div><div class="line">            final int yDiff = Math.abs(y - mLastMotionY);</div><div class="line">            if (yDiff &gt; mTouchSlop &amp;&amp; (getNestedScrollAxes() &amp; SCROLL_AXIS_VERTICAL) == 0) &#123;</div><div class="line">                mIsBeingDragged = true;</div><div class="line">                mLastMotionY = y;</div><div class="line">                initVelocityTrackerIfNotExists();</div><div class="line">                mVelocityTracker.addMovement(ev);</div><div class="line">                mNestedYOffset = 0;</div><div class="line">                if (mScrollStrictSpan == null) &#123;</div><div class="line">                    mScrollStrictSpan = StrictMode.enterCriticalSpan(&quot;ScrollView-scroll&quot;);</div><div class="line">                &#125;</div><div class="line">                final ViewParent parent = getParent();</div><div class="line">                if (parent != null) &#123;</div><div class="line">                    parent.requestDisallowInterceptTouchEvent(true);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            break;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">         case MotionEvent.ACTION_DOWN: &#123;</div><div class="line">            final int y = (int) ev.getY();</div><div class="line">            if (!inChild((int) ev.getX(), (int) y)) &#123;</div><div class="line">                mIsBeingDragged = false;</div><div class="line">                recycleVelocityTracker();</div><div class="line">                break;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            /*</div><div class="line">             * Remember location of down touch.</div><div class="line">             * ACTION_DOWN always refers to pointer index 0.</div><div class="line">             */</div><div class="line">            mLastMotionY = y;</div><div class="line">            mActivePointerId = ev.getPointerId(0);</div><div class="line"></div><div class="line">            initOrResetVelocityTracker();</div><div class="line">            mVelocityTracker.addMovement(ev);</div><div class="line"></div><div class="line">            mIsBeingDragged = !mScroller.isFinished();</div><div class="line">            if (mIsBeingDragged &amp;&amp; mScrollStrictSpan == null) &#123;</div><div class="line">                mScrollStrictSpan = StrictMode.enterCriticalSpan(&quot;ScrollView-scroll&quot;);</div><div class="line">            &#125;</div><div class="line">            startNestedScroll(SCROLL_AXIS_VERTICAL);</div><div class="line">            break;</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
+<p>这两段代码的意思是：如果ScrollView接收到move事件，并且正在滑动，那么它的onInterceptTouchEvent方法直接就返回true了，也就是拦截了滑动事件。当接收到了按下的事件，那么将 mIsBeingDragged直接置false，<br>mIsBeingDragged就表示当前ScrollView是否在滑动。里面还有这么一句mIsBeingDragged = !mScroller.isFinished();即如ScrollView还在滑动的时候，你想去触摸嵌在里面的ListView，ScrollView滑动还没结束呢，直接return true;<br>再来看看switch里面case MotionEvent.ACTION_MOVE，如果y轴方向上的滑动距离大于最小滑动距离，则将mIsBeingDragged设置为true。也就是说虽然我手指落在了子View里面，但是如果我要滑动的话，根据第一个if判断，会直接被拦截，交给ScrollView去处理。</p>
+<h2 id="处理方法"><a href="#处理方法" class="headerlink" title="处理方法"></a>处理方法</h2><ul>
+<li>ListView滑动拦截的处理，思路很简单：我们可以自定义一个ListView，去重写里面的dispatchTouchEvent方法，在它的 MotionEvent.ACTION_DOWN的事件调用:getParent().requestDisallowInterceptTouchEvent(true)方法，意思是通知其父组件不要拦截它的滑动事件。这时候一定要记着当ListView滑动到最底部和最顶部的时候要将滑动事件交给其父组件来处理。自定义的ListView代码如下：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div></pre></td><td class="code"><pre><div class="line">public class MyListView extends ListView &#123;</div><div class="line">    float y,downY;</div><div class="line">    float mTouchSlop = ViewConfiguration.getTouchSlop(); //获取滑动最小位移量</div><div class="line"></div><div class="line">    public MyListView(Context context) &#123;</div><div class="line">        super(context);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public MyListView(Context context, AttributeSet attrs) &#123;</div><div class="line">        super(context, attrs);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 对事件分发的重写</div><div class="line">     * @param ev</div><div class="line">     * @return</div><div class="line">     */</div><div class="line">    @Override</div><div class="line">    public boolean dispatchTouchEvent(MotionEvent ev) &#123;</div><div class="line">        switch (ev.getAction()) &#123;</div><div class="line">            case MotionEvent.ACTION_DOWN:</div><div class="line">                downY = ev.getRawY();</div><div class="line">                y = downY;</div><div class="line">                getParent().requestDisallowInterceptTouchEvent(true);</div><div class="line">                break;</div><div class="line">            case MotionEvent.ACTION_MOVE:</div><div class="line">                y = ev.getRawY();</div><div class="line">                /*</div><div class="line">                  判断滑动到顶部</div><div class="line">                 */</div><div class="line">                if (getFirstVisiblePosition() == 0) &#123;</div><div class="line">                    if (y - downY &gt; mTouchSlop) &#123;</div><div class="line">                        getParent().requestDisallowInterceptTouchEvent(false); </div><div class="line">                        return false;</div><div class="line">                    &#125; else if (y - downY &lt; -mTouchSlop) &#123;</div><div class="line">                        getParent().requestDisallowInterceptTouchEvent(true); //滑到顶部再向上，自己处理</div><div class="line"></div><div class="line">                    &#125;</div><div class="line"></div><div class="line">                &#125;</div><div class="line">                /*</div><div class="line">                  判断滑动到底部</div><div class="line">                 */</div><div class="line">                if (getFirstVisiblePosition()+getChildCount()==getCount()) &#123;</div><div class="line">                    if (y - downY &lt; -mTouchSlop) &#123;</div><div class="line">                        getParent().requestDisallowInterceptTouchEvent(false);</div><div class="line">                        return false;</div><div class="line">                    &#125; else if (y - downY &gt; mTouchSlop) &#123;</div><div class="line">                        getParent().requestDisallowInterceptTouchEvent(true); //滑到底部再向下，自己处理</div><div class="line">                    &#125;</div><div class="line">                &#125;</div><div class="line">                break;</div><div class="line">            case MotionEvent.ACTION_UP:</div><div class="line">                break;</div><div class="line">            default:</div><div class="line">                break;</div><div class="line">        &#125;</div><div class="line">        return super.dispatchTouchEvent(ev);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<ul>
+<li>对显示只有一项的情况处理：出现这种情况的原因是ScrollView嵌套ListView时，ListView无法正确计算大小，因此可以通过在其初始化的时候固定其大小来解决，但有时候并不知道View应该多大，这时候就得使用代码来控制了，具体的实现方法如下：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">public void setListViewHeight(ListView listView) &#123;</div><div class="line">        ListAdapter adapter = listView.getAdapter();</div><div class="line">        int totalHeight = 0; //子View的总高度</div><div class="line">        int len  = adapter.getCount();</div><div class="line">        for (int i = 0; i &lt; len; i++) &#123;</div><div class="line">            View listItem = adapter.getView(i, null, listView);</div><div class="line">            listItem.measure(0, 0); //对子View进行测量</div><div class="line">            totalHeight += listItem.getMeasuredHeight();</div><div class="line">        &#125;</div><div class="line">        ViewGroup.LayoutParams params = listView.getLayoutParams();</div><div class="line">        params.height = totalHeight+ (listView.getDividerHeight() * (adapter.getCount() - 1));//加上分割线的高度</div><div class="line">        listView.setLayoutParams(params);</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
+<p>在ListView加载完adapter后，可以通过调用上面的方法来实现对ListView的大小控制。其中的思路是先通过获得ListView的itemView的总数量，然后进行测量，测量后在重新设置ListView的参数。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/21/ListView和RecyclerView的刷新内容错乱问题/" rel="next" title="ListView和RecyclerView的刷新内容错乱问题">
+                <i class="fa fa-chevron-left"></i> ListView和RecyclerView的刷新内容错乱问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/21/自定义Notification/" rel="prev" title="自定义Notification">
+                自定义Notification <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Catango</p>
+              <p class="site-description motion-element" itemprop="description">无喵不欢</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#问题情形"><span class="nav-number">1.</span> <span class="nav-text">问题情形</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#源码分析"><span class="nav-number">2.</span> <span class="nav-text">源码分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#处理方法"><span class="nav-number">3.</span> <span class="nav-text">处理方法</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Catango</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v="></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v="></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
+<script type="text/javascript" src="/js/src/post-details.js?v="></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v="></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

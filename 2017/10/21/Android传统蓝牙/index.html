@@ -1,0 +1,1015 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="蓝牙建立连接的几个过程 打开蓝牙 查找附近已配对或可用设备 连接设备 设备间数据交换  API及常用函数 BluetoothAdapter:代表本地蓝牙适配器，是所有蓝牙的交互入口。使用这个可以发现其他蓝牙设备，查询配对设备和创建BluetoothServerSocket来为监听与其他设备通信 enable()直接开启蓝牙 getBondedDevices()返回一个set集合，类型为Blueto">
+<meta name="keywords" content="Android">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android传统蓝牙">
+<meta property="og:url" content="http://yoursite.com/2017/10/21/Android传统蓝牙/index.html">
+<meta property="og:site_name" content="猫的储物间">
+<meta property="og:description" content="蓝牙建立连接的几个过程 打开蓝牙 查找附近已配对或可用设备 连接设备 设备间数据交换  API及常用函数 BluetoothAdapter:代表本地蓝牙适配器，是所有蓝牙的交互入口。使用这个可以发现其他蓝牙设备，查询配对设备和创建BluetoothServerSocket来为监听与其他设备通信 enable()直接开启蓝牙 getBondedDevices()返回一个set集合，类型为Blueto">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-10-21T15:17:07.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android传统蓝牙">
+<meta name="twitter:description" content="蓝牙建立连接的几个过程 打开蓝牙 查找附近已配对或可用设备 连接设备 设备间数据交换  API及常用函数 BluetoothAdapter:代表本地蓝牙适配器，是所有蓝牙的交互入口。使用这个可以发现其他蓝牙设备，查询配对设备和创建BluetoothServerSocket来为监听与其他设备通信 enable()直接开启蓝牙 getBondedDevices()返回一个set集合，类型为Blueto">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/10/21/Android传统蓝牙/"/>
+
+
+
+
+
+  <title>Android传统蓝牙 | 猫的储物间</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<!-- 背景 -->
+
+<script type="text/javascript" src="//cdn.bootcss.com/canvas-nest.js/1.0.0/canvas-nest.min.js"></script>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+    <!-- head -->
+    <a href="https://github.com/yangcihang/">
+      <img style="position: absolute; top: 0; left: 0; border: 0;" src="https://camo.githubusercontent.com/567c3a48d796e2fc06ea80409cc9dd82bf714434/68747470733a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6461726b626c75655f3132313632312e706e67" alt="Fork me on GitHub" data-canonical-src="https://s3.amazonaws.com/github/ribbons/forkme_left_darkblue_121621.png">
+    </a>
+    <header id="header" 
+    class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">猫的储物间</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">我是Android喵</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/10/21/Android传统蓝牙/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Catango">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="猫的储物间">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android传统蓝牙</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T23:16:52+08:00">
+                2017-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="蓝牙建立连接的几个过程"><a href="#蓝牙建立连接的几个过程" class="headerlink" title="蓝牙建立连接的几个过程"></a>蓝牙建立连接的几个过程</h2><ul>
+<li>打开蓝牙</li>
+<li>查找附近已配对或可用设备</li>
+<li>连接设备</li>
+<li>设备间数据交换</li>
+</ul>
+<h2 id="API及常用函数"><a href="#API及常用函数" class="headerlink" title="API及常用函数"></a>API及常用函数</h2><ul>
+<li>BluetoothAdapter:代表本地蓝牙适配器，是所有蓝牙的交互入口。使用这个可以发现其他蓝牙设备，查询配对设备和创建BluetoothServerSocket来为监听与其他设备通信<ul>
+<li>enable()直接开启蓝牙</li>
+<li>getBondedDevices()返回一个set集合，类型为BluetoothDevice</li>
+<li>getState()返回当前本地蓝牙适配器的状态</li>
+<li>startDiscovery()开始搜索远程蓝牙</li>
+<li>isDiscovering()返回是否在搜索的状态</li>
+<li>isEnabled()返回蓝牙是否可用</li>
+<li>listenUsingRfcommWithServiceRecord(String name,UUID uuid)返回一个BluetoothServerSocket,即创建一个BluetoothServerSocket来监听client的连接。</li>
+</ul>
+</li>
+<li>BluetoothDevice 代表一个远程的蓝牙设备，可以使用这个来请求一个与远程设备的BluetoothSocket连接，也可以查看设备的名称地址之类的设备信息<ul>
+<li>createBond（）和远程蓝牙配对</li>
+<li>getBondState()返回配对的状态</li>
+<li>createRfcommSocketToServiceRecord（UUID uuid）创建一个BluetoothSocket连接</li>
+<li>getName() getUuids() getType getAddress()字面意思</li>
+</ul>
+</li>
+<li>BluetoothSocket 代表蓝牙的socket接口，它允许一个应用与其他蓝牙设备通过输入输出流来交换数据<ul>
+<li>connect() 和远程服务连接</li>
+<li>getIputStream() 返回一个输入流</li>
+<li>getOutputSteram() 返回一个输出流</li>
+<li>getRemoteDevice() 返回远程连接的BluetoothDevice</li>
+</ul>
+</li>
+<li>BluetoothServerSocket 代表一个服务器的socket，监听请求。连接两台设备时，必须有一台开启一个serverSocket。BluetoothServerSocket将返回一个已连接的BluetoothSocket，接受该连接。<ul>
+<li>accept()这是个阻塞的方法，直到有蓝牙和ServerSocket建立连接时，解除阻塞，返回一个BluetoothSocket。</li>
+</ul>
+</li>
+</ul>
+<h2 id="蓝牙搜索、配对、广播接收"><a href="#蓝牙搜索、配对、广播接收" class="headerlink" title="蓝牙搜索、配对、广播接收"></a>蓝牙搜索、配对、广播接收</h2><ol>
+<li><p>创建adapter  基本上都是使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">2. 打开蓝牙  打开蓝牙有三种方式：第一种是直接使用adapter.enable方法，这样是直接打开蓝牙的。第二种是用intent隐式打开</div></pre></td></tr></table></figure></p>
+<p>  Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);<br>  startActivityForResult(intent, 1);</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">第三种就是用户直接在手机打开。</div><div class="line"></div><div class="line"> 3. 扫描设备  使用adapter的startDiscovery()方法。这个方法是经典蓝牙的扫描方法。注意，这个方法很占用资源，扫描设备大概会持续10s，然后会自行关闭。但是若用户执行多次扫描时候，一定要记住使用cancelDiscovery方法将扫描关闭。</div><div class="line"> 4. 广播接收  在扫描设备时，系统会将扫描的状态广播出去,我们可以从广播中获取到搜索到的设备，即BluetoothDevice对象。所以我们需要写一个广播接收器来接收他们。基本操作如下：</div></pre></td></tr></table></figure>
+<p>   private BroadcastReceiver discoveryReceiver = new BroadcastReceiver() {</p>
+<pre><code>@Override
+public void onReceive(Context context, Intent intent) {
+    String action = intent.getAction();
+
+    if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
+        Log.i(TAG, &quot;onReceive: 开始搜索&quot;);
+
+    } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
+
+        BluetoothDevice bluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);  //获取设备,发现远程蓝牙设备
+        String name = bluetoothDevice.getName();
+        String address = bluetoothDevice.getAddress();
+        Log.i(TAG, &quot;onReceive: name=&quot; + name + &quot; address=&quot; + address);
+        serversText.append(name + &quot;:&quot; + address + &quot;\n&quot;);
+
+        discoveredDevices.add(bluetoothDevice);
+
+    } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
+        Log.i(TAG, &quot;onReceive:  搜索结束&quot;);
+
+        if (discoveredDevices.isEmpty()) {
+            Log.i(TAG, &quot;onReceive:  未发现设备&quot;);
+        }
+    }
+}
+if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
+    switch (device.getBondState()) {
+        case BluetoothDevice.BOND_BONDING:
+            ToastUtil.showToast(&quot;正在配对&quot;);
+            break;
+        case BluetoothDevice.BOND_BONDED:
+            ToastUtil.showToast(&quot;配对完成&quot;);
+            break;
+        case BluetoothDevice.BOND_NONE:
+            ToastUtil.showToast(&quot;取消配对&quot;);
+        default:
+            break;
+    }
+}
+</code></pre><p>};</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">代码中用了一个list来存放搜索到的设备信息，其中还有绑定的一些广播在内。然后再对广播进行注册：</div></pre></td></tr></table></figure>
+<pre><code>IntentFilter discoveryFilter = new IntentFilter();
+  discoveryFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+  discoveryFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+  discoveryFilter.addAction(BluetoothDevice.ACTION_FOUND);
+  registerReceiver(discoveryReceiver, discoveryFilter);
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">5. 蓝牙绑定  一般情况下，如果两个设备需要通信首先得进行绑定，然后在广播接收器中监听其状态。不过在进行socket连接的时候，会自行访问用户是否进行设备绑定的。如果有必要的话，我们可以使用反射来进行连接，方法如下：</div></pre></td></tr></table></figure>
+<p>Method createBondMethod = null;</p>
+<pre><code>    try {
+        createBondMethod = BluetoothDevice.class.getMethod(&quot;createBond&quot;);
+    } catch (NoSuchMethodException e) {
+        e.printStackTrace();
+    }
+    ToastUtil.showToast(&quot;开始配对&quot;);
+    try {
+        returnValue = (Boolean) createBondMethod.invoke(btDev);
+    } catch (IllegalAccessException e) {
+        e.printStackTrace();
+    } catch (InvocationTargetException e) {
+        e.printStackTrace();
+    }
+    if (returnValue) {
+        ToastUtil.showToast(&quot;配对成功&quot;);
+
+    }
+}
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">解除绑定：</div></pre></td></tr></table></figure>
+<p>if (device != null) {</p>
+<pre><code>    try {
+        Method m = device.getClass().getMethod(&quot;removeBond&quot;, (Class[]) null);
+        boolean returnValue = (boolean) m.invoke(device, (Object[]) null)；
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">## 设备间的通信</div><div class="line">下来就是进行socket通信了通信分为client模块和server模块和通信模块来说吧。</div><div class="line"></div><div class="line">### server</div><div class="line">server模块主要功能就是实现一个设备的监听，当监听到有连接访问的操作时，返回一个BluetoothSocket，然后通过调用BluetoothSocket的输入输出流来进行两个设备间的通信。因此设备需要在一开始就开启一个线程去不断监听，在用Handler来将监听到的数据或是异常在主线程中展示给用户。server监听线程如下：</div></pre></td></tr></table></figure>
+<p>/**</p>
+</li>
+</ol>
+<ul>
+<li><p>服务器监听线程<br>*/<br>public class BluetoothServerConnThread extends Thread {</p>
+<p> private Handler serviceHandler;        //用于同Service通信的Handler<br> private BluetoothAdapter adapter;<br> private BluetoothSocket socket;        //用于通信的Socket<br> private BluetoothServerSocket serverSocket; //serverSocket</p>
+</li>
+</ul>
+<pre><code>/**
+ * 构造函数
+ *
+ * @param handler 在构造中传入需要处理数据的handler
+ */
+public BluetoothServerConnThread(Handler handler, BluetoothAdapter bluetoothAdapter) {
+    this.serviceHandler = handler;
+    adapter = bluetoothAdapter;
+}
+
+@Override
+public void run() {
+
+    try {
+        if (serverSocket == null) {
+            serverSocket = adapter.listenUsingRfcommWithServiceRecord(&quot;Server&quot;, Constant.PRIVATE_UUID);
+        }
+        //accept是一个阻塞的方法，返回一个socket连接
+        socket = serverSocket.accept();
+
+    } catch (Exception e) {
+        //发送连接失败消息
+        serviceHandler.obtainMessage(BluetoothTools.MESSAGE_CONNECT_ERROR).sendToTarget();
+        e.printStackTrace();
+        return;
+    } finally {
+        try {
+            serverSocket.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+   /* if (socket.isConnected()) {
+       ToastUtil.showToast(&quot;BluetoothServerConnThread.run 已建立与客户连接&quot;);
+    }*/
+    if (socket != null) {
+        //发送连接成功消息，消息的obj字段为连接的socket
+        Message msg = serviceHandler.obtainMessage();
+        msg.what = BluetoothTools.MESSAGE_CONNECT_SUCCESS;
+        msg.obj = socket;
+        msg.sendToTarget();
+    } else {
+        //发送连接失败消息
+        serviceHandler.obtainMessage(BluetoothTools.MESSAGE_CONNECT_ERROR).sendToTarget();
+        return;
+    }
+}
+</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">其中在serverSocket获取时，第二个参数为 Constant.PRIVATE_UUID，这个参数就是通信时候必要的UUID。只有UUID相同时，才能进行设备的通信。下来是客户端模块的操作。</div><div class="line">### client</div><div class="line">客户端首先得去开启、搜索蓝牙设备，这个过程在上面已经说过了。下来主要是client如何与server来进行通信。首先我们需要获取到server端的蓝牙设备信息，这个操作在搜索蓝牙这步就已经能够得到了。搜索到后，调用BluetoothDevice的createRfcommSocketToServiceRecord（UUID uuid）方法来返回一个BluetoothSocket。然后调用socket的connect（）方法来连接到远程的server。在此之前，一定要记得关闭蓝牙的搜索。具体代码如下：</div></pre></td></tr></table></figure></p>
+<p> /**</p>
+<ul>
+<li><p>蓝牙客户端连接线程<br>*/<br>public class BluetoothClientConnThread extends Thread {</p>
+<p> private Handler serviceHandler;        //用于向客户端Service回传消息的handler<br> private BluetoothDevice serverDevice;    //服务器设备<br> private BluetoothSocket socket;        //通信Socket</p>
+<p> private BluetoothAdapter mBluetoothAdapter;</p>
+<p> /**</p>
+<ul>
+<li>构造函数<br>*</li>
+<li>@param handler</li>
+<li><p>@param serverDevice<br>*/<br>public BluetoothClientConnThread(Handler handler, BluetoothDevice serverDevice, BluetoothAdapter mBluetoothAdapter) {<br> this.serviceHandler = handler;<br> this.serverDevice = serverDevice;</p>
+<p> this.mBluetoothAdapter = mBluetoothAdapter;<br>}</p>
+<p>@Override<br>public void run() {</p>
+<p> if (mBluetoothAdapter.isDiscovering()) { //判断当前是否正在搜索</p>
+<pre><code>mBluetoothAdapter.cancelDiscovery();
+</code></pre><p> }</p>
+<p> if (serverDevice == null) {</p>
+<pre><code>ToastUtil.showToast(&quot;没有获取到远程设备&quot;);
+return;
+</code></pre><p> }</p>
+<p> try {</p>
+<pre><code>if (socket == null) {
+    socket = serverDevice.createRfcommSocketToServiceRecord(BluetoothTools.PRIVATE_UUID);
+    mBluetoothAdapter.cancelDiscovery();
+}
+socket.connect();
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<pre><code>    } catch (Exception ex) {
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        //发送连接失败消息
+        serviceHandler.obtainMessage(BluetoothTools.MESSAGE_CONNECT_ERROR).sendToTarget();
+        return;
+    }
+
+    //发送连接成功消息，消息的obj参数为连接的socket
+    Message msg = serviceHandler.obtainMessage();
+    msg.what = BluetoothTools.MESSAGE_CONNECT_SUCCESS;
+    msg.obj = socket;
+    msg.sendToTarget();
+}
+</code></pre><p>}<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">这样我们就建立好一个server和client的socket连接了，接下来我们需要做的就是通信了：</div><div class="line"></div><div class="line">### socket通信</div><div class="line">通信方面比较简单，server和client都持有一个socket对象，我们只需要通过其输入输出流通信就可以了。因此我们可以也可以通过一个线程来实现，在server和client的handler处理message时，当传入的message消息为连接成功，我们就可以开启这个线程。通信的线程代码如下：</div></pre></td></tr></table></figure></p>
+<p> /**</p>
+<ul>
+<li><p>蓝牙通讯线程<br>*/<br>public class BluetoothCommunThread extends Thread {</p>
+<p> private Handler serviceHandler;        //与Service通信的Handler<br> private BluetoothSocket socket;<br> private ObjectInputStream inStream;        //对象输入流<br> private ObjectOutputStream outStream;    //对象输出流<br> public volatile boolean isRun = true;    //运行标志位</p>
+<p> /**</p>
+<ul>
+<li>构造函数<br>*</li>
+<li>@param handler 用于接收消息</li>
+<li><p>@param socket<br>*/<br>public BluetoothCommunThread(Handler handler, BluetoothSocket socket) {<br> this.serviceHandler = handler;<br> this.socket = socket;<br> try {</p>
+<pre><code>this.outStream = new ObjectOutputStream(socket.getOutputStream());
+this.inStream = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
+</code></pre><p> } catch (Exception e) {</p>
+<pre><code>try {
+    if (socket != null) {
+        socket.close();
+    } else {
+        ToastUtil.showToast(&quot;BluetoothCommunThread.BluetoothCommunThread ddd socket is null&quot;);
+    }
+
+} catch (IOException e1) {
+    e1.printStackTrace();
+}
+//发送连接失败消息
+serviceHandler.obtainMessage(BluetoothTools.MESSAGE_CONNECT_ERROR).sendToTarget();
+e.printStackTrace();
+</code></pre><p> }<br>}</p>
+<p>/**</p>
+</li>
+<li><p>写入一个可序列化的对象<br>*/<br>public void writeObject(Object obj) {<br> if (obj != null) {</p>
+<pre><code>try {
+    outStream.flush();
+    outStream.writeObject(obj);
+    outStream.flush();
+} catch (IOException e) {
+    e.printStackTrace();
+}
+</code></pre><p> }</p>
+<p>}</p>
+<p>@Override<br>public void run() {</p>
+<p> while (true) {</p>
+<pre><code>if (!isRun || Thread.currentThread().isInterrupted()) {
+    ToastUtil.showToast(&quot;BluetoothCommunThread.run 线程已中断&quot;);
+    break;
+}
+</code></pre></li>
+</ul>
+</li>
+</ul>
+<pre><code>        try {
+         ToastUtil.showToast(&quot;BluetoothCommunThread.run inStream=&quot; + inStream);
+           /* if (inStream == null) {
+                break;
+            }*/
+
+            Object obj = inStream.readObject();
+
+            System.out.println(&quot;BluetoothCommunThread.run ddd&quot;);
+            //发送成功读取到对象的消息，消息的obj参数为读取到的对象
+            Message msg = serviceHandler.obtainMessage();
+            msg.what = BluetoothTools.MESSAGE_READ_OBJECT;
+            msg.obj = obj;
+            msg.sendToTarget();
+
+
+        } catch (Exception ex) {
+            //发送连接失败消息
+            serviceHandler.obtainMessage(BluetoothTools.MESSAGE_CONNECT_ERROR).sendToTarget();
+            ex.printStackTrace();
+            return;
+        }
+    }
+
+
+    //关闭流
+    if (inStream != null) {
+        try {
+            inStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    if (outStream != null) {
+        try {
+            outStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    if (socket != null) {
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+}
+</code></pre><p>}<br>```</p>
+<p> 在线程中我们使用了一个阻塞的方法不断的去获取输出的信息。如果当我们连个设备间要停止通信时，调用上面取消配对所述的方法即可。 这样我们就实现了传统蓝牙间的简单通信的流程</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android/" rel="tag"><i class="fa fa-tag"></i> Android</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/10/21/Android蓝牙相关/" rel="next" title="Android蓝牙相关">
+                <i class="fa fa-chevron-left"></i> Android蓝牙相关
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/21/Android低能耗蓝牙-待补充/" rel="prev" title="Android低能耗蓝牙(待补充)">
+                Android低能耗蓝牙(待补充) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Catango</p>
+              <p class="site-description motion-element" itemprop="description">无喵不欢</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">18</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          <div class="links-of-author motion-element">
+            
+          </div>
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#蓝牙建立连接的几个过程"><span class="nav-number">1.</span> <span class="nav-text">蓝牙建立连接的几个过程</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#API及常用函数"><span class="nav-number">2.</span> <span class="nav-text">API及常用函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#蓝牙搜索、配对、广播接收"><span class="nav-number">3.</span> <span class="nav-text">蓝牙搜索、配对、广播接收</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Catango</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v="></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v="></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v="></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v="></script>
+<script type="text/javascript" src="/js/src/post-details.js?v="></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v="></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
