@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="猫的储物间">
 <meta property="og:description" content="为什么使用线程池在Java中，执行异步大多使用两种操作，一是继承Thread类，而是实现Runnable接口。其中使用Runnable方法可以处理同一资源。而Thread类创建的线程则是各自处理。一般情况下，我们是这么实现的: 123456new Thread(new Runnable() &amp;#123;            @Override            public void run">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-22T02:54:59.000Z">
+<meta property="og:updated_time" content="2017-10-22T08:59:46.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android优化--线程池">
 <meta name="twitter:description" content="为什么使用线程池在Java中，执行异步大多使用两种操作，一是继承Thread类，而是实现Runnable接口。其中使用Runnable方法可以处理同一资源。而Thread类创建的线程则是各自处理。一般情况下，我们是这么实现的: 123456new Thread(new Runnable() &amp;#123;            @Override            public void run">
@@ -359,7 +359,7 @@
 <li>线程频繁的创建和销毁需要时间，导致了性能缺失。频繁的GC会让内存发生变动，这样会使手机变卡</li>
 <li>大量的线程执行急剧占用内存和CPU</li>
 </ul>
-<p>因此，我们需要一个合理的机制去管理这些线程，优化性能。所以提出了个线程池的这个概念。</p>
+<p>因此，我们需要一个合理的机制去管理这些线程，优化性能。所以提出了个线程池的这个概念。<br><a id="more"></a></p>
 <h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><p>Java里面线程池的顶级接口是 Executor，不过真正的线程池接口是 ExecutorService， ExecutorService 的默认的实现是 ThreadPoolExecutor；如果我们直接用ThreadPoolExecutor来创建线程池的话，配置起来那是相当麻烦，看看这个构造：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public ThreadPoolExecutor(int corePoolSize,</div><div class="line">                              int maximumPoolSize,</div><div class="line">                              long keepAliveTime,</div><div class="line">                              TimeUnit unit,</div><div class="line">                              BlockingQueue&lt;Runnable&gt; workQueue,</div><div class="line">                              ThreadFactory threadFactory,</div><div class="line">                              RejectedExecutionHandler handler) &#123;...&#125;</div></pre></td></tr></table></figure>
 <p>在此先介绍下这么几个参数</p>
@@ -560,18 +560,6 @@
                   <a href="https://github.com/yangcihang" target="_blank" title="GitHub">
                     
                       <i class="fa fa-fw fa-globe"></i>GitHub</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="http://marklux.cn/" target="_blank" title="MarkLux">
-                    
-                      <i class="fa fa-fw fa-globe"></i>MarkLux</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="https://www.outxu.cn/" target="_blank" title="OutXu">
-                    
-                      <i class="fa fa-fw fa-globe"></i>OutXu</a>
                 </span>
               
             

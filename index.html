@@ -354,26 +354,15 @@
 
       
         
-          
-            <p>系统在渲染UI界面时将要消耗大量的资源。熟悉View绘制流程的小伙伴们应该知道，View绘制是一层层对子View进行遍历的。因此，布局的好坏影响着用户的体验。</p>
-<p>在Android中，系统通过VSYNC信号触发对UI的渲染、重绘。其间隔时间是16ms、如果系统每次渲染的时间都在16ms内，那么我们看到的界面应该是相当流畅的。如果发生帧率和刷新频率不一致的情况时，就会出现卡顿。</p>
-<h2 id="避免Overdraw"><a href="#避免Overdraw" class="headerlink" title="避免Overdraw"></a>避免Overdraw</h2><p>什么是overdraw呢？描述的是屏幕上的某个像素在同一帧的时间内被绘制了多次。在多层次的UI结构里面，如果不可见的UI也在做绘制的操作，就会导致某些像素区域被绘制了多次，浪费大量的CPU以及GPU资源。（可以通过开发者选项，打开Show GPU Overdraw的选项，观察UI上的Overdraw情况，红色区域就是过绘制）。例如默认系统会绘制Activity背景，而如果再给布局绘制了重叠的背景，那么默认Activity的背景就属于过度绘制。</p>
-<h2 id="优化布局层级"><a href="#优化布局层级" class="headerlink" title="优化布局层级"></a>优化布局层级</h2><p>一开始已经提到了，View的绘制都是通过对View树的遍历来进行的。如果一个View树太高，就会严重影响其测量、布局、绘制的速度。Google官方建议View树最高不过10层。所以我们为了提高效率，尽量在一些复杂的场合下使用RelativeLayout来降低View树的高度。</p>
-<h2 id="善于使用抽象标签"><a href="#善于使用抽象标签" class="headerlink" title="善于使用抽象标签"></a>善于使用抽象标签</h2><p>使用抽象标签在某些场合下能减少代码量，还能起到优化布局的效果。</p>
-<h3 id="include标签"><a href="#include标签" class="headerlink" title="include标签"></a>include标签</h3><p>include标签可以将布局中的公共部分复用。比如一些自定义的toolbar或者底部的导航栏之类能复用的东西。使用起来也是很方便的，比如</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&lt; include layout=&quot;@layout/item_test_linear_layout&quot;  /&gt;</div></pre></td></tr></table></figure>
-<p>这样就把一个自定义的组件加载到了布局中。</p>
-<h3 id="merge标签"><a href="#merge标签" class="headerlink" title="merge标签"></a>merge标签</h3><p>merge标签是作为include标签的一种辅助扩展来使用，它的主要作用是为了防止在引用布局文件时产生多余的布局嵌套。Android渲染需要消耗时间，布局越复杂，性能就越差。如上述include标签引入了之前的LinearLayout之后导致了界面多了一个层级。在布局中用merge就可以减少绘制一层viewGroup</p>
-<h2 id="viewStub标签"><a href="#viewStub标签" class="headerlink" title="viewStub标签"></a>viewStub标签</h2><p>viewstub是view的子类。他是一个轻量级View， 隐藏的，没有尺寸的View。他可以用来在程序运行时简单的填充布局文件。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt; ViewStub</div><div class="line">        android:id=&quot;@+id/vs_test&quot;</div><div class="line">        android:layout_width=&quot;match_parent&quot;</div><div class="line">        android:layout_height=&quot;match_parent&quot;</div><div class="line">        android:layout=&quot;@layout/item_test_linear_layout&quot;</div><div class="line">        android:layout_marginTop=&quot;10dp&quot;  /&gt;</div></pre></td></tr></table></figure>
-<p>运行后，我们会发现这个使用viewstub标签的布局果然没有显示出来。如何重新加载显示的布局呢？<br>首先，我们通过普通的findViewById来找到这个组件，然后，有两种方法可以展示这个组件的内容：</p>
-<ul>
-<li>我们可以setVisibility来将他视为可见。但是这样使用的话没法返回显示的布局</li>
-<li>使用inflate方法来展示。inflate()方法会返回一个viewStub布局，然后我们就可以使用这个返回的布局通过findViewById的方法来获取里面响应的控件了。</li>
-</ul>
-<p>不管哪种方法使用后，viewStub就不存在了，取而代之的就是其引用的layout。因此调用两次inflate方法会报错的。</p>
-
-          
+          <p>系统在渲染UI界面时将要消耗大量的资源。熟悉View绘制流程的小伙伴们应该知道，View绘制是一层层对子View进行遍历的。因此，布局的好坏影响着用户的体验。</p>
+<p>在Android中，系统通过VSYNC信号触发对UI的渲染、重绘。其间隔时间是16ms、如果系统每次渲染的时间都在16ms内，那么我们看到的界面应该是相当流畅的。如果发生帧率和刷新频率不一致的情况时，就会出现卡顿。
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/21/Android优化-布局优化/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -512,55 +501,21 @@
 
       
         
-          
-            <h2 id="为什么使用线程池"><a href="#为什么使用线程池" class="headerlink" title="为什么使用线程池"></a>为什么使用线程池</h2><p>在Java中，执行异步大多使用两种操作，一是继承Thread类，而是实现Runnable接口。其中使用Runnable方法可以处理同一资源。而Thread类创建的线程则是各自处理。一般情况下，我们是这么实现的:</p>
+          <h2 id="为什么使用线程池"><a href="#为什么使用线程池" class="headerlink" title="为什么使用线程池"></a>为什么使用线程池</h2><p>在Java中，执行异步大多使用两种操作，一是继承Thread类，而是实现Runnable接口。其中使用Runnable方法可以处理同一资源。而Thread类创建的线程则是各自处理。一般情况下，我们是这么实现的:</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">new Thread(new Runnable() &#123;</div><div class="line">            @Override</div><div class="line">            public void run() &#123;</div><div class="line">                //do sth .</div><div class="line">            &#125;</div><div class="line">        &#125;).start();</div></pre></td></tr></table></figure>
 <p>这样实现是没什么问题，任务结束后会GC。不过如果一个程序中很多地方需要大量的线程处理任务，那么这样处理会让系统性能降低。对于Android来说，这样做有如下两个弊端</p>
 <ul>
 <li>线程频繁的创建和销毁需要时间，导致了性能缺失。频繁的GC会让内存发生变动，这样会使手机变卡</li>
 <li>大量的线程执行急剧占用内存和CPU</li>
 </ul>
-<p>因此，我们需要一个合理的机制去管理这些线程，优化性能。所以提出了个线程池的这个概念。</p>
-<h2 id="线程池"><a href="#线程池" class="headerlink" title="线程池"></a>线程池</h2><p>Java里面线程池的顶级接口是 Executor，不过真正的线程池接口是 ExecutorService， ExecutorService 的默认的实现是 ThreadPoolExecutor；如果我们直接用ThreadPoolExecutor来创建线程池的话，配置起来那是相当麻烦，看看这个构造：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public ThreadPoolExecutor(int corePoolSize,</div><div class="line">                              int maximumPoolSize,</div><div class="line">                              long keepAliveTime,</div><div class="line">                              TimeUnit unit,</div><div class="line">                              BlockingQueue&lt;Runnable&gt; workQueue,</div><div class="line">                              ThreadFactory threadFactory,</div><div class="line">                              RejectedExecutionHandler handler) &#123;...&#125;</div></pre></td></tr></table></figure>
-<p>在此先介绍下这么几个参数</p>
-<ol>
-<li><p>corePoolSize：线程池的核心线程数，一般情况下不管有没有任务都会一直在线程池中一直存活，只有在 ThreadPoolExecutor 中的方法 allowCoreThreadTimeOut(boolean value) 设置为 true 时，闲置的核心线程会存在超时机制，如果在指定时间没有新任务来时，核心线程也会被终止，而这个时间间隔由第3个属性 keepAliveTime 指定。</p>
-</li>
-<li><p>maximumPoolSize：线程池所能容纳的最大线程数，当活动的线程数达到这个值后，后续的新任务将会被阻塞。</p>
-</li>
-<li><p>keepAliveTime：控制线程闲置时的超时时长，超过则终止该线程。一般情况下用于非核心线程，只有在 ThreadPoolExecutor 中的方法 allowCoreThreadTimeOut(boolean value) 设置为 true时，也作用于核心线程。</p>
-</li>
-<li><p>unit：用于指定 keepAliveTime 参数的时间单位，TimeUnit 是个 enum 枚举类型，常用的有：TimeUnit.HOURS(小时)、TimeUnit.MINUTES(分钟)、TimeUnit.SECONDS(秒) 和 TimeUnit.MILLISECONDS(毫秒)等。</p>
-</li>
-<li><p>workQueue：线程池的任务队列，通过线程池的 execute(Runnable command) 方法会将任务 Runnable 存储在队列中。</p>
-</li>
-<li><p>threadFactory：线程工厂，它是一个接口，用来为线程池创建新线程的。</p>
-</li>
-<li><p>handler：通常叫做拒绝策略，1、在线程池已经关闭的情况下 2、任务太多导致最大线程数和任务队列已经饱和，无法再接收新的任务 。在上面两种情况下，只要满足其中一种时，在使用execute()来提交新的任务时将会拒绝，而默认的拒绝策略是抛一个RejectedExecutionException异常。</p>
-</li>
-</ol>
-<p>参考链接：<a href="http://www.jianshu.com/p/b8197dd2934c" target="_blank" rel="external">http://www.jianshu.com/p/b8197dd2934c</a></p>
-<p>还好，Java官方提供了一个Executor的框架，其核心是Executors类，这个Executors里面调用的就是 ThreadPoolExecutor。摘取这个类的某一方法:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"> public static ExecutorService newFixedThreadPool(int nThreads) &#123;</div><div class="line">        return new ThreadPoolExecutor(nThreads, nThreads,</div><div class="line">                                      0L, TimeUnit.MILLISECONDS,</div><div class="line">                                      new LinkedBlockingQueue&lt;Runnable&gt;());</div><div class="line">...</div></pre></td></tr></table></figure>
-<p>在源码中我们可以看到，Executors直接帮我们构造了线程池。Executors这个类是用工厂模式设计的，它里面封装好了众多功能不一样的线程池，从而使得我们创建线程池非常的简便。我们主要使用的是这么几个池：</p>
-<ol>
-<li><p>newFixedThreadPool() ：<br>该方法返回一个固定线程数量的线程池，该线程池中的线程数量始终不变，即不会再创建新的线程，也不会销毁已经创建好的线程，自始自终都是那几个固定的线程在工作，所以该线程池可以控制线程的最大并发数。<br>栗子：假如有一个新任务提交时，线程池中如果有空闲的线程则立即使用空闲线程来处理任务，如果没有，则会把这个新任务存在一个任务队列中，一旦有线程空闲了，则按FIFO方式处理任务队列中的任务。</p>
-</li>
-<li><p>newCachedThreadPool() ：<br>该方法返回一个可以根据实际情况调整线程池中线程的数量的线程池。即该线程池中的线程数量不确定，是根据实际情况动态调整的。<br>栗子：假如该线程池中的所有线程都正在工作，而此时有新任务提交，那么将会创建新的线程去处理该任务，而此时假如之前有一些线程完成了任务，现在又有新任务提交，那么将不会创建新线程去处理，而是复用空闲的线程去处理新任务。那么此时有人有疑问了，那这样来说该线程池的线程岂不是会越集越多？其实并不会，因为线程池中的线程都有一个“保持活动时间”的参数，通过配置它，如果线程池中的空闲线程的空闲时间超过该“保存活动时间”则立刻停止该线程，而该线程池默认的“保持活动时间”为60s。</p>
-</li>
-<li><p>newSingleThreadExecutor() ：<br>该方法返回一个只有一个线程的线程池，即每次只能执行一个线程任务，多余的任务会保存到一个任务队列中，等待这一个线程空闲，当这个线程空闲了再按FIFO方式顺序执行任务队列中的任务。</p>
-</li>
-<li><p>newScheduledThreadPool() ：<br>该方法返回一个可以控制线程池内线程定时或周期性执行某任务的线程池。</p>
-</li>
-<li><p>newSingleThreadScheduledExecutor() ：<br>该方法返回一个可以控制线程池内线程定时或周期性执行某任务的线程池。只不过和上面的区别是该线程池大小为1，而上面的可以指定线程池的大小。</p>
-</li>
-</ol>
-<p>使用时，官方建议我们用Executors来创建一个线程池，然后执行ExecutorService的execute(Runnable command) 方法来执行。其中Runnable对象的调度是有池的类型来决定的。完整的流程是这样的：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">ExecutorService singleThreadPool = Executors.newSingleThreadExecutor();</div><div class="line">      singleThreadPool.execute(new Runnable() &#123;</div><div class="line">               @Override</div><div class="line">               public void run() &#123;</div><div class="line">                   //todo</div><div class="line">           &#125;);</div><div class="line">       &#125;</div></pre></td></tr></table></figure>
-<p>这样我们就创建了一个singelThreadPool，然后使用execute去执行相关的方法。我们可以用Executors创建不同种类的线程池，然后来管理线程进行异步处理。</p>
-
-          
+<p>因此，我们需要一个合理的机制去管理这些线程，优化性能。所以提出了个线程池的这个概念。<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/21/Android优化-线程池/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -699,37 +654,14 @@
 
       
         
-          
-            <p>View绘制基本上分为measure、layout、draw过程，其中measure过程比较难理。在许多的书上面measure过程基本上就一两页概括，看的人云里雾里的。因此我们详细的说说这个measure过程。</p>
-<h2 id="MeasureSpec"><a href="#MeasureSpec" class="headerlink" title="MeasureSpec"></a>MeasureSpec</h2><p>首先介绍一下MeasureSpec。MeasureSpec类可以帮助我们测量View。MeasureSpec是一个32位的int值，其中高2位是测量模式，低30位是测量大小，在计算中使用位运算可以提高效率。</p>
-<p>MeasureSpec 封装的是父容器传递给子容器的布局要求，而不是父容器对子容器的布局要求，“传递” 两个字很重要，更精确的说法应该这个MeasureSpec是由父View的MeasureSpec和子View的LayoutParams通过简单的计算得出一个针对子View的测量要求，这个测量要求就是MeasureSpec。</p>
-<p>测量模式分为下面几种:</p>
-<ul>
-<li>EXACTLY:精确模式，当我们的控件设置layout_ width属性或者layout_height可以推测为特定值时，使用的是EXACTLY模式。</li>
-<li>AT_ MOST:最大值模式，子容器可以是声明大小内的任意大小时，使用AT_MOST模式。</li>
-<li><p>UPSPECIFIED:不明确模式。 父容器已经为子容器设置了尺寸，子容器应该服从这些边界，不论子容器想要多大的空间。</p>
-<p>具体的测量模式是根据View和其父View来决定的。下面会具体介绍。</p>
-</li>
-</ul>
-<p>打开View的源码，找到measure方法，这个方法代码不少，但是测量工作都是在onMeasure()做的，measure方法是final的所以这个方法也不可重写，如果想自定义View的测量，应该去重写onMeasure()方法。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">public final void measure(int widthMeasureSpec, int heightMeasureSpec) &#123;</div><div class="line">  ......</div><div class="line">  onMeasure(widthMeasureSpec,heightMeasureSpec);</div><div class="line">  .....</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>View测量过程应该是这样的：父View的measure过程会先测量子View，调用子View的measure方法后，根据其子View的各种参数再测量自己。而measure方法里面的主要内容是onMeasure方法。所以说，我们主要看的是View的onMeasure方法。</p>
-<h2 id="ViewGroup的onMeasure方法"><a href="#ViewGroup的onMeasure方法" class="headerlink" title="ViewGroup的onMeasure方法"></a>ViewGroup的onMeasure方法</h2><p>这里，我们先说ViewGroup中measure的onMeasure方法。我们举FrameLayout的onMeasure方法的主要源码。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line">//FrameLayout 的测量</div><div class="line">protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) &#123;  </div><div class="line">....</div><div class="line">int maxHeight = 0;</div><div class="line">int maxWidth = 0;</div><div class="line">int childState = 0;</div><div class="line">for (int i = 0; i &lt; count; i++) &#123;    </div><div class="line">   final View child = getChildAt(i);    </div><div class="line">   if (mMeasureAllChildren || child.getVisibility() != GONE) &#123;   </div><div class="line">    // 遍历自己的子View，只要不是GONE的都会参与测量，measureChildWithMargins方法等会会说的，基本思想就是父View把自己的MeasureSpec </div><div class="line">    // 传给子View结合子View自己的LayoutParams 算出子View 的MeasureSpec，然后继续往下传，</div><div class="line">    // 传递叶子节点，叶子节点没有子View，根据传下来的这个MeasureSpec测量自己就好了。</div><div class="line">     measureChildWithMargins(child, widthMeasureSpec, 0, heightMeasureSpec, 0);       </div><div class="line">     final LayoutParams lp = (LayoutParams) child.getLayoutParams(); </div><div class="line">     maxWidth = Math.max(maxWidth, child.getMeasuredWidth() +  lp.leftMargin + lp.rightMargin);        </div><div class="line">     maxHeight = Math.max(maxHeight, child.getMeasuredHeight() + lp.topMargin + lp.bottomMargin);  </div><div class="line">     ....</div><div class="line">     ....</div><div class="line">   &#125;</div><div class="line">&#125;</div><div class="line">.....</div><div class="line">.....</div><div class="line">//所有的孩子测量之后，经过一系类的计算之后通过setMeasuredDimension设置自己的宽高，</div><div class="line">//对于FrameLayout 可能用最大的View的大小，对于LinearLayout，可能是高度的累加，</div><div class="line">//具体测量的原理去看看源码。总的来说，父View是等所有的子View测量结束之后，再来测量自己。</div><div class="line">setMeasuredDimension(resolveSizeAndState(maxWidth, widthMeasureSpec, childState),        </div><div class="line">resolveSizeAndState(maxHeight, heightMeasureSpec, childState &lt;&lt; MEASURED_HEIGHT_STATE_SHIFT));</div><div class="line">....</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>其中这里面有这么一个重要的方法：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">measureChildWithMargins(View child,</div><div class="line">            int parentWidthMeasureSpec, int widthUsed,</div><div class="line">            int parentHeightMeasureSpec, int heightUsed)</div></pre></td></tr></table></figure>
-<p>这个方法的作用就是来具体测量子View的。让我们看看这个方法具体是怎样的吧。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">protected void measureChildWithMargins(View child, int parentWidthMeasureSpec, int widthUsed, int parentHeightMeasureSpec, int heightUsed) &#123; </div><div class="line"></div><div class="line">// 子View的LayoutParams，你在xml的layout_width和layout_height,</div><div class="line">// layout_xxx的值最后都会封装到这个个LayoutParams。</div><div class="line">final MarginLayoutParams lp = (MarginLayoutParams) child.getLayoutParams();   </div><div class="line"></div><div class="line">//根据父View的测量规格和父View自己的Padding，</div><div class="line">//还有子View的Margin和已经用掉的空间大小（widthUsed），就能算出子View的MeasureSpec,具体计算过程看getChildMeasureSpec方法。</div><div class="line">final int childWidthMeasureSpec = getChildMeasureSpec(parentWidthMeasureSpec,            </div><div class="line">mPaddingLeft + mPaddingRight + lp.leftMargin + lp.rightMargin + widthUsed, lp.width);    </div><div class="line"></div><div class="line">final int childHeightMeasureSpec = getChildMeasureSpec(parentHeightMeasureSpec,           </div><div class="line">mPaddingTop + mPaddingBottom + lp.topMargin + lp.bottomMargin  + heightUsed, lp.height);  </div><div class="line"></div><div class="line">//通过父View的MeasureSpec和子View的自己LayoutParams的计算，算出子View的MeasureSpec，然后父容器传递给子容器的</div><div class="line">// 然后让子View用这个MeasureSpec（一个测量要求，比如不能超过多大）去测量自己，如果子View是ViewGroup 那还会递归往下测量。下面的方法执行完后，我们就可以获取到子View的大小了。</div><div class="line">child.measure(childWidthMeasureSpec, childHeightMeasureSpec);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>注释都在代码里面。这里有一点需要注意的是这么两个方法：getChildMeasureSpec方法和child.measure。让我们一个个来分析分析吧。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div></pre></td><td class="code"><pre><div class="line">// spec参数   表示父View的MeasureSpec </div><div class="line">// padding参数    父View的Padding+子View的Margin，父View的大小减去这些边距，才能精确算出</div><div class="line">//               子View的MeasureSpec的size</div><div class="line">// childDimension参数  表示该子View内部LayoutParams属性的值（lp.width或者lp.height）</div><div class="line">//                    可以是wrap_content、match_parent、一个精确指(an exactly size),  </div><div class="line">public static int getChildMeasureSpec(int spec, int padding, int childDimension) &#123;  </div><div class="line">    int specMode = MeasureSpec.getMode(spec);  //获得父View的mode  </div><div class="line">    int specSize = MeasureSpec.getSize(spec);  //获得父View的大小  </div><div class="line"></div><div class="line">   //父View的大小-自己的Padding+子View的Margin，得到值才是子View的大小。</div><div class="line">    int size = Math.max(0, specSize - padding);   </div><div class="line"></div><div class="line">    int resultSize = 0;    //初始化值，最后通过这个两个值生成子View的MeasureSpec</div><div class="line">    int resultMode = 0;    //初始化值，最后通过这个两个值生成子View的MeasureSpec</div><div class="line"></div><div class="line">    switch (specMode) &#123;  </div><div class="line">    // Parent has imposed an exact size on us  </div><div class="line">    //1、父View是EXACTLY的 ！  </div><div class="line">    case MeasureSpec.EXACTLY:   </div><div class="line">        //1.1、子View的width或height是个精确值 (an exactly size)  </div><div class="line">        if (childDimension &gt;= 0) &#123;            </div><div class="line">            resultSize = childDimension;         //size为精确值  </div><div class="line">            resultMode = MeasureSpec.EXACTLY;    //mode为 EXACTLY 。  </div><div class="line">        &#125;   </div><div class="line">        //1.2、子View的width或height为 MATCH_PARENT/FILL_PARENT   </div><div class="line">        else if (childDimension == LayoutParams.MATCH_PARENT) &#123;  </div><div class="line">            // Child wants to be our size. So be it.  </div><div class="line">            resultSize = size;                   //size为父视图大小  </div><div class="line">            resultMode = MeasureSpec.EXACTLY;    //mode为 EXACTLY 。  </div><div class="line">        &#125;   </div><div class="line">        //1.3、子View的width或height为 WRAP_CONTENT  </div><div class="line">        else if (childDimension == LayoutParams.WRAP_CONTENT) &#123;  </div><div class="line">            // Child wants to determine its own size. It can&apos;t be  </div><div class="line">            // bigger than us.  </div><div class="line">            resultSize = size;                   //size为父视图大小  </div><div class="line">            resultMode = MeasureSpec.AT_MOST;    //mode为AT_MOST 。  </div><div class="line">        &#125;  </div><div class="line">        break;  </div><div class="line"></div><div class="line">    // Parent has imposed a maximum size on us  </div><div class="line">    //2、父View是AT_MOST的 ！      </div><div class="line">    case MeasureSpec.AT_MOST:  </div><div class="line">        //2.1、子View的width或height是个精确值 (an exactly size)  </div><div class="line">        if (childDimension &gt;= 0) &#123;  </div><div class="line">            // Child wants a specific size... so be it  </div><div class="line">            resultSize = childDimension;        //size为精确值  </div><div class="line">            resultMode = MeasureSpec.EXACTLY;   //mode为 EXACTLY 。  </div><div class="line">        &#125;  </div><div class="line">        //2.2、子View的width或height为 MATCH_PARENT/FILL_PARENT  </div><div class="line">        else if (childDimension == LayoutParams.MATCH_PARENT) &#123;  </div><div class="line">            // Child wants to be our size, but our size is not fixed.  </div><div class="line">            // Constrain child to not be bigger than us.  </div><div class="line">            resultSize = size;                  //size为父视图大小  </div><div class="line">            resultMode = MeasureSpec.AT_MOST;   //mode为AT_MOST  </div><div class="line">        &#125;  </div><div class="line">        //2.3、子View的width或height为 WRAP_CONTENT  </div><div class="line">        else if (childDimension == LayoutParams.WRAP_CONTENT) &#123;  </div><div class="line">            // Child wants to determine its own size. It can&apos;t be  </div><div class="line">            // bigger than us.  </div><div class="line">            resultSize = size;                  //size为父视图大小  </div><div class="line">            resultMode = MeasureSpec.AT_MOST;   //mode为AT_MOST  </div><div class="line">        &#125;  </div><div class="line">        break;  </div><div class="line"></div><div class="line">    // Parent asked to see how big we want to be  </div><div class="line">    //3、父View是UNSPECIFIED的 ！  </div><div class="line">    case MeasureSpec.UNSPECIFIED:  </div><div class="line">        //3.1、子View的width或height是个精确值 (an exactly size)  </div><div class="line">        if (childDimension &gt;= 0) &#123;  </div><div class="line">            // Child wants a specific size... let him have it  </div><div class="line">            resultSize = childDimension;        //size为精确值  </div><div class="line">            resultMode = MeasureSpec.EXACTLY;   //mode为 EXACTLY  </div><div class="line">        &#125;  </div><div class="line">        //3.2、子View的width或height为 MATCH_PARENT/FILL_PARENT  </div><div class="line">        else if (childDimension == LayoutParams.MATCH_PARENT) &#123;  </div><div class="line">            // Child wants to be our size... find out how big it should  </div><div class="line">            // be  </div><div class="line">            resultSize = 0;                        //size为0！ ,其值未定  </div><div class="line">            resultMode = MeasureSpec.UNSPECIFIED;  //mode为 UNSPECIFIED  </div><div class="line">        &#125;   </div><div class="line">        //3.3、子View的width或height为 WRAP_CONTENT  </div><div class="line">        else if (childDimension == LayoutParams.WRAP_CONTENT) &#123;  </div><div class="line">            // Child wants to determine its own size.... find out how  </div><div class="line">            // big it should be  </div><div class="line">            resultSize = 0;                        //size为0! ，其值未定  </div><div class="line">            resultMode = MeasureSpec.UNSPECIFIED;  //mode为 UNSPECIFIED  </div><div class="line">        &#125;  </div><div class="line">        break;  </div><div class="line">    &#125;  </div><div class="line">    //根据上面逻辑条件获取的mode和size构建MeasureSpec对象。  </div><div class="line">    return MeasureSpec.makeMeasureSpec(resultSize, resultMode);  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这段代码看似很长，其实逻辑还算比较简单，就是View的measureSpec的一些决定因素，这里返回的measureSpec只是暂时的measureSpec，由父View决定。然后View的主要测量过程是measureChildWithMargins方法中执行child.measure来进行测量的。这个方法的参数就是根据getChildMeasureSpec方法返回的measureSpec。而measure方法中，主要是调用onMeasure方法来测量，如果是ViewGroup，那就还是上面所述的流程，如果是View的话，我们接下来看看吧。</p>
-<h2 id="View的onMeasure方法"><a href="#View的onMeasure方法" class="headerlink" title="View的onMeasure方法"></a>View的onMeasure方法</h2><p>这里的View的onMeasure默认是这么实现的：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) &#123;</div><div class="line">        setMeasuredDimension(getDefaultSize(getSuggestedMinimumWidth(), widthMeasureSpec),</div><div class="line">                getDefaultSize(getSuggestedMinimumHeight(), heightMeasureSpec));</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>我们可以看到，View的测量直接是调用setMeasuredDimension方法，这个方法调用后我们接可以获取到View的大小了。其中调用的getDefaultSize方法源码是这样的：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">public static int getDefaultSize(int size, int measureSpec) &#123;    </div><div class="line">   int result = size;    </div><div class="line">   int specMode = MeasureSpec.getMode(measureSpec);    </div><div class="line">   int specSize = MeasureSpec.getSize(measureSpec);    </div><div class="line">   switch (specMode) &#123;    </div><div class="line">   case MeasureSpec.UNSPECIFIED:</div><div class="line">     result = size;  </div><div class="line">     break;    </div><div class="line">   case MeasureSpec.AT_MOST:    </div><div class="line">   case MeasureSpec.EXACTLY:        </div><div class="line">     result = specSize;  </div><div class="line">     break;   </div><div class="line"> &#125;    </div><div class="line">return result;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>可以看到，这个方法大多数情况下是直接拿MeasureSpec里面的size部分用的。当然，View的派生类，比如Button，TextView等这些，他们都会去重写onMeasure方法来实现自己的一套测量机制的，比如TextView它可能会根据里面的字符长度等来确定其长度。当然ViewGroup也是继承View的，它重写的onMeasure在上面的代码中已经说明了。</p>
-
-          
+          <p>View绘制基本上分为measure、layout、draw过程，其中measure过程比较难理。在许多的书上面measure过程基本上就一两页概括，看的人云里雾里的。因此我们详细的说说这个measure过程。
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/21/Android-View绘制-Measure过程/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -868,40 +800,15 @@
 
       
         
-          
-            <p>(by 蔡老板)</p>
-<h2 id="问题概述"><a href="#问题概述" class="headerlink" title="问题概述"></a>问题概述</h2><p>笔者在开发过程中临时遇到一个本来仅有web端的项目临时增加Android端，导致后端在出接口时并未考虑Android端的json数据的解析，导致接口是这样的。。。。</p>
-<ul>
-<li>正确请求</li>
-</ul>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"code"</span>: <span class="number">0</span>,</div><div class="line">    <span class="attr">"data"</span>: &#123;</div><div class="line">        <span class="attr">"user"</span>: &#123;</div><div class="line">            <span class="attr">"id"</span>: <span class="number">145</span>,</div><div class="line">            <span class="attr">"name"</span>: <span class="string">"abtion"</span>,</div><div class="line">            <span class="attr">"school_id"</span>: <span class="number">1</span>,</div><div class="line">            <span class="attr">"sex"</span>: <span class="string">"男"</span>,</div><div class="line">            <span class="attr">"add_on"</span>: <span class="literal">null</span>,</div><div class="line">            <span class="attr">"status"</span>: <span class="number">1</span>,</div><div class="line">            <span class="attr">"role"</span>: <span class="string">"student"</span>,</div><div class="line">            <span class="attr">"created_at"</span>: <span class="string">"2017-08-05 18:26:31"</span>,</div><div class="line">            <span class="attr">"updated_at"</span>: <span class="string">"2017-08-19 12:41:50"</span></div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<ul>
-<li>错误请求</li>
-</ul>
-<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&#123;</div><div class="line">    <span class="attr">"code"</span>: <span class="number">20002</span>,</div><div class="line">    <span class="attr">"data"</span>: <span class="string">"Password Wrong"</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这也就是说在请求正确时服务端返回的数据中data是在java中的一个对象，而错误时却变成了String，这就导致了错误的请求在解析json时抛出异常导致请求失败，而且抛出的异常是无法拿到错误码和错误信息的。</p>
-<h2 id="问题分析"><a href="#问题分析" class="headerlink" title="问题分析"></a>问题分析</h2><p>我们该如何解决这个问题呢，经过思考，方法有三：</p>
-<ul>
-<li>呼叫可爱的后端老哥改接口，将错误信息改由<code>message</code>字段输出</li>
-<li>给<code>okhttp</code>添加拦截器，在<code>retrofit</code>解析json前解析json数据并存储。</li>
-<li>自定义<code>Gson</code>响应体变换器和响应变换工厂，在请求错误时抛出异常并保存错误码和错误信息。</li>
-</ul>
-<p>由于该项目已经上线，再改接口无异于痴人说梦，因加拦截器的效率也不及第三种方法日后再分享，本次采用自定义<code>Gson</code>响应体变换器和响应变换工厂的方法来解决。</p>
-<h2 id="具体解决办法"><a href="#具体解决办法" class="headerlink" title="具体解决办法"></a>具体解决办法</h2><h3 id="1、切入点"><a href="#1、切入点" class="headerlink" title="1、切入点"></a>1、切入点</h3><p>首先请看一张图片</p>
-<p><img src="http://oum3tk6e0.bkt.clouddn.com/android4_1.png" alt=""></p>
-<p>我们通常情况下跟图中一样采用的是Gosn工厂变换器，而本次抛出异常的地方就是这个变换器，自定义工厂变换器就可以完美解决我们的问题。</p>
-<h3 id="2、自定义Gson响应体变换器"><a href="#2、自定义Gson响应体变换器" class="headerlink" title="2、自定义Gson响应体变换器"></a>2、自定义Gson响应体变换器</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">GsonResponseBodyConverter</span>&lt;<span class="title">T</span>&gt; <span class="keyword">implements</span> <span class="title">Converter</span>&lt;<span class="title">ResponseBody</span>,<span class="title">T</span>&gt; </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Gson gson;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Type type;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">GsonResponseBodyConverter</span><span class="params">(Gson gson, Type type)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.gson = gson;</div><div class="line">        <span class="keyword">this</span>.type = type;</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">convert</span><span class="params">(ResponseBody value)</span> <span class="keyword">throws</span> IOException </span>&#123;</div><div class="line">        <span class="comment">//将返回的json数据储存在String类型的response中</span></div><div class="line">        String response = value.string();</div><div class="line">        <span class="comment">//将外层的数据解析到APIResponse类型的httpResult中</span></div><div class="line">        APIResponse httpResult = gson.fromJson(response,APIResponse.class);</div><div class="line">        <span class="comment">//服务端设定0为正确的请求，故在此为判断标准</span></div><div class="line">        <span class="keyword">if</span> (httpResult.getCode()==<span class="number">0</span>)&#123;</div><div class="line">            <span class="comment">//直接解析，正确请求不会导致json解析异常</span></div><div class="line">            <span class="keyword">return</span> gson.fromJson(response,type);</div><div class="line">        &#125;<span class="keyword">else</span> &#123;</div><div class="line">            <span class="comment">//定义错误响应体，并通过抛出自定义异常传递错误码及错误信息</span></div><div class="line">            ErrorResponse errorResponse = gson.fromJson(response,ErrorResponse.class);</div><div class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ResultException(errorResponse.getCode(),errorResponse.getData());</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>附上APIResponse类，ErrorResponse类和ResultException类</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">APIResponse</span>&lt;<span class="title">T</span>&gt; <span class="keyword">extends</span> <span class="title">BaseModel</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> code = -<span class="number">2</span>;</div><div class="line">    <span class="keyword">private</span> T data;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCode</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> code;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCode</span><span class="params">(<span class="keyword">int</span> code)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.code = code;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> T <span class="title">getData</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> data;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setData</span><span class="params">(T data)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.data = data;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ErrorResponse</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> code;</div><div class="line">    <span class="keyword">private</span> String data;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ErrorResponse</span><span class="params">(<span class="keyword">int</span> code, String data)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.code = code;</div><div class="line">        <span class="keyword">this</span>.data = data;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCode</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> code;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCode</span><span class="params">(<span class="keyword">int</span> code)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.code = code;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getData</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> data;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setData</span><span class="params">(String data)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.data = data;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ResultException</span> <span class="keyword">extends</span> <span class="title">IOException</span> </span>&#123;</div><div class="line">    <span class="keyword">private</span> <span class="keyword">int</span> code;</div><div class="line">    <span class="keyword">private</span> String msg;</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="title">ResultException</span><span class="params">(<span class="keyword">int</span> code, String msg)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.code = code;</div><div class="line">        <span class="keyword">this</span>.msg = msg;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getCode</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> code;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setCode</span><span class="params">(<span class="keyword">int</span> code)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.code = code;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getMsg</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> msg;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setMsg</span><span class="params">(String msg)</span> </span>&#123;</div><div class="line">        <span class="keyword">this</span>.msg = msg;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="3、自定义响应变换工厂"><a href="#3、自定义响应变换工厂" class="headerlink" title="3、自定义响应变换工厂"></a>3、自定义响应变换工厂</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"><span class="class"><span class="keyword">class</span> <span class="title">ResponseConverterFactory</span> <span class="keyword">extends</span> <span class="title">Converter</span>.<span class="title">Factory</span> </span>&#123;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ResponseConverterFactory <span class="title">create</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> create(<span class="keyword">new</span> Gson());</div><div class="line">    &#125;</div><div class="line"></div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> ResponseConverterFactory <span class="title">create</span><span class="params">(Gson gson)</span> </span>&#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> ResponseConverterFactory(gson);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="keyword">private</span> <span class="keyword">final</span> Gson gson;</div><div class="line"></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="title">ResponseConverterFactory</span><span class="params">(Gson gson)</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (gson == <span class="keyword">null</span>) <span class="keyword">throw</span> <span class="keyword">new</span> NullPointerException(<span class="string">"gson == null"</span>);</div><div class="line">        <span class="keyword">this</span>.gson = gson;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> Converter&lt;ResponseBody, ?&gt; responseBodyConverter(Type type, java.lang.annotation.Annotation[] annotations, Retrofit retrofit) &#123;</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> GsonResponseBodyConverter&lt;&gt;(gson,type);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    <span class="meta">@Override</span></div><div class="line">    <span class="keyword">public</span> Converter&lt;?, RequestBody&gt; requestBodyConverter(Type type, java.lang.annotation.Annotation[] parameterAnnotations, java.lang.annotation.Annotation[] methodAnnotations, Retrofit retrofit) &#123;</div><div class="line">        TypeAdapter&lt;?&gt; adapter = gson.getAdapter(TypeToken.get(type));</div><div class="line">        <span class="keyword">return</span> <span class="keyword">new</span> GsonRequestBodyConverter&lt;&gt;(gson, adapter);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<h3 id="4、调用自定义的响应变换工厂"><a href="#4、调用自定义的响应变换工厂" class="headerlink" title="4、调用自定义的响应变换工厂"></a>4、调用自定义的响应变换工厂</h3><p>在构造Retrofit时在addConverterFactory()方法中传入ResponseConverterFactory.create()就可以了。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/**</span></div><div class="line"><span class="comment">     * 构造Retrofit</span></div><div class="line"><span class="comment">     *</span></div><div class="line"><span class="comment">     * <span class="doctag">@return</span> retrofit</span></div><div class="line"><span class="comment">     */</span></div><div class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Retrofit <span class="title">getRetrofit</span><span class="params">()</span> </span>&#123;</div><div class="line">        <span class="keyword">if</span> (retrofit == <span class="keyword">null</span>) &#123;</div><div class="line">            retrofit = <span class="keyword">new</span> Retrofit.Builder()</div><div class="line">                    .baseUrl(Config.APP_SERVER_BASE_URL)</div><div class="line">                    .addConverterFactory(ResponseConverterFactory.create())</div><div class="line">                    .client(getClient())</div><div class="line">                    .build();</div><div class="line">        &#125;</div><div class="line">        <span class="keyword">return</span> retrofit;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<h3 id="5、在网络请求的onFailure中接收异常信息并进行处理"><a href="#5、在网络请求的onFailure中接收异常信息并进行处理" class="headerlink" title="5、在网络请求的onFailure中接收异常信息并进行处理"></a>5、在网络请求的onFailure中接收异常信息并进行处理</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">@Override</span></div><div class="line">                <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onFailure</span><span class="params">(Call&lt;APIResponse&lt;LoginResponse&gt;&gt; call, Throwable t)</span> </span>&#123;</div><div class="line">                    <span class="keyword">if</span> (t <span class="keyword">instanceof</span> ResultException) &#123;</div><div class="line">                        ToastUtil.showToast(((ResultException) t).getMsg(), ((ResultException) t).getCode());</div><div class="line">                    &#125; <span class="keyword">else</span> &#123;</div><div class="line">                        ToastUtil.showToast(<span class="string">"网络请求失败，请稍后再试"</span>);</div><div class="line">                    &#125;</div><div class="line">                &#125;</div></pre></td></tr></table></figure>
-<p>到这里就完成了，别忘了Gson的请求体变换器是default限定的。改改限定符就好了。</p>
-
-          
+          <p>(by 蔡老板)</p>
+<h2 id="问题概述"><a href="#问题概述" class="headerlink" title="问题概述"></a>问题概述</h2><p>笔者在开发过程中临时遇到一个本来仅有web端的项目临时增加Android端，导致后端在出接口时并未考虑Android端的json数据的解析，导致接口是这样的。。。。
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/21/Retrofit-JsonConverter/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1040,42 +947,14 @@
 
       
         
-          
-            <p>BLE分为三部分Service、Characteristic、Descriptor，这三部分都由UUID作为唯一标示符。一个蓝牙4.0的终端可以包含多个Service，一个Service可以包含多个Characteristic，一个Characteristic包含一个Value和多个Descriptor，一个Descriptor包含一个Value。一般来说，Characteristic是手机与BLE终端交换数据的关键。另外，这些UUID都写在硬件里，我们通过BLE提供的API可以读取到。</p>
-<h2 id="大体流程"><a href="#大体流程" class="headerlink" title="大体流程"></a>大体流程</h2><ul>
-<li>打开蓝牙</li>
-<li>扫描设备</li>
-<li>连接设备</li>
-<li>写入数据，控制设备</li>
-<li>读取设备返回的数据</li>
-<li>断开设备</li>
-</ul>
-<h2 id="不一样的蓝牙搜索"><a href="#不一样的蓝牙搜索" class="headerlink" title="不一样的蓝牙搜索"></a>不一样的蓝牙搜索</h2><p>在传统的蓝牙上，我们使用BluetoothAdapter.startDiscovery的方法来进行蓝牙扫描。<strong>BluetoothAdapter.startDiscovery在大多数手机上是可以同时发现经典蓝牙和Ble的，但是startDiscovery的回调无法返回Ble的广播，所以无法通过广播识别设备，且startDiscovery扫描Ble的效率比StartLeScan低很多。</strong>所以在实际应用中，还是StartDiscovery和StartLeScan分开扫，前者扫传统蓝牙，后者扫低功耗蓝牙。因此本篇文章的扫描用StartLeScan方法来进行扫描的。</p>
-<h2 id="蓝牙扫描"><a href="#蓝牙扫描" class="headerlink" title="蓝牙扫描"></a>蓝牙扫描</h2><p>我们还得继续用到我们的老朋友BluetoothAdapter。首先打开蓝牙，这步操作和上篇文章一样，不必多说。主要是蓝牙扫描这一过程。首先，调用adapter的startLeScan(LeScanCallback callback)或者是startLeScan(final UUID[] serviceUuids, final LeScanCallback callback)方法，这两种方法的区别是前者没有指定UUID，后者是进行精准扫描，根据UUID来进行匹配。其中我们需要一个叫LeScanCallback的这一参数。这个回调接口需要我们自己去实现，主要的功能是实现扫描时的监听，类似传统方式用广播监听搜索时蓝牙设备的变化。对于这个callBack我们可以实现以下两个方法:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">new ScanDeviceCallback() &#123;</div><div class="line">            @Override</div><div class="line">            public void onScanFinish() &#123;</div><div class="line">             ToastUtil.showToast(&quot;没有找到设备&quot;);</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            @Override</div><div class="line">            public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) &#123;</div><div class="line">                 ToastUtil.showToast(&quot;扫描到设备-------&quot;, device.getName());</div><div class="line">            &#125;</div><div class="line">        &#125;);</div></pre></td></tr></table></figure>
-<p>顾名思义，一个是搜索结束，一个是搜索过程中扫描到设备时回调。我们可以自己定义一个扫描时间，用handler进行延迟处理，当扫描结束时，调用scanDeviceCallback.onScanFinish()和bluetoothAdapter.stopLeScan(scanDeviceCallback)方法来结束扫描。<strong>这里还是要提醒一下，蓝牙设备的扫描是很耗费资源的，一定要手动停止。</strong></p>
-<h2 id="蓝牙连接和交互"><a href="#蓝牙连接和交互" class="headerlink" title="蓝牙连接和交互"></a>蓝牙连接和交互</h2><ul>
-<li>首先，我们需要获取到BluetoothDevice，和传统蓝牙蓝牙获取到远程设备的方式一样，都是通过在监听回调时获取到BluetoothDevice，如果得到BluetoothDevice的地址，也可以通过adapter.getRemoteDevice(device.getAddress())这种方式来获取。</li>
-<li>接下来是蓝牙连接的最重要的一步，连接蓝牙设备。我们需要创建一个BluetoothGatt对象，然后通过device的connectGatt(Context context, boolean autoConnect,BluetoothGattCallback callback）方法返回一个BluetoothGatt对象。第一个参数传入一个context，第二个参数是是否自动连接，一般传入false，第三个参数又是一个callback，这个callback监听的是连接时的状态。一般情况下重写这么几个函数:</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">private BluetoothGattCallback bluetoothGattCallback = new BluetoothGattCallback() &#123;</div><div class="line">        @Override</div><div class="line">        public void onConnectionStateChange(BluetoothGatt gatt, int status, int newState) &#123;</div><div class="line">           ToastUtil.showToast(&quot;连接状态发生改变&quot;);</div><div class="line">            if (status != BluetoothProfile.STATE_DISCONNECTED) &#123;</div><div class="line">                gatt.disconnect();</div><div class="line">                gatt.close();</div><div class="line">            &#125; else if (newState == BluetoothProfile.STATE_CONNECTED) &#123;</div><div class="line">                gatt.discoverServices();</div><div class="line">                ToastUtil.showToast(&quot;开始发现服务&quot;);</div><div class="line">            &#125; else &#123;</div><div class="line">                gatt.disconnect();</div><div class="line">                gatt.close();</div><div class="line">            &#125;</div><div class="line"></div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void onServicesDiscovered(BluetoothGatt gatt, int status) &#123;</div><div class="line">            ToastUtil.showToast(&quot;服务已经发现);</div><div class="line">        &#125;</div><div class="line"></div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) &#123;</div><div class="line">        //在此写入数据</div><div class="line">            if (status == BluetoothGatt.GATT_SUCCESS) &#123;</div><div class="line">                ToastUtil.showToast(&quot;写入数据&quot;);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) &#123;</div><div class="line">        //在此可以接受到数据</div><div class="line">            ToastUtil.showToast( &quot;接受数据&quot;);</div><div class="line">        &#125;</div><div class="line">    &#125;;</div></pre></td></tr></table></figure>
-<ul>
-<li><p>当连接完成后，我们可以在这个callback里面监听到各种连接状况。我们可以看到其中有一个BluetoothGattCharacteristic参数。这个参数是干什么用呢？这个参数极其重要，Characteristic是手机与BLE终端交换数据的关键。我们可以在上述回调的这一步<figure class="highlight plain"><figcaption><span>gatt, int status)&#123;</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#125;```来实例化这个Characteristic,具体方式如下:</div></pre></td></tr></table></figure></p>
-<p>@Override</p>
-<pre><code>public void onServicesDiscovered(BluetoothGatt gatt, int status) {
-    ToastUtil.showToast(&quot;服务已经发现&quot;);
-    if (status == BluetoothGatt.GATT_SUCCESS) {
-        bluetoothGattCharacteristic = gatt.getService(Constant.UUID_SERVICE).getCharacteristic(Constant.UUID_CHAR);
-        bluetoothGatt.setCharacteristicNotification(bluetoothGattCharacteristic, true);
-        ToastUtil.showToast(&quot;设置Notification成功&quot;);
-    }
-}
-</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"> BluetoothGattCharacteristic实例是使用gatt.getService(Constant.UUID_SERVICE).getCharacteristic(Constant.UUID_CHAR);来获取当前的需要用到的Characteristic。注意，第一个方法getService(UUID uuid)返回的是一个service，service概况来说是一系列Characteristic的集合，我们通过设备指定的UUID才能获取到设备的service。然后再通过每一个Characteristic的UUID获取到这一特征属性的对象。举个例子：我们通过getService方法和UUID获取到了小米手环的service，然后又通过getCharacteristic方法和UUID获取到小米手环测量心率的一个特征。然后通过BluetoothGatt来设置Characteristic可通知，即我们可以接受到设备的写入操作。</div><div class="line">- 数据的交互  当我们获取到Characteristic后，我们就可以和设备进行交互了。交互方式举例如下:</div></pre></td></tr></table></figure>
-<p>  bluetoothGattCharacteristic.setValue(byte[]);<br>  bluetoothGatt.writeCharacteristic(bluetoothGattCharacteristic);<br>  ```<br>通过Characteristic的setValue方法和gatt的writeCharacteristic方法写入，然后就会触发到BluetoothGattCallback中的onCharacteristicWrite回调。<br>读取数据也是从BluetoothGattCallback的onCharacteristicChanged方法来获取到设备通知的数据，也是通过Characteristic来获取到data的。</p>
-</li>
-</ul>
-
-          
+          <p>BLE分为三部分Service、Characteristic、Descriptor，这三部分都由UUID作为唯一标示符。一个蓝牙4.0的终端可以包含多个Service，一个Service可以包含多个Characteristic，一个Characteristic包含一个Value和多个Descriptor，一个Descriptor包含一个Value。一般来说，Characteristic是手机与BLE终端交换数据的关键。另外，这些UUID都写在硬件里，我们通过BLE提供的API可以读取到。
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/21/Android低能耗蓝牙-待补充/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1214,328 +1093,21 @@
 
       
         
-          
-            <h2 id="蓝牙建立连接的几个过程"><a href="#蓝牙建立连接的几个过程" class="headerlink" title="蓝牙建立连接的几个过程"></a>蓝牙建立连接的几个过程</h2><ul>
+          <h2 id="蓝牙建立连接的几个过程"><a href="#蓝牙建立连接的几个过程" class="headerlink" title="蓝牙建立连接的几个过程"></a>蓝牙建立连接的几个过程</h2><ul>
 <li>打开蓝牙</li>
 <li>查找附近已配对或可用设备</li>
 <li>连接设备</li>
 <li>设备间数据交换</li>
 </ul>
 <h2 id="API及常用函数"><a href="#API及常用函数" class="headerlink" title="API及常用函数"></a>API及常用函数</h2><ul>
-<li>BluetoothAdapter:代表本地蓝牙适配器，是所有蓝牙的交互入口。使用这个可以发现其他蓝牙设备，查询配对设备和创建BluetoothServerSocket来为监听与其他设备通信<ul>
-<li>enable()直接开启蓝牙</li>
-<li>getBondedDevices()返回一个set集合，类型为BluetoothDevice</li>
-<li>getState()返回当前本地蓝牙适配器的状态</li>
-<li>startDiscovery()开始搜索远程蓝牙</li>
-<li>isDiscovering()返回是否在搜索的状态</li>
-<li>isEnabled()返回蓝牙是否可用</li>
-<li>listenUsingRfcommWithServiceRecord(String name,UUID uuid)返回一个BluetoothServerSocket,即创建一个BluetoothServerSocket来监听client的连接。</li>
-</ul>
-</li>
-<li>BluetoothDevice 代表一个远程的蓝牙设备，可以使用这个来请求一个与远程设备的BluetoothSocket连接，也可以查看设备的名称地址之类的设备信息<ul>
-<li>createBond（）和远程蓝牙配对</li>
-<li>getBondState()返回配对的状态</li>
-<li>createRfcommSocketToServiceRecord（UUID uuid）创建一个BluetoothSocket连接</li>
-<li>getName() getUuids() getType getAddress()字面意思</li>
-</ul>
-</li>
-<li>BluetoothSocket 代表蓝牙的socket接口，它允许一个应用与其他蓝牙设备通过输入输出流来交换数据<ul>
-<li>connect() 和远程服务连接</li>
-<li>getIputStream() 返回一个输入流</li>
-<li>getOutputSteram() 返回一个输出流</li>
-<li>getRemoteDevice() 返回远程连接的BluetoothDevice</li>
-</ul>
-</li>
-<li>BluetoothServerSocket 代表一个服务器的socket，监听请求。连接两台设备时，必须有一台开启一个serverSocket。BluetoothServerSocket将返回一个已连接的BluetoothSocket，接受该连接。<ul>
-<li>accept()这是个阻塞的方法，直到有蓝牙和ServerSocket建立连接时，解除阻塞，返回一个BluetoothSocket。</li>
-</ul>
-</li>
-</ul>
-<h2 id="蓝牙搜索、配对、广播接收"><a href="#蓝牙搜索、配对、广播接收" class="headerlink" title="蓝牙搜索、配对、广播接收"></a>蓝牙搜索、配对、广播接收</h2><ol>
-<li><p>创建adapter  基本上都是使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">2. 打开蓝牙  打开蓝牙有三种方式：第一种是直接使用adapter.enable方法，这样是直接打开蓝牙的。第二种是用intent隐式打开</div></pre></td></tr></table></figure></p>
-<p>  Intent intent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);<br>  startActivityForResult(intent, 1);</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">第三种就是用户直接在手机打开。</div><div class="line"></div><div class="line"> 3. 扫描设备  使用adapter的startDiscovery()方法。这个方法是经典蓝牙的扫描方法。注意，这个方法很占用资源，扫描设备大概会持续10s，然后会自行关闭。但是若用户执行多次扫描时候，一定要记住使用cancelDiscovery方法将扫描关闭。</div><div class="line"> 4. 广播接收  在扫描设备时，系统会将扫描的状态广播出去,我们可以从广播中获取到搜索到的设备，即BluetoothDevice对象。所以我们需要写一个广播接收器来接收他们。基本操作如下：</div></pre></td></tr></table></figure>
-<p>   private BroadcastReceiver discoveryReceiver = new BroadcastReceiver() {</p>
-<pre><code>@Override
-public void onReceive(Context context, Intent intent) {
-    String action = intent.getAction();
-
-    if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
-        Log.i(TAG, &quot;onReceive: 开始搜索&quot;);
-
-    } else if (BluetoothDevice.ACTION_FOUND.equals(action)) {
-
-        BluetoothDevice bluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);  //获取设备,发现远程蓝牙设备
-        String name = bluetoothDevice.getName();
-        String address = bluetoothDevice.getAddress();
-        Log.i(TAG, &quot;onReceive: name=&quot; + name + &quot; address=&quot; + address);
-        serversText.append(name + &quot;:&quot; + address + &quot;\n&quot;);
-
-        discoveredDevices.add(bluetoothDevice);
-
-    } else if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
-        Log.i(TAG, &quot;onReceive:  搜索结束&quot;);
-
-        if (discoveredDevices.isEmpty()) {
-            Log.i(TAG, &quot;onReceive:  未发现设备&quot;);
-        }
-    }
-}
-if (BluetoothDevice.ACTION_BOND_STATE_CHANGED.equals(action)) {
-    switch (device.getBondState()) {
-        case BluetoothDevice.BOND_BONDING:
-            ToastUtil.showToast(&quot;正在配对&quot;);
-            break;
-        case BluetoothDevice.BOND_BONDED:
-            ToastUtil.showToast(&quot;配对完成&quot;);
-            break;
-        case BluetoothDevice.BOND_NONE:
-            ToastUtil.showToast(&quot;取消配对&quot;);
-        default:
-            break;
-    }
-}
-</code></pre><p>};</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">代码中用了一个list来存放搜索到的设备信息，其中还有绑定的一些广播在内。然后再对广播进行注册：</div></pre></td></tr></table></figure>
-<pre><code>IntentFilter discoveryFilter = new IntentFilter();
-  discoveryFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
-  discoveryFilter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
-  discoveryFilter.addAction(BluetoothDevice.ACTION_FOUND);
-  registerReceiver(discoveryReceiver, discoveryFilter);
-</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">5. 蓝牙绑定  一般情况下，如果两个设备需要通信首先得进行绑定，然后在广播接收器中监听其状态。不过在进行socket连接的时候，会自行访问用户是否进行设备绑定的。如果有必要的话，我们可以使用反射来进行连接，方法如下：</div></pre></td></tr></table></figure>
-<p>Method createBondMethod = null;</p>
-<pre><code>    try {
-        createBondMethod = BluetoothDevice.class.getMethod(&quot;createBond&quot;);
-    } catch (NoSuchMethodException e) {
-        e.printStackTrace();
-    }
-    ToastUtil.showToast(&quot;开始配对&quot;);
-    try {
-        returnValue = (Boolean) createBondMethod.invoke(btDev);
-    } catch (IllegalAccessException e) {
-        e.printStackTrace();
-    } catch (InvocationTargetException e) {
-        e.printStackTrace();
-    }
-    if (returnValue) {
-        ToastUtil.showToast(&quot;配对成功&quot;);
-
-    }
-}
-</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">解除绑定：</div></pre></td></tr></table></figure>
-<p>if (device != null) {</p>
-<pre><code>    try {
-        Method m = device.getClass().getMethod(&quot;removeBond&quot;, (Class[]) null);
-        boolean returnValue = (boolean) m.invoke(device, (Object[]) null)；
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
-}
-</code></pre><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">## 设备间的通信</div><div class="line">下来就是进行socket通信了通信分为client模块和server模块和通信模块来说吧。</div><div class="line"></div><div class="line">### server</div><div class="line">server模块主要功能就是实现一个设备的监听，当监听到有连接访问的操作时，返回一个BluetoothSocket，然后通过调用BluetoothSocket的输入输出流来进行两个设备间的通信。因此设备需要在一开始就开启一个线程去不断监听，在用Handler来将监听到的数据或是异常在主线程中展示给用户。server监听线程如下：</div></pre></td></tr></table></figure>
-<p>/**</p>
-</li>
-</ol>
-<ul>
-<li><p>服务器监听线程<br>*/<br>public class BluetoothServerConnThread extends Thread {</p>
-<p> private Handler serviceHandler;        //用于同Service通信的Handler<br> private BluetoothAdapter adapter;<br> private BluetoothSocket socket;        //用于通信的Socket<br> private BluetoothServerSocket serverSocket; //serverSocket</p>
-</li>
-</ul>
-<pre><code>/**
- * 构造函数
- *
- * @param handler 在构造中传入需要处理数据的handler
- */
-public BluetoothServerConnThread(Handler handler, BluetoothAdapter bluetoothAdapter) {
-    this.serviceHandler = handler;
-    adapter = bluetoothAdapter;
-}
-
-@Override
-public void run() {
-
-    try {
-        if (serverSocket == null) {
-            serverSocket = adapter.listenUsingRfcommWithServiceRecord(&quot;Server&quot;, Constant.PRIVATE_UUID);
-        }
-        //accept是一个阻塞的方法，返回一个socket连接
-        socket = serverSocket.accept();
-
-    } catch (Exception e) {
-        //发送连接失败消息
-        serviceHandler.obtainMessage(BluetoothTools.MESSAGE_CONNECT_ERROR).sendToTarget();
-        e.printStackTrace();
-        return;
-    } finally {
-        try {
-            serverSocket.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-   /* if (socket.isConnected()) {
-       ToastUtil.showToast(&quot;BluetoothServerConnThread.run 已建立与客户连接&quot;);
-    }*/
-    if (socket != null) {
-        //发送连接成功消息，消息的obj字段为连接的socket
-        Message msg = serviceHandler.obtainMessage();
-        msg.what = BluetoothTools.MESSAGE_CONNECT_SUCCESS;
-        msg.obj = socket;
-        msg.sendToTarget();
-    } else {
-        //发送连接失败消息
-        serviceHandler.obtainMessage(BluetoothTools.MESSAGE_CONNECT_ERROR).sendToTarget();
-        return;
-    }
-}
-</code></pre><p>}<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">其中在serverSocket获取时，第二个参数为 Constant.PRIVATE_UUID，这个参数就是通信时候必要的UUID。只有UUID相同时，才能进行设备的通信。下来是客户端模块的操作。</div><div class="line">### client</div><div class="line">客户端首先得去开启、搜索蓝牙设备，这个过程在上面已经说过了。下来主要是client如何与server来进行通信。首先我们需要获取到server端的蓝牙设备信息，这个操作在搜索蓝牙这步就已经能够得到了。搜索到后，调用BluetoothDevice的createRfcommSocketToServiceRecord（UUID uuid）方法来返回一个BluetoothSocket。然后调用socket的connect（）方法来连接到远程的server。在此之前，一定要记得关闭蓝牙的搜索。具体代码如下：</div></pre></td></tr></table></figure></p>
-<p> /**</p>
-<ul>
-<li><p>蓝牙客户端连接线程<br>*/<br>public class BluetoothClientConnThread extends Thread {</p>
-<p> private Handler serviceHandler;        //用于向客户端Service回传消息的handler<br> private BluetoothDevice serverDevice;    //服务器设备<br> private BluetoothSocket socket;        //通信Socket</p>
-<p> private BluetoothAdapter mBluetoothAdapter;</p>
-<p> /**</p>
-<ul>
-<li>构造函数<br>*</li>
-<li>@param handler</li>
-<li><p>@param serverDevice<br>*/<br>public BluetoothClientConnThread(Handler handler, BluetoothDevice serverDevice, BluetoothAdapter mBluetoothAdapter) {<br> this.serviceHandler = handler;<br> this.serverDevice = serverDevice;</p>
-<p> this.mBluetoothAdapter = mBluetoothAdapter;<br>}</p>
-<p>@Override<br>public void run() {</p>
-<p> if (mBluetoothAdapter.isDiscovering()) { //判断当前是否正在搜索</p>
-<pre><code>mBluetoothAdapter.cancelDiscovery();
-</code></pre><p> }</p>
-<p> if (serverDevice == null) {</p>
-<pre><code>ToastUtil.showToast(&quot;没有获取到远程设备&quot;);
-return;
-</code></pre><p> }</p>
-<p> try {</p>
-<pre><code>if (socket == null) {
-    socket = serverDevice.createRfcommSocketToServiceRecord(BluetoothTools.PRIVATE_UUID);
-    mBluetoothAdapter.cancelDiscovery();
-}
-socket.connect();
-</code></pre></li>
-</ul>
-</li>
-</ul>
-<pre><code>    } catch (Exception ex) {
-        try {
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        //发送连接失败消息
-        serviceHandler.obtainMessage(BluetoothTools.MESSAGE_CONNECT_ERROR).sendToTarget();
-        return;
-    }
-
-    //发送连接成功消息，消息的obj参数为连接的socket
-    Message msg = serviceHandler.obtainMessage();
-    msg.what = BluetoothTools.MESSAGE_CONNECT_SUCCESS;
-    msg.obj = socket;
-    msg.sendToTarget();
-}
-</code></pre><p>}<br> <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">这样我们就建立好一个server和client的socket连接了，接下来我们需要做的就是通信了：</div><div class="line"></div><div class="line">### socket通信</div><div class="line">通信方面比较简单，server和client都持有一个socket对象，我们只需要通过其输入输出流通信就可以了。因此我们可以也可以通过一个线程来实现，在server和client的handler处理message时，当传入的message消息为连接成功，我们就可以开启这个线程。通信的线程代码如下：</div></pre></td></tr></table></figure></p>
-<p> /**</p>
-<ul>
-<li><p>蓝牙通讯线程<br>*/<br>public class BluetoothCommunThread extends Thread {</p>
-<p> private Handler serviceHandler;        //与Service通信的Handler<br> private BluetoothSocket socket;<br> private ObjectInputStream inStream;        //对象输入流<br> private ObjectOutputStream outStream;    //对象输出流<br> public volatile boolean isRun = true;    //运行标志位</p>
-<p> /**</p>
-<ul>
-<li>构造函数<br>*</li>
-<li>@param handler 用于接收消息</li>
-<li><p>@param socket<br>*/<br>public BluetoothCommunThread(Handler handler, BluetoothSocket socket) {<br> this.serviceHandler = handler;<br> this.socket = socket;<br> try {</p>
-<pre><code>this.outStream = new ObjectOutputStream(socket.getOutputStream());
-this.inStream = new ObjectInputStream(new BufferedInputStream(socket.getInputStream()));
-</code></pre><p> } catch (Exception e) {</p>
-<pre><code>try {
-    if (socket != null) {
-        socket.close();
-    } else {
-        ToastUtil.showToast(&quot;BluetoothCommunThread.BluetoothCommunThread ddd socket is null&quot;);
-    }
-
-} catch (IOException e1) {
-    e1.printStackTrace();
-}
-//发送连接失败消息
-serviceHandler.obtainMessage(BluetoothTools.MESSAGE_CONNECT_ERROR).sendToTarget();
-e.printStackTrace();
-</code></pre><p> }<br>}</p>
-<p>/**</p>
-</li>
-<li><p>写入一个可序列化的对象<br>*/<br>public void writeObject(Object obj) {<br> if (obj != null) {</p>
-<pre><code>try {
-    outStream.flush();
-    outStream.writeObject(obj);
-    outStream.flush();
-} catch (IOException e) {
-    e.printStackTrace();
-}
-</code></pre><p> }</p>
-<p>}</p>
-<p>@Override<br>public void run() {</p>
-<p> while (true) {</p>
-<pre><code>if (!isRun || Thread.currentThread().isInterrupted()) {
-    ToastUtil.showToast(&quot;BluetoothCommunThread.run 线程已中断&quot;);
-    break;
-}
-</code></pre></li>
-</ul>
-</li>
-</ul>
-<pre><code>        try {
-         ToastUtil.showToast(&quot;BluetoothCommunThread.run inStream=&quot; + inStream);
-           /* if (inStream == null) {
-                break;
-            }*/
-
-            Object obj = inStream.readObject();
-
-            System.out.println(&quot;BluetoothCommunThread.run ddd&quot;);
-            //发送成功读取到对象的消息，消息的obj参数为读取到的对象
-            Message msg = serviceHandler.obtainMessage();
-            msg.what = BluetoothTools.MESSAGE_READ_OBJECT;
-            msg.obj = obj;
-            msg.sendToTarget();
-
-
-        } catch (Exception ex) {
-            //发送连接失败消息
-            serviceHandler.obtainMessage(BluetoothTools.MESSAGE_CONNECT_ERROR).sendToTarget();
-            ex.printStackTrace();
-            return;
-        }
-    }
-
-
-    //关闭流
-    if (inStream != null) {
-        try {
-            inStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    if (outStream != null) {
-        try {
-            outStream.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    if (socket != null) {
-        try {
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-}
-</code></pre><p>}<br>```</p>
-<p> 在线程中我们使用了一个阻塞的方法不断的去获取输出的信息。如果当我们连个设备间要停止通信时，调用上面取消配对所述的方法即可。 这样我们就实现了传统蓝牙间的简单通信的流程</p>
-
-          
+<li>BluetoothAdapter:代表本地蓝牙适配器，是所有蓝牙的交互入口。使用这个可以发现其他蓝牙设备，查询配对设备和创建BluetoothServerSocket来为监听与其他设备通信
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/21/Android传统蓝牙/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1674,19 +1246,15 @@ e.printStackTrace();
 
       
         
-          
-            <h2 id="蓝牙4-0、传统蓝牙、低能耗蓝牙"><a href="#蓝牙4-0、传统蓝牙、低能耗蓝牙" class="headerlink" title="蓝牙4.0、传统蓝牙、低能耗蓝牙"></a>蓝牙4.0、传统蓝牙、低能耗蓝牙</h2><ul>
-<li><p>蓝牙4.0标准包含两个蓝牙标准，准确的说，是一个双模的标准，它包含传统蓝牙部分（也有称之为经典蓝牙Classic Bluetooth）和低功耗蓝牙部分（Bluetooth Low Energy）。这两个部分适用于不同的应用或者应用条件。   传统蓝牙可以用与数据量比较大的传输，如语音，音乐，较高数据量传输等，像咱们以前偶尔用手机的蓝牙传输，低功耗蓝牙这样应用于实时性要求比较高，但是数据速率比较低的产品，如遥控类的，如鼠标，键盘。（来自百度）不过BLE在Android 4.3才开始支持BLE API</p>
-</li>
-<li><p>传统蓝牙 就是手机上用的那种，它有两个角色一个是客户端一个是服务器（前提是android手机系统版本小于4.3之前的）手机它既可以做客户端也可以做服务器端。所以手机既可以作为客户端去搜索服务器端（其他手机），也可以作为服务器端被其他其他客户端（手机端）搜索到。<br>当客户端搜索到蓝牙服务器后并与之配对后，才能通过UUID（这个是唯一的，服务器端必须与客户端一致）建立socket，然后使用流像文件读写和网络通信那样传输数据就行了。</p>
-</li>
-<li><p>低功能耗蓝牙也就是BLE, 它的角色变成了一个是中心设备（central）一个是外围设备（peripheral），中心设备就是你的手机，外围设备就是智能手环一类的东西。大于等于4.3 和 小于5.0 之间的android手机系统版本，只能作为中心设备去搜索一些其他外围设备，不能做为外围设备被其他中心设备搜索到；在 5.0以及5.0 之后，既可以作为中心设备，也可以作为外围设备。</p>
-</li>
-</ul>
-<h2 id="通信方式"><a href="#通信方式" class="headerlink" title="通信方式"></a>通信方式</h2><p>传统的蓝牙一般通过socket的方式，而低功耗蓝牙是通过Gatt协议来实现的。单从Android的文档的使用来看，两者没有很大的关联。</p>
-<h2 id="权限"><a href="#权限" class="headerlink" title="权限"></a>权限</h2><p>在安卓6.0以后，蓝牙若只有BLUETOOTH_ADMIN和BLUETOOTH权限是不够的，还得需要ACCESS_FINE_LOCATION和ACCESS_COARSE_LOCATION地理位置权限，如果没有这俩权限并不会报错，而是会搜索不到附近的蓝牙信息。这两个位置权限需要用户主动授权，也就是说得动态授权。</p>
-
-          
+          <h2 id="蓝牙4-0、传统蓝牙、低能耗蓝牙"><a href="#蓝牙4-0、传统蓝牙、低能耗蓝牙" class="headerlink" title="蓝牙4.0、传统蓝牙、低能耗蓝牙"></a>蓝牙4.0、传统蓝牙、低能耗蓝牙</h2><ul>
+<li><p>蓝牙4.0标准包含两个蓝牙标准，准确的说，是一个双模的标准，它包含传统蓝牙部分（也有称之为经典蓝牙Classic Bluetooth）和低功耗蓝牙部分（Bluetooth Low Energy）。这两个部分适用于不同的应用或者应用条件。   传统蓝牙可以用与数据量比较大的传输，如语音，音乐，较高数据量传输等，像咱们以前偶尔用手机的蓝牙传输，低功耗蓝牙这样应用于实时性要求比较高，但是数据速率比较低的产品，如遥控类的，如鼠标，键盘。（来自百度）不过BLE在Android 4.3才开始支持BLE API
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/21/Android蓝牙相关/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -1825,351 +1393,14 @@ e.printStackTrace();
 
       
         
-          
-            <p>动画效果一直是人机交互的一个非常重要的部分，动画效果的引入，会让交互变得更加友好，让用户获得更加愉悦的体验。作为一个前端开发者，动画也是一个必会的技能。</p>
-<h2 id="View-Animation"><a href="#View-Animation" class="headerlink" title="View Animation"></a>View Animation</h2><p>View Animation包含了Tween Animation、Frame Animation（Drawable Animation）。这些都是在安卓3.0之前的两种动画。</p>
-<h3 id="帧动画"><a href="#帧动画" class="headerlink" title="帧动画"></a>帧动画</h3><p>帧动画有时也叫Drawable动画，它允许你实现像播放幻灯片一样的效果，这种动画的实质其实是Drawable，所以这种动画的XML定义方式文件 <strong>一般放在res/drawable/目录下。</strong>帧动画的动画本质呢就是我们的视觉残留。</p>
-<p>一般我们会先在Drawable下面将动画资源引用好，然后在代码中调用start()/stop()来开始或者停止播放动画。当然我们也可以在Java代码中创建逐帧动画，创建AnimationDrawable对象，然后调用 addFrame(Drawable frame,int duration)向动画中添加帧，接着调用start()和stop()而已~推荐是使用XML来定义动画。</p>
-<p>具体的标签有：</p>
-<ul>
-<li><code>&lt;animation-list&gt;</code>：必须是根节点，包含多个<code>&lt; item&gt;</code>元素。属性有android:oneshot true代表只执行一次，false循环执行。</li>
-<li><code>&lt; item&gt;</code>:animation-list的子项，包含的属性有：<ul>
-<li>android:drawable 一个frame的Drawable资源。</li>
-<li>android:duration 一个frame显示多长时间。</li>
-</ul>
-</li>
-</ul>
-<p>举个例子，我们在drawable中</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt; ?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div><div class="line"></div><div class="line">&lt; animation-list xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot; android:oneshot=&quot;false&quot;&gt;</div><div class="line">    &lt; item android:drawable=&quot;@color/black&quot; android:duration=&quot;300&quot;/&gt;</div><div class="line">    &lt; item android:drawable=&quot;@color/white&quot; android:duration=&quot;300&quot;/&gt;</div><div class="line">&lt; /animation-list&gt;</div></pre></td></tr></table></figure>
-<p>然后在kotlin中</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">img_test.apply &#123;</div><div class="line">          setBackgroundResource(R.drawable.test_frame)</div><div class="line">          setOnClickListener &#123;</div><div class="line">              if ((background as AnimationDrawable).isRunning)</div><div class="line">                  (background as AnimationDrawable).stop()</div><div class="line">              else (background as AnimationDrawable).start()</div><div class="line">          &#125;</div><div class="line">      &#125;</div></pre></td></tr></table></figure>
-<p>这样当我们点击图片的时候就会自动播放在drawable中设置的资源了。<br><strong>注意，Animation的start方法不能在Activity的onCreate方法中调用，因为AnimationDrawable还未完全附着到Window上。</strong></p>
-<h3 id="补间动画"><a href="#补间动画" class="headerlink" title="补间动画"></a>补间动画</h3><p> Tween Animation(补间动画)只能应用于View对象，而且只支持一部分属性，如支持缩放旋转而不支持背景颜色的改变。而且对于Tween Animation，并不改变属性的值，它只是改变了View对象绘制的位置，而没有改变View对象本身，比如，你有一个Button，坐标（100,100），Width:100,Height:100，而你有一个动画使其移动（200，200），你会发现动画过程中触发按钮点击的区域仍是(100,100)-(200,200)。 </p>
-<p>补间动画通过XML或Android代码定义，建议还是使用XML文件定义，因为它更具可读性、可重用性。这里说一下，补间动画的所有父类都是它：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public abstract class Animation implements Cloneable</div></pre></td></tr></table></figure>
-<p>这个注意和属性动画的父类区分。</p>
-<table>
-<thead>
-<tr>
-<th>java类名</th>
-<th>xml关键字</th>
-<th>描述信息</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>AlphaAnimation</td>
-<td><alpha> 放置在res/anim/目录下</alpha></td>
-<td>渐变透明度动画效果</td>
-</tr>
-<tr>
-<td>RotateAnimation</td>
-<td><rotate> 放置在res/anim/目录下</rotate></td>
-<td>画面转移旋转动画效果</td>
-</tr>
-<tr>
-<td>ScaleAnimation</td>
-<td><scale> 放置在res/anim/目录下</scale></td>
-<td>渐变尺寸伸缩动画效果</td>
-</tr>
-<tr>
-<td>TranslateAnimation</td>
-<td><translate> 放置在res/anim/目录下</translate></td>
-<td>画面转换位置移动动画效果</td>
-</tr>
-<tr>
-<td>AnimationSet</td>
-<td><set> 放置在res/anim/目录下</set></td>
-<td>一个持有其它动画元素alpha、scale、translate、rotate或者其它set元素的容器</td>
-</tr>
-</tbody>
-</table>
-<h4 id="Animation属性"><a href="#Animation属性" class="headerlink" title="Animation属性"></a>Animation属性</h4><table>
-<thead>
-<tr>
-<th>xml属性</th>
-<th>java方法</th>
-<th>解释</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>android:detachWallpaper</td>
-<td>setDetachWallpaper(boolean)</td>
-<td>是否在壁纸上运行</td>
-</tr>
-<tr>
-<td>android:duration</td>
-<td>setDuration(long)</td>
-<td>动画持续时间，毫秒为单位</td>
-</tr>
-<tr>
-<td>android:fillAfter</td>
-<td>setFillAfter(boolean)</td>
-<td>控件动画结束时是否保持动画最后的状态</td>
-</tr>
-<tr>
-<td>android:fillBefore</td>
-<td>setFillBefore(boolean)</td>
-<td>控件动画结束时是否还原到开始动画前的状态</td>
-</tr>
-<tr>
-<td>android:fillEnabled</td>
-<td>setFillEnabled(boolean)</td>
-<td>与android:fillBefore效果相同</td>
-</tr>
-<tr>
-<td>android:interpolator</td>
-<td>setInterpolator(Interpolator)</td>
-<td>设定插值器（指定的动画效果，譬如回弹等）</td>
-</tr>
-<tr>
-<td>android:repeatCount</td>
-<td>setRepeatCount(int)</td>
-<td>重复次数</td>
-</tr>
-<tr>
-<td>android:repeatMode</td>
-<td>setRepeatMode(int)</td>
-<td>重复类型有两个值，reverse表示倒序回放，restart表示从头播放</td>
-</tr>
-<tr>
-<td>android:startOffset</td>
-<td>setStartOffset(long)</td>
-<td>调用start函数之后等待开始运行的时间，单位为毫秒</td>
-</tr>
-<tr>
-<td>android:zAdjustment</td>
-<td>setZAdjustment(int)</td>
-<td>表示被设置动画的内容运行时在Z轴上的位置（top/bottom/normal），默认为normal</td>
-</tr>
-</tbody>
-</table>
-<h4 id="Alpha属性"><a href="#Alpha属性" class="headerlink" title="Alpha属性"></a>Alpha属性</h4><table>
-<thead>
-<tr>
-<th>xml属性</th>
-<th>java方法</th>
-<th>解释</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>android:fromAlpha</td>
-<td>AlphaAnimation(float fromAlpha, …)</td>
-<td>动画开始的透明度（0.0到1.0，0.0是全透明，1.0是不透明）</td>
-</tr>
-<tr>
-<td>android:toAlpha</td>
-<td>AlphaAnimation(…, float toAlpha)</td>
-<td>动画结束的透明度，同上</td>
-</tr>
-</tbody>
-</table>
-<h4 id="Rotate属性"><a href="#Rotate属性" class="headerlink" title="Rotate属性"></a>Rotate属性</h4><table>
-<thead>
-<tr>
-<th>xml属性</th>
-<th>java方法</th>
-<th>解释</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>android:fromDegrees</td>
-<td>RotateAnimation(float fromDegrees, …)</td>
-<td>旋转开始角度，正代表顺时针度数，负代表逆时针度数</td>
-</tr>
-<tr>
-<td>android:toDegrees</td>
-<td>RotateAnimation(…, float toDegrees, …)</td>
-<td>旋转结束角度，正代表顺时针度数，负代表逆时针度数</td>
-</tr>
-<tr>
-<td>android:pivotX</td>
-<td>RotateAnimation(…, float pivotX, …)</td>
-<td>缩放起点X坐标（数值、百分数、百分数p，譬如50表示以当前View左上角坐标加50px为初始点、50%表示以当前View的左上角加上当前View宽高的50%做为初始点、50%p表示以当前View的左上角加上父控件宽高的50%做为初始点）</td>
-</tr>
-<tr>
-<td>android:pivotY</td>
-<td>RotateAnimation(…, float pivotY)</td>
-<td>缩放起点Y坐标，同上规律</td>
-</tr>
-</tbody>
-</table>
-<h4 id="Scale属性"><a href="#Scale属性" class="headerlink" title="Scale属性"></a>Scale属性</h4><table>
-<thead>
-<tr>
-<th>xml属性</th>
-<th>java方法</th>
-<th>解释</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>android:fromXScale</td>
-<td>ScaleAnimation(float fromX, …)</td>
-<td>初始X轴缩放比例，1.0表示无变化</td>
-</tr>
-<tr>
-<td>android:toXScale</td>
-<td>ScaleAnimation(…, float toX, …)</td>
-<td>结束X轴缩放比例</td>
-</tr>
-<tr>
-<td>android:fromYScale</td>
-<td>ScaleAnimation(…, float fromY, …)</td>
-<td>初始Y轴缩放比例</td>
-</tr>
-<tr>
-<td>android:toYScale</td>
-<td>ScaleAnimation(…, float toY, …)</td>
-<td>结束Y轴缩放比例</td>
-</tr>
-<tr>
-<td>android:pivotX</td>
-<td>ScaleAnimation(…, float pivotX, …)</td>
-<td>缩放起点X轴坐标（数值、百分数、百分数p，譬如50表示以当前View左上角坐标加50px为初始点、50%表示以当前View的左上角加上当前View宽高的50%做为初始点、50%p表示以当前View的左上角加上父控件宽高的50%做为初始点）</td>
-</tr>
-<tr>
-<td>android:pivotY</td>
-<td>ScaleAnimation(…, float pivotY)</td>
-<td>缩放起点Y轴坐标，同上规律</td>
-</tr>
-</tbody>
-</table>
-<h4 id="Translate属性详解"><a href="#Translate属性详解" class="headerlink" title="Translate属性详解"></a>Translate属性详解</h4><table>
-<thead>
-<tr>
-<th>xml属性</th>
-<th>java方法</th>
-<th>解释</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>android:fromXDelta</td>
-<td>TranslateAnimation(float fromXDelta, …)</td>
-<td>起始点X轴坐标（数值、百分数、百分数p，譬如50表示以当前View左上角坐标加50px为初始点、50%表示以当前View的左上角加上当前View宽高的50%做为初始点、50%p表示以当前View的左上角加上父控件宽高的50%做为初始点）</td>
-</tr>
-<tr>
-<td>android:fromYDelta</td>
-<td>TranslateAnimation(…, float fromYDelta, …)</td>
-<td>起始点Y轴从标，同上规律</td>
-</tr>
-<tr>
-<td>android:toXDelta</td>
-<td>TranslateAnimation(…, float toXDelta, …)</td>
-<td>结束点X轴坐标，同上规律</td>
-</tr>
-<tr>
-<td>android:toYDelta</td>
-<td>TranslateAnimation(…, float toYDelta)</td>
-<td>结束点Y轴坐标，同上规律</td>
-</tr>
-</tbody>
-</table>
-<h4 id="插值器"><a href="#插值器" class="headerlink" title="插值器"></a>插值器</h4><p>插值器是用来控制动画的变化速度，可以理解成动画渲染器，当然我们也可以自己实现Interpolator 接口，自行来控制动画的变化速度，而Android中已经为我们提供了五个可供选择的实现类:</p>
-<ul>
-<li>LinearInterpolator：动画以均匀的速度改变</li>
-<li>AccelerateInterpolator：在动画开始的地方改变速度较慢，然后开始加速</li>
-<li>AccelerateDecelerateInterpolator：在动画开始、结束的地方改变速度较慢，中间时加速</li>
-<li>CycleInterpolator：动画循环播放特定次数，变化速度按正弦曲线改变： Math.sin(2 <em> mCycles </em> Math.PI * input)</li>
-<li>DecelerateInterpolator：在动画开始的地方改变速度较快，然后开始减速</li>
-<li>AnticipateInterpolator：反向，先向相反方向改变一段再加速播放</li>
-<li>AnticipateOvershootInterpolator：开始的时候向后然后向前甩一定值后返回最后的值</li>
-<li>BounceInterpolator： 跳跃，快到目的值时值会跳跃，如目的值100，后面的值可能依次为85，77，70，80，90，100</li>
-<li>OvershottInterpolator：回弹，最后超出目的值然后缓慢改变到目的值</li>
-</ul>
-<h4 id="使用简介："><a href="#使用简介：" class="headerlink" title="使用简介："></a>使用简介：</h4><p>上面这些都是补间动画的一些xml和java方法的简介，这些方法属性记不住不要紧，咱们可以随时查看的。最重要的还是怎么去用。其实用法也是特别简单的，十分的套路，我们只需要记住套路就可以。我们就举个简单的旋转动画的例子吧。</p>
-<p>首先是XML</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt; ?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;</div><div class="line">&lt; rotate xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;</div><div class="line">        android:interpolator=&quot;@android:anim/accelerate_decelerate_interpolator&quot;</div><div class="line">        android:fromDegrees=&quot;0&quot;</div><div class="line">        android:toDegrees=&quot;360&quot;</div><div class="line">        android:duration=&quot;1000&quot;</div><div class="line">        android:pivotX=&quot;50%&quot;</div><div class="line">        android:pivotY=&quot;50%&quot;</div><div class="line">        android:repeatCount=&quot;infinite&quot;</div><div class="line">    /&gt;</div></pre></td></tr></table></figure>
-<p>其中我们用了<code>@android:animaccelerate_decelerate_interpolator</code>这个插值器，就是上面所说的DecelerateInterpolator在动画开始的地方改变速度较快，然后开始减速。</p>
-<p>写完XML后，在java代码中</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">Animation animation = AnimationUtils.loadAnimation(this, R.anim.anim_rotate);</div><div class="line">testImg.setAnimation(animation);</div><div class="line">animation.start();</div><div class="line">animation.cancel();</div></pre></td></tr></table></figure>
-<p>我们可以看到，先创建了一个Animation对象，然后在用AnimationUtils的loadAnimation方法将XML里定义的动画加载到animation对象中，然后通过View的setAnimation方法将animation传入，这样就将这个动画绑定到view上面了。最后通过animation的start和cancel方法来开始或者取消动画。  其中我们可以为animation设置动画的监听，这个特别简单就不再这赘述了…</p>
-<h2 id="Property-Animation"><a href="#Property-Animation" class="headerlink" title="Property Animation"></a>Property Animation</h2><p>Android 3.0以后引入了属性动画，属性动画可以轻而易举的实现许多View动画做不到的事。其实说白了，记住一点就行，属性动画实现原理就是修改控件的属性值实现的动画。当然，功能强大的代价就是使用起来要比较复杂。</p>
-<p>属性动画所有的父类是它：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public abstract class Animator implements Cloneable</div></pre></td></tr></table></figure>
-<p>这个注意要和补间动画来区分。</p>
-<p>接下来介绍一下相关的API：</p>
-<ul>
-<li>Animator  创建属性动画的基类，一般不直接用，而是用他的两个子类</li>
-<li>ValueAnimator  Animator的直接派生类。其内部采用一种时间循环的机制来计算值与值之间的动画过度，我们只需将初始值以及结束值提供给该类，并告诉其动画所需时间长度，该类就会自动帮我们从初始值平滑过度到结束。该类还能管理动画的播放次数、模式和监听器等。</li>
-<li>AnimatorSet  Animator的直接派生类，可以组合多个Animator，并制定Animator的播放次序。</li>
-<li>ObjectAnimator  ValueAnimator的子类，允许我们对指定对象的属性执行动画，用起来更简单，实际中用得较多。</li>
-<li>Evaluator  计算器，告诉动画系统如何从初始值过度到结束值。提供了一下的几种Evaluator：<ul>
-<li>IntEvaluator:用于计算int属性</li>
-<li>FloatEvaluator:用于计算float属性</li>
-<li>ArgbEvaluator：用于计算16进制表示颜色值的计算器</li>
-<li>TypeEvaluator：上述计算类的公共接口，可以自己实现接口完成自定义。</li>
-</ul>
-</li>
-</ul>
-<h3 id="ValueAnimator"><a href="#ValueAnimator" class="headerlink" title="ValueAnimator"></a>ValueAnimator</h3><p>使用流程：</p>
-<ol>
-<li>调用ValueAnimator的ofInt()，ofFloat()或ofObject()静态方法创建ValueAnimator实例</li>
-<li>调用实例的setXxx方法设置动画持续时间，插值方式，重复次数等</li>
-<li>调用实例的addUpdateListener添加AnimatorUpdateListener监听器，在该监听器中 可以获得ValueAnimator计算出来的值，你可以值应用到指定对象上~</li>
-<li>调用实例的start()方法开启动画！ 另外我们可以看到ofInt和ofFloat都有个这样的参数：float/int… values代表可以多个值！</li>
-</ol>
-<p>举个例子:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">//按轨迹方程来运动</div><div class="line">  private void lineAnimator() &#123;</div><div class="line">      width = ly_root.getWidth();</div><div class="line">      height = ly_root.getHeight();</div><div class="line">      ValueAnimator xValue = ValueAnimator.ofInt(height,0,height / 4,height / 2,height / 4 * 3 ,height);</div><div class="line">      xValue.setDuration(3000L);</div><div class="line">      xValue.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">          @Override</div><div class="line">          public void onAnimationUpdate(ValueAnimator animation) &#123;</div><div class="line">              // 轨迹方程 x = width / 2</div><div class="line">              int y = (Integer) animation.getAnimatedValue();</div><div class="line">              int x = width / 2;</div><div class="line">              moveView(img_babi, x, y);</div><div class="line">          &#125;</div><div class="line">      &#125;);</div><div class="line">      xValue.setInterpolator(new LinearInterpolator());</div><div class="line">      xValue.start();</div><div class="line">  &#125;</div><div class="line">      </div><div class="line">      </div><div class="line">  private void moveView(View view, int rawX, int rawY) &#123;</div><div class="line">      int left = rawX - img_babi.getWidth() / 2;</div><div class="line">      int top = rawY - img_babi.getHeight();</div><div class="line">      int width = left + view.getWidth();</div><div class="line">      int height = top + view.getHeight();</div><div class="line">      view.layout(left, top, width, height);</div><div class="line">  &#125;</div></pre></td></tr></table></figure>
-<p>其中moveView方法是将View重新布局，xValue的值从参数列表就可以看出，然后设置每次更新的监听，在监听中每次调用moveView方法来改变View的布局。如果是组合动画的话，我们可以这样：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div></pre></td><td class="code"><pre><div class="line">//缩放效果</div><div class="line">    private void scaleAnimator()&#123;</div><div class="line">    </div><div class="line">        final float scale = 0.5f;</div><div class="line">        AnimatorSet scaleSet = new AnimatorSet();</div><div class="line">        ValueAnimator valueAnimatorSmall = ValueAnimator.ofFloat(1.0f, scale);</div><div class="line">        valueAnimatorSmall.setDuration(500);</div><div class="line"></div><div class="line">        ValueAnimator valueAnimatorLarge = ValueAnimator.ofFloat(scale, 1.0f);</div><div class="line">        valueAnimatorLarge.setDuration(500);</div><div class="line"></div><div class="line">        valueAnimatorSmall.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">            @Override</div><div class="line">            public void onAnimationUpdate(ValueAnimator animation) &#123;</div><div class="line">                float scale = (Float) animation.getAnimatedValue();</div><div class="line">                img_babi.setScaleX(scale);</div><div class="line">                img_babi.setScaleY(scale);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line">        valueAnimatorLarge.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">            @Override</div><div class="line">            public void onAnimationUpdate(ValueAnimator animation) &#123;</div><div class="line">                float scale = (Float) animation.getAnimatedValue();</div><div class="line">                img_babi.setScaleX(scale);</div><div class="line">                img_babi.setScaleY(scale);</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        scaleSet.play(valueAnimatorLarge).after(valueAnimatorSmall);</div><div class="line">        scaleSet.start();</div><div class="line">     &#125;</div></pre></td></tr></table></figure>
-<p>这个组合动画我们可以用play after来设定动画实例，然后动画就先执行play的动画再执行after的实例了。当然，类似的方法还有一个with，就是两个动画会一起播放。</p>
-<ul>
-<li>after(Animator anim)   将现有动画插入到传入的动画之后执行</li>
-<li>after(long delay)   将现有动画延迟指定毫秒后执行</li>
-<li>before(Animator anim)   将现有动画插入到传入的动画之前执行</li>
-<li>with(Animator anim)   将现有动画和传入的动画同时执行</li>
-</ul>
-<h3 id="ObjectAnimator"><a href="#ObjectAnimator" class="headerlink" title="ObjectAnimator"></a>ObjectAnimator</h3><p>相比于ValueAnimator，ObjectAnimator可能才是我们最常接触到的类，因为ValueAnimator只不过是对值进行了一个平滑的动画过渡，但我们实际使用到这种功能的场景好像并不多。而ObjectAnimator则就不同了，它是可以直接对任意对象的任意属性进行动画操作的，比如说View的alpha属性。还有ObjectAnimator在设计的时候就没有针对于View来进行设计，而是针对于任意对象的。</p>
-<p>既然ObjectAnimator是继承自ValueAnimator的，那么它的用法应该是和ValueAnimator相似的。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">ObjectAnimator.ofFloat(textview, &quot;alpha&quot;, 1f, 0f);</div></pre></td></tr></table></figure>
-<p>其实这段代码的意思就是ObjectAnimator会帮我们不断地改变textview对象中alpha属性的值，从1f变化到0f。然后textview对象需要根据alpha属性值的改变来不断刷新界面的显示，从而让用户可以看出淡入淡出的动画效果。</p>
-<p>那么textview对象中是不是有alpha属性这个值呢？没有，不仅textview没有这个属性，连它所有的父类也是没有这个属性的！这就奇怪了，textview当中并没有alpha这个属性，ObjectAnimator是如何进行操作的呢？其实ObjectAnimator内部的工作机制并不是直接对我们传入的属性名进行操作的，而是会去寻找这个属性名对应的get和set方法，因此alpha属性所对应的get和set方法应该就是：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">public void setAlpha(float value);  </div><div class="line">public float getAlpha();</div></pre></td></tr></table></figure>
-<p>ObjectAnimator的使用相比ValueAnimator简单多了，我们只需要将它实例化后，其他的用法和ValueAnimator是一样的。</p>
-<h3 id="动画的监听"><a href="#动画的监听" class="headerlink" title="动画的监听"></a>动画的监听</h3><p>接下来要说下动画事件的监听，上面我们ValueAnimator的监听器是 AnimatorUpdateListener，当值状态发生改变时候会回调onAnimationUpdate方法！<br>除了这种事件外还有：动画进行状态的监听, AnimatorListener，我们可以调用addListener方法 添加监听器，然后重写下面四个回调方法：</p>
-<ul>
-<li>onAnimationStart()：动画开始</li>
-<li>onAnimationRepeat()：动画重复执行</li>
-<li>onAnimationEnd()：动画结束</li>
-<li>onAnimationCancel()：动画取消</li>
-</ul>
-<p>加入AnimatorListener的话，四个方法你都要重写，这样写起来很是麻烦，不过Android已经给我们提供好一个适配器类：AnimatorListenerAdapter，该类中已经把每个接口 方法都实现好了，所以我们这里只写一个回调方法也是可以的。</p>
-<h2 id="Evaluator"><a href="#Evaluator" class="headerlink" title="Evaluator"></a>Evaluator</h2><p>我们在调用属性动画的时候，用到了ofInt,ofFloat,ofObject这些静态方法来创建ValueAnimator的实例，在例子中，我们用到了ofInt,ofFloat，但是细心的同学可能发现了，ValueAnimator还有个ofObject方法来构造ValueAnimator实例，那么这个是干什么用的呢？</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">public static ValueAnimator ofObject(TypeEvaluator evaluator, Object... values) &#123;</div><div class="line">    ValueAnimator anim = new ValueAnimator();</div><div class="line">    anim.setObjectValues(values);</div><div class="line">    anim.setEvaluator(evaluator);</div><div class="line">    return anim;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>我们先戳进去看看这个源码的参数。第一个参数是名为TypeEvaluator的一个东西，这就是我们要说的计算器，他是来告诉动画系统如何从初始值过渡到结束值的。前面提到过，TypeEvaluator是所有Evaluator的基类，这里再重复一遍，系统提供了以下的几种Evaluator:</p>
-<ul>
-<li>IntEvaluator:用于计算int属性</li>
-<li>FloatEvaluator:用于计算float属性</li>
-<li>ArgbEvaluator：用于计算16进制表示颜色值的计算器</li>
-<li>TypeEvaluator：上述计算类的公共接口，可以自己实现接口完成自定义。</li>
-</ul>
-<p>当然，这些Evaluator都是TypeEvaluator实现。我们先来看看TypeEvaluator这个接口长什么样吧：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">public interface TypeEvaluator&lt;T&gt; &#123;</div><div class="line">    public T evaluate(float fraction, T startValue, T endValue);</div><div class="line"></div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>就这个一个evaluate方法，简单吧？这里面的三个参数的含义依次是：</p>
-<ul>
-<li>fraction：动画的完成度，我们根据他来计算动画的值应该是多少</li>
-<li>startValue：动画的起始值</li>
-<li>endValue：动画的结束值</li>
-</ul>
-<p>那么我们来看看系统是如何实现TypeEvaluator这个接口的，咱们就从IntEvaluator说起：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">public class IntEvaluator implements TypeEvaluator&lt;Integer&gt; &#123;</div><div class="line">    public Integer evaluate(float fraction, Integer startValue, Integer endValue) &#123;</div><div class="line">        int startInt = startValue;</div><div class="line">        return (int)(startInt + fraction * (endValue - startInt));</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>实现了TypeEvaluator接口，重写了evaluate方法，其中返回的是动画的值。动画的值是多少呢？我们从IntEvaluator的return语句中可以看出，<strong>动画的值 = 初始值 + 完成度 * (结束值 - 初始值)</strong> 这样当完成度为100%的时候，动画的值就是结束值了，同样的还有FloatEvaluator等。细心的同学也发现了，这个TypeEvaluator里面传入的是一个泛型，这个类型也就是我们接下来自定义的Object.</p>
-<p>现在我们举个自定义Evaluator的例子。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div></pre></td><td class="code"><pre><div class="line">package com.example.yang.testkotlin.widget;</div><div class="line"></div><div class="line">import android.animation.AnimatorSet;</div><div class="line">import android.animation.ObjectAnimator;</div><div class="line">import android.animation.TypeEvaluator;</div><div class="line">import android.animation.ValueAnimator;</div><div class="line">import android.content.Context;</div><div class="line">import android.graphics.Canvas;</div><div class="line">import android.graphics.Color;</div><div class="line">import android.graphics.Paint;</div><div class="line">import android.graphics.Point;</div><div class="line">import android.support.annotation.Nullable;</div><div class="line">import android.util.AttributeSet;</div><div class="line">import android.view.View;</div><div class="line"></div><div class="line">/**</div><div class="line"> * @author YangCihang</div><div class="line"> * @since 17/10/18.</div><div class="line"> * email yangcihang@hrsoft.net</div><div class="line"> */</div><div class="line"></div><div class="line">public class CircleAnimView extends View &#123;</div><div class="line">    public static final int RADIUS = 80;</div><div class="line">    private Point currentPoint;</div><div class="line">    private Paint mPaint;</div><div class="line">    private int mColor;//必须写这个属性的get和set，否则动画无法识别color属性</div><div class="line"></div><div class="line">    public CircleAnimView(Context context) &#123;</div><div class="line">        super(context);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public CircleAnimView(Context context, @Nullable AttributeSet attrs) &#123;</div><div class="line">        super(context, attrs);</div><div class="line">        init();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public CircleAnimView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) &#123;</div><div class="line">        super(context, attrs, defStyleAttr);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private void init() &#123;</div><div class="line">        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);</div><div class="line">        mPaint.setColor(Color.BLUE);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    protected void onDraw(Canvas canvas) &#123;</div><div class="line">        if (currentPoint == null) &#123;</div><div class="line">            currentPoint = new Point(RADIUS, RADIUS);</div><div class="line">            drawCircle(canvas);</div><div class="line">            startAnimation();</div><div class="line">        &#125; else &#123;</div><div class="line">            drawCircle(canvas);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private void drawCircle(Canvas canvas) &#123;</div><div class="line">        float x = currentPoint.x;</div><div class="line">        float y = currentPoint.y;</div><div class="line">        //用canvas draw，因此此控件大小应该为全屏大小才可以从左上到右下</div><div class="line">        canvas.drawCircle(x, y, RADIUS, mPaint);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    private void startAnimation() &#123;</div><div class="line">        Point startPoint = new Point(RADIUS, RADIUS);</div><div class="line">        Point endPoint = new Point(getWidth() - RADIUS, getHeight() - RADIUS);</div><div class="line">        ValueAnimator anim = ValueAnimator.ofObject(new PointEvaluator(), startPoint, endPoint);</div><div class="line">        anim.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() &#123;</div><div class="line">            @Override</div><div class="line">            public void onAnimationUpdate(ValueAnimator animation) &#123;</div><div class="line">                currentPoint = (Point) animation.getAnimatedValue();</div><div class="line">                invalidate();</div><div class="line">            &#125;</div><div class="line">        &#125;);</div><div class="line"></div><div class="line">        ObjectAnimator objectAnimator = ObjectAnimator.ofObject(this, &quot;color&quot;, new ColorEvaluator(),</div><div class="line">                Color.BLUE, Color.RED);</div><div class="line">        //动画集合将两个动画加到一起，with同时播放</div><div class="line">        AnimatorSet animatorSet = new AnimatorSet();</div><div class="line">        animatorSet.play(anim).with(objectAnimator);</div><div class="line">        animatorSet.setStartDelay(1000L);</div><div class="line">        animatorSet.setDuration(3000L);</div><div class="line">        animatorSet.start();</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 坐标变化</div><div class="line">     */</div><div class="line">    class PointEvaluator implements TypeEvaluator&lt;Point&gt; &#123;</div><div class="line"></div><div class="line">        @Override</div><div class="line">        public Point evaluate(float fraction, Point startValue, Point endValue) &#123;</div><div class="line">            //初始值 + 完成度 * (结束值 - 初始值)</div><div class="line">            int x = (int) (startValue.x + fraction * (endValue.x - startValue.x));</div><div class="line">            int y = (int) (startValue.y + fraction * (endValue.y - startValue.y));</div><div class="line">            return new Point(x, y);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    /**</div><div class="line">     * 颜色变化</div><div class="line">     */</div><div class="line">    public class ColorEvaluator implements TypeEvaluator&lt;Integer&gt; &#123;</div><div class="line">        @Override</div><div class="line">        public Integer evaluate(float fraction, Integer startValue, Integer endValue) &#123;</div><div class="line">            int alpha = (int) (Color.alpha(startValue) + fraction *</div><div class="line">                    (Color.alpha(endValue) - Color.alpha(startValue)));</div><div class="line">            int red = (int) (Color.red(startValue) + fraction *</div><div class="line">                    (Color.red(endValue) - Color.red(startValue)));</div><div class="line">            int green = (int) (Color.green(startValue) + fraction *</div><div class="line">                    (Color.green(endValue) - Color.green(startValue)));</div><div class="line">            int blue = (int) (Color.blue(startValue) + fraction *</div><div class="line">                    (Color.blue(endValue) - Color.blue(startValue)));</div><div class="line">            return Color.argb(alpha, red, green, blue);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    //color的get和set方法~</div><div class="line">    public int getColor() &#123;</div><div class="line">        return mColor;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setColor(int color) &#123;</div><div class="line">        mColor = color;</div><div class="line">        mPaint.setColor(color);</div><div class="line">        invalidate();</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>在这里我们定义了两个Evaluator类分别来表示坐标变化和颜色变化。注意，我们要改变color属性的时候，一定要写setColor和getColor方法，原因上面已经说过了。</p>
-<h2 id="Interpolator"><a href="#Interpolator" class="headerlink" title="Interpolator"></a>Interpolator</h2><p>Interpolator中文译名叫做插值器或者补间器。在补间动画的时候我们介绍了几个常用的插值器，我们可以回头去看看。补间动画和属性动画都可以用插值器的。而且补间动画还新增加了一个TimeInterpolator接口，该接口是用于兼容之前的Interpolator的(也就是Interpolator又继承了TimeInterpolator接口)，这使得所有过去的Interpolator实现类都可以直接拿过来 放到属性动画当中使用！我们可以调用动画对象的setInterpolator()方法设置不同的Interpolator。比如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">animatorSet.setInterpolator(new AccelerateInterpolator(2f))</div></pre></td></tr></table></figure>
-<p>括号里面的值用于控制加速度的。</p>
-<h3 id="自定义Interpolator"><a href="#自定义Interpolator" class="headerlink" title="自定义Interpolator"></a>自定义Interpolator</h3><p>我们自定义Interpolator其实就只要实现TimeInterpolator就可以了，重写也就只需要重写getInterpolation方法比如:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">private class DecelerateAccelerateInterpolator implements TimeInterpolator &#123;</div><div class="line">    @Override</div><div class="line">    public float getInterpolation(float input) &#123;</div><div class="line">        if (input &lt; 0.5) &#123;</div><div class="line">            return (float) (Math.sin(input * Math.PI) / 2);</div><div class="line">        &#125; else &#123;</div><div class="line">            return 1 - (float) (Math.sin(input * Math.PI) / 2);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>也是很简单的嘛。不过我们如果需要做一些复杂的速率变化，就得需要数学功底了。</p>
-
-          
+          <p>动画效果一直是人机交互的一个非常重要的部分，动画效果的引入，会让交互变得更加友好，让用户获得更加愉悦的体验。作为一个前端开发者，动画也是一个必会的技能。
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/21/Android动画学习笔记/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -2308,55 +1539,18 @@ e.printStackTrace();
 
       
         
-          
-            <p>Android的事件分发机制是Android中一个比较重要的知识点，开发会用面试必问。了解事件分发机制可以帮助我们了解滑动失效的问题，更好的去扩展控件的事件功能和开发自定义控件。<strong>总而言之，事件分发机制很重要。</strong>（本文只是介绍事件分发机制，具体是如何实现的还得看源码）</p>
+          <p>Android的事件分发机制是Android中一个比较重要的知识点，开发会用面试必问。了解事件分发机制可以帮助我们了解滑动失效的问题，更好的去扩展控件的事件功能和开发自定义控件。<strong>总而言之，事件分发机制很重要。</strong>（本文只是介绍事件分发机制，具体是如何实现的还得看源码）</p>
 <h2 id="Touch事件"><a href="#Touch事件" class="headerlink" title="Touch事件"></a>Touch事件</h2><p>当我们写给一个控件注册点击事件的时候，细心的小伙伴可能会发现在setOnClickListener()方法下面有个setOnTouchListener()这样一个方法。像这样：</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">button.setOnTouchListener(new OnTouchListener() &#123;  </div><div class="line">    @Override  </div><div class="line">    public boolean onTouch(View v, MotionEvent event) &#123;   </div><div class="line">        return false;  </div><div class="line">    &#125;  </div><div class="line">&#125;);</div></pre></td></tr></table></figure>
 <p>onTouch方法里能做的事情要比onClick多一点，比如判断手指按下、抬起、移动等事件，只需要判断event.getAction()方法返回的值就可以根据用户不用的操作来进行不同的处理。那么如果我两个事件都注册了，哪一个会先执行呢？经过测验，onTouch()是优先执行于onClick()方法的。也就是说view首先响应的是onTouch方法，其次是onClick。</p>
-<p>细心的小伙伴可能还发现了，这个onTouch()方法是有返回值的。如果我们把这个false改写为true会怎么样呢？经过测验，onTouch()方法里面的内容还是正常执行的，但是onClick()方法却没有执行。这个例子说明了onTouch()方法中返回true就说明了这个事件被onTouch()消费掉了，所以不会继续向下传递。</p>
-<h2 id="一些重要的函数"><a href="#一些重要的函数" class="headerlink" title="一些重要的函数"></a>一些重要的函数</h2><p>先简单介绍三个方法：</p>
-<ul>
-<li>dispatchTouchEvent是处理触摸事件分发,事件(多数情况)是从Activity的dispatchTouchEvent开始的。<strong>执行super.dispatchTouchEvent(ev)，事件向下分发</strong>。 </li>
-<li>onInterceptTouchEvent是ViewGroup提供的方法，默认返回false。onInterceptTouchEvent方法中 return true就会交给自己的onTouchEvent的处理，如果不拦截就是继续往子控件往下传。默认是不会去拦截的，因为子View也需要这个事件，所以onInterceptTouchEvent拦截器<strong>return super.onInterceptTouchEvent()和return false是一样的，是不会拦截的，事件会继续往子View的dispatchTouchEvent传递。</strong></li>
-<li>onTouchEvent是View中提供的方法，ViewGroup也有这个方法，view中不存在onInterceptTouchEvent。</li>
-</ul>
-<p>在View和Activity里，有两个回调函数 </p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">public boolean dispatchTouchEvent(MotionEvent ev)；    </div><div class="line">public boolean onTouchEvent(MotionEvent ev);</div></pre></td></tr></table></figure>
-<p>在viewGroup中，有三个回调函数</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">public boolean dispatchTouchEvent(MotionEvent ev)；    </div><div class="line">public boolean onInterceptTouchEvent(MotionEvent ev);    </div><div class="line">public boolean onTouchEvent(MotionEvent ev);</div></pre></td></tr></table></figure>
-<h2 id="事件分发流"><a href="#事件分发流" class="headerlink" title="事件分发流"></a>事件分发流</h2><p>借用网上的几张图来理解事件分发的流程图…用户点击后，根据不同的返回值来确定最终走向。<br><img src="http://upload-images.jianshu.io/upload_images/966283-b9cb65aceea9219b.png?imageMogr2/auto-orient/strip%7CimageView2/2" alt="Alt text"><br>图中的dispatchTouchEvent方法的返回值和onTouchEvent的返回值的含义是相同的， <strong>一旦返回了true，事件就会被消费，不会再有任何形式的传递，事件就此终止。</strong> 我们还可以发现，<strong>dispatchTouchEvent 和 onTouchEvent返回false的时候事件都回传给父控件的onTouchEvent处理，注意是父控件的onTouchEvent。</strong></p>
-<ul>
-<li>对于dispatchTouchEvent 返回 false 的含义应该是：事件停止往子View传递和分发同时开始往父控件回溯（父控件的onTouchEvent开始从下往上回传直到某个onTouchEvent 返回true），事件分发机制就像递归，return false 的意义就是递归停止然后开始回溯。</li>
-<li>对于onTouchEvent返回false的意思是：它不消费事件，并让事件继续往父控件的方向从下往上流动。</li>
-</ul>
-<p><img src="http://upload-images.jianshu.io/upload_images/966283-7f3ab9e7e7a1f0a2.png?imageMogr2/auto-orient/strip%7CimageView2/2" alt="Alt text"></p>
-<p>从图中我们可以看到事件的分发消费是呈类U型的一个流程。（注意Activity中的dispatchTouchEvent，只有return super.dispatchTouchEvent(ev) 才是往下走，返回true 或者 false 事件就终止传递。</p>
-<ul>
-<li><p>对于ViewGroup的事件分发：ViewGroup怎样通过dispatchTouchEvent方法能把事件分发到自己的onTouchEvent处理呢，return true和false 都不行，那么 <strong>只能通过Interceptor把事件拦截下来给自己的onTouchEvent，所以ViewGroup dispatchTouchEvent方法的super默认实现就是去调用onInterceptTouchEvent。</strong>（源码在最后会贴出，在源码里面也顺便解释了这个类似递归的过程）</p>
-</li>
-<li><p>对于View的事件分发：调用View的dispatchTouchEvent的方法的默认super方法时会将事件传递到哪儿呢？View没有拦截器，所以没有拦截的方法。怎样把事件分发给自己的onTouchEvent 处理呢，<strong>那只能return super.dispatchTouchEvent,View类的dispatchTouchEvent（）方法默认实现就是能帮你调用View自己的onTouchEvent方法的。</strong> 这里我们可以从源码看出：</p>
-</li>
-</ul>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">public boolean dispatchTouchEvent(MotionEvent event) &#123;  </div><div class="line">    if (mOnTouchListener != null &amp;&amp; (mViewFlags &amp; ENABLED_MASK) == ENABLED &amp;&amp;  </div><div class="line">            mOnTouchListener.onTouch(this, event)) &#123;  </div><div class="line">        return true;  </div><div class="line">    &#125;  </div><div class="line">    return onTouchEvent(event);  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>View的dispatchTouchEvent是先看有没有注册onTouchListener，没有或者onTouchListener的onTouch方法没有消费事件(返回false)就会直接调用onTouchEvent方法的。</p>
-<ul>
-<li>对于ViewGroup的事件拦截:只有ViewGroup有onInterceptTouchEvent的方法，return true是拦截下来，给自己的onTouchEvent处理，return false是不拦截，将事件传递给子View去处理，默认是不拦截的。</li>
-</ul>
-<p>那我们如果直接在屏幕上点击一下某一个组件会有什么事情发生呢？事件的传递首先先到的是Activity，然后交由window处理，window的直接子类phoneWindow调用superDispatchTouchEvent方法，在该方法中将事件传递给DecorView，至此事件就从activity传到我们的View/ViewGroup了,然后View和ViewGroup根据我们不同的设定来消费拦截或者消费。</p>
-<h2 id="对于ACTION-MOVE和ACTION-UP"><a href="#对于ACTION-MOVE和ACTION-UP" class="headerlink" title="对于ACTION_MOVE和ACTION_UP"></a>对于ACTION_MOVE和ACTION_UP</h2><p>上面说的都是ACTION_DOWN的时间传递。而这俩在传递的过程和ACTION_DOWN并不一样。简单的说，就是当dispatchTouchEvent在进行事件分发的时候，只有前一个事件（如ACTION_DOWN）返回true，才会收到ACTION_MOVE和ACTION_UP的事件。也就是事件传递的时候是不会调用这俩方法的。</p>
-<p>对于在onTouchEvent消费事件的情况：在哪个View的onTouchEvent 返回true，那么ACTION_MOVE和ACTION_UP的事件从上往下传到这个View后就不再往下传递了，而直接传给自己的onTouchEvent 并结束本次事件传递过程。</p>
-<p><strong>对于ACTION_MOVE、ACTION_UP总结：ACTION_DOWN事件在哪个控件消费了（return true）， 那么ACTION_MOVE和ACTION_UP就会从上往下（通过dispatchTouchEvent）做事件分发往下传，就只会传到这个控件，不会继续往下传，如果ACTION_DOWN事件是在dispatchTouchEvent消费，那么事件到此为止停止传递，如果ACTION_DOWN事件是在onTouchEvent消费的，那么会把ACTION_MOVE或ACTION_UP事件传给该控件的onTouchEvent处理并结束传递。</strong></p>
-<h2 id="onTouchListener-onTouchEvent-onClickListener"><a href="#onTouchListener-onTouchEvent-onClickListener" class="headerlink" title="onTouchListener,onTouchEvent,onClickListener"></a>onTouchListener,onTouchEvent,onClickListener</h2><p>关于这三个方法的执行顺序问题。在最开始的例子中，我们知道是先响应onTouchListener中的onTouch方法，然后是onClickListener。其实如果当我们自定义控件的时候，重写onTouchEvent方法打个log，会发现其实真正的顺序是onTouchListener、onTouchEvent、onClickListener这么个顺序。我们可以看看dispatchTouchEvent方法的源码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">public boolean dispatchTouchEvent(MotionEvent event) &#123;</div><div class="line">        ......</div><div class="line">        ListenerInfo li = mListenerInfo;</div><div class="line">        if (li != null &amp;&amp; li.mOnTouchListener != null</div><div class="line">                &amp;&amp; (mViewFlags &amp; ENABLED_MASK) == ENABLED</div><div class="line">                &amp;&amp; li.mOnTouchListener.onTouch(this, event)) &#123;</div><div class="line">            result = true;</div><div class="line">        &#125;</div><div class="line">        if (!result &amp;&amp; onTouchEvent(event)) &#123;</div><div class="line">            result = true;</div><div class="line">        &#125;</div><div class="line">        ......</div><div class="line">        return result;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>再看看listenerInfo这个类</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">static class ListenerInfo &#123;</div><div class="line"></div><div class="line">        protected OnFocusChangeListener mOnFocusChangeListener;</div><div class="line">        private ArrayList&lt;OnLayoutChangeListener&gt; mOnLayoutChangeListeners;</div><div class="line">        protected OnScrollChangeListener mOnScrollChangeListener;</div><div class="line">        private CopyOnWriteArrayList&lt;OnAttachStateChangeListener&gt; mOnAttachStateChangeListeners;</div><div class="line">        public OnClickListener mOnClickListener;</div><div class="line">        protected OnLongClickListener mOnLongClickListener;</div><div class="line">        protected OnContextClickListener mOnContextClickListener;</div><div class="line">        protected OnCreateContextMenuListener mOnCreateContextMenuListener;</div><div class="line">        ......</div><div class="line"></div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>这里面是各种的listener，回来我们接着看dispatchTouchEvent方法，从上面我们可以知道如果有的话OnTouchListener是比onTouchEvent先执行的，当然前提是OnTouchListener返回false，即OnTouchListener并没有消费事件。</p>
-<p>然后看看调用的onTouchEvent方法</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div></pre></td><td class="code"><pre><div class="line">public boolean onTouchEvent(MotionEvent event) &#123;</div><div class="line">        ......</div><div class="line">        switch (action) &#123;</div><div class="line">             case MotionEvent.ACTION_UP:</div><div class="line">                  ......</div><div class="line">                  performClick();</div><div class="line">                  ......</div><div class="line">                  break;</div><div class="line">        ......</div><div class="line">    &#125;</div><div class="line"></div><div class="line">public boolean performClick() &#123;</div><div class="line">        final boolean result;</div><div class="line">        final ListenerInfo li = mListenerInfo;</div><div class="line">        if (li != null &amp;&amp; li.mOnClickListener != null) &#123;</div><div class="line">            playSoundEffect(SoundEffectConstants.CLICK);</div><div class="line">            li.mOnClickListener.onClick(this);</div><div class="line">            result = true;</div><div class="line">        &#125; else &#123;</div><div class="line">            result = false;</div><div class="line">        &#125;</div><div class="line">        sendAccessibilityEvent(AccessibilityEvent.TYPE_VIEW_CLICKED);</div><div class="line">        return result;</div><div class="line">    &#125;</div></pre></td></tr></table></figure>
-<p>在View的onTouchEvent方法中，如果判断事件为MotionEvent.ACTION_UP时，则会调用performClick，而在performClick中则会回调mOnClickListener的onClick方法，即点击事件被回调，同时直接返回true。当然，如果我们再深入看源码的话，这个点击事件其实在一个if的判断里面，if条件触发，即点击事件触发，它会直接返回true，也就是onTouchEvent方法会直接消费掉事件。下面贴上ViewGroup的dispatchTouchEvent的具体代码（Android5.0以前版本代码，5.0以后代码会变复杂但是整体逻辑还算这样，其次View的dispatchTouchEvent在上面已经贴出）</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div></pre></td><td class="code"><pre><div class="line">public boolean dispatchTouchEvent(MotionEvent ev) &#123;  </div><div class="line">    final int action = ev.getAction();  </div><div class="line">    final float xf = ev.getX();  </div><div class="line">    final float yf = ev.getY();  </div><div class="line">    final float scrolledXFloat = xf + mScrollX;  </div><div class="line">    final float scrolledYFloat = yf + mScrollY;  </div><div class="line">    final Rect frame = mTempRect;  </div><div class="line">    boolean disallowIntercept = (mGroupFlags &amp; FLAG_DISALLOW_INTERCEPT) != 0;  </div><div class="line">    if (action == MotionEvent.ACTION_DOWN) &#123;  </div><div class="line">        if (mMotionTarget != null) &#123;  </div><div class="line">            mMotionTarget = null;  </div><div class="line">        &#125;  </div><div class="line"></div><div class="line">//看这个If判断语句</div><div class="line">//第一个判断值disallowIntercept：是否禁用事件拦截的功能(默认是false)</div><div class="line">//可以通过调用requestDisallowInterceptTouchEvent方法对这个值进行修改。</div><div class="line">//第二个判断值： !onInterceptTouchEvent(ev)：对onInterceptTouchEvent()返回值取反</div><div class="line"></div><div class="line">//如果我们在onInterceptTouchEvent()中返回false，就会让第二个值为true，从而进入到条件判断的内部</div><div class="line">//如果我们在onInterceptTouchEvent()中返回true，就会让第二个值为false，从而跳出了这个条件判断。</div><div class="line">//关于onInterceptTouchEvent()请看下面分析（关注点1）</div><div class="line">        if (disallowIntercept || !onInterceptTouchEvent(ev)) &#123;  </div><div class="line">            ev.setAction(MotionEvent.ACTION_DOWN);  </div><div class="line">            final int scrolledXInt = (int) scrolledXFloat;  </div><div class="line">            final int scrolledYInt = (int) scrolledYFloat;  </div><div class="line">            final View[] children = mChildren;  </div><div class="line">            final int count = mChildrenCount;  </div><div class="line"></div><div class="line">          //通过for循环，遍历了当前ViewGroup下的所有子View</div><div class="line">            for (int i = count - 1; i &gt;= 0; i--) &#123;  </div><div class="line">                final View child = children[i];  </div><div class="line">                if ((child.mViewFlags &amp; VISIBILITY_MASK) == VISIBLE  </div><div class="line">                        || child.getAnimation() != null) &#123;  </div><div class="line">                    child.getHitRect(frame);  </div><div class="line"></div><div class="line">                    //判断当前遍历的View是不是正在点击的View</div><div class="line">                    //如果是，则进入条件判断内部</div><div class="line">                    if (frame.contains(scrolledXInt, scrolledYInt)) &#123;  </div><div class="line">                        final float xc = scrolledXFloat - child.mLeft;  </div><div class="line">                        final float yc = scrolledYFloat - child.mTop;  </div><div class="line">                        ev.setLocation(xc, yc);  </div><div class="line">                        child.mPrivateFlags &amp;= ~CANCEL_NEXT_UP_EVENT;  </div><div class="line"></div><div class="line">                    //条件判断的内部调用了该View的dispatchTouchEvent()方法（具体请看下面的View事件分发机制）</div><div class="line">                    //实现了点击事件从ViewGroup到View的传递</div><div class="line">                        if (child.dispatchTouchEvent(ev))  &#123; </div><div class="line"></div><div class="line">        //调用子View的dispatchTouchEvent后是有返回值的</div><div class="line">        //如果这个控件是可点击的话，那么点击该控件时，dispatchTouchEvent的返回值必定是true</div><div class="line">        //因此会导致条件判断成立</div><div class="line">                            mMotionTarget = child;  </div><div class="line">        //于是给ViewGroup的dispatchTouchEvent方法直接返回了true，这样就导致后面的代码无法执行，直接跳出</div><div class="line">        //即把ViewGroup的touch事件拦截掉</div><div class="line">                            return true;  </div><div class="line">                        &#125;  </div><div class="line">                    &#125;  </div><div class="line">                &#125;  </div><div class="line">            &#125;  </div><div class="line">        &#125;  </div><div class="line">    &#125;  </div><div class="line">    boolean isUpOrCancel = (action == MotionEvent.ACTION_UP) ||  </div><div class="line">            (action == MotionEvent.ACTION_CANCEL);  </div><div class="line">    if (isUpOrCancel) &#123;  </div><div class="line">        mGroupFlags &amp;= ~FLAG_DISALLOW_INTERCEPT;  </div><div class="line">    &#125;  </div><div class="line">    final View target = mMotionTarget;  </div><div class="line"></div><div class="line">//没有任何View接收事件的情况，即点击空白处情况</div><div class="line">    if (target == null) &#123;  </div><div class="line">        ev.setLocation(xf, yf);  </div><div class="line">        if ((mPrivateFlags &amp; CANCEL_NEXT_UP_EVENT) != 0) &#123;  </div><div class="line">            ev.setAction(MotionEvent.ACTION_CANCEL);  </div><div class="line">            mPrivateFlags &amp;= ~CANCEL_NEXT_UP_EVENT;  </div><div class="line">        &#125;  </div><div class="line">//调用ViewGroup的父类View的dispatchTouchEvent()</div><div class="line">//因此会执行ViewGroup的onTouch()、onTouchEvent()</div><div class="line">//实现了点击事件从ViewGroup到View的传递</div><div class="line">        return super.dispatchTouchEvent(ev);  </div><div class="line">    &#125;  </div><div class="line"></div><div class="line"></div><div class="line">//之后的代码在一般情况下是走不到的了，我们也就不再继续往下分析。</div><div class="line">    if (!disallowIntercept &amp;&amp; onInterceptTouchEvent(ev)) &#123;  </div><div class="line">        final float xc = scrolledXFloat - (float) target.mLeft;  </div><div class="line">        final float yc = scrolledYFloat - (float) target.mTop;  </div><div class="line">        mPrivateFlags &amp;= ~CANCEL_NEXT_UP_EVENT;  </div><div class="line">        ev.setAction(MotionEvent.ACTION_CANCEL);  </div><div class="line">        ev.setLocation(xc, yc);  </div><div class="line">        if (!target.dispatchTouchEvent(ev)) &#123;  </div><div class="line">        &#125;  </div><div class="line">        mMotionTarget = null;  </div><div class="line">        return true;  </div><div class="line">    &#125;  </div><div class="line">    if (isUpOrCancel) &#123;  </div><div class="line">        mMotionTarget = null;  </div><div class="line">    &#125;  </div><div class="line">    final float xc = scrolledXFloat - (float) target.mLeft;  </div><div class="line">    final float yc = scrolledYFloat - (float) target.mTop;  </div><div class="line">    ev.setLocation(xc, yc);  </div><div class="line">    if ((target.mPrivateFlags &amp; CANCEL_NEXT_UP_EVENT) != 0) &#123;  </div><div class="line">        ev.setAction(MotionEvent.ACTION_CANCEL);  </div><div class="line">        target.mPrivateFlags &amp;= ~CANCEL_NEXT_UP_EVENT;  </div><div class="line">        mMotionTarget = null;  </div><div class="line">    &#125;  </div><div class="line">    return target.dispatchTouchEvent(ev);  </div><div class="line">&#125;</div></pre></td></tr></table></figure>
-
-          
+<p>细心的小伙伴可能还发现了，这个onTouch()方法是有返回值的。如果我们把这个false改写为true会怎么样呢？经过测验，onTouch()方法里面的内容还是正常执行的，但是onClick()方法却没有执行。这个例子说明了onTouch()方法中返回true就说明了这个事件被onTouch()消费掉了，所以不会继续向下传递。
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/21/事件分发机制/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -2495,39 +1689,14 @@ e.printStackTrace();
 
       
         
-          
-            <p>在Android中，我们将线程大体上分为两种，一种是UI线程，即主线程，在应用启动的时候就分配的线程。它是我们加载UI界面，完成用户交互的线程。另一个就是WorkerThread，除了UI线程外的所有线程都可以这么称呼。在多线程编程中，我们必须遵循这么几个原则：</p>
-<ul>
-<li>不能在UI线程中执行耗时操作（5s）</li>
-<li>不能再WorkerThread去操控UI组件</li>
-</ul>
-<p>因此我们通常会使用Handler来进行跨线程的通信，至于Handler的使用和原理在这里不是重点。本文介绍的是基于Handler的一个轻量级的异步类AsyncTask，它使得我们创建异步任务不会像Handler那样繁琐。</p>
-<h2 id="AsyncTask使用"><a href="#AsyncTask使用" class="headerlink" title="AsyncTask使用"></a>AsyncTask使用</h2><p>AsyncTask字面意思就是异步任务。在我们的UI线程运行的时候，AsyncTask允许我们的执行一个异步的任务在后台。我们可以将耗时的操作放在异步任务当中来执行，并随时将任务执行的结果返回给我们的UI线程来更新我们的UI控件。我们先来看看这个抽象类的原型：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">public abstract class AsyncTask &lt; Params, Progress, Result&gt;</div></pre></td></tr></table></figure>
-<p>从代码里面我们可以看到，这个AsyncTask创建的时候需要三个泛型。这三个泛型代表什么意思呢？其实这个字面翻译已经很明显了。</p>
-<ul>
-<li>Params: 这个泛型指定的是我们传递给异步任务执行时的参数的类型</li>
-<li>Progress: 这个泛型指定的是我们的异步任务在执行的时候将执行的进度返回给UI线程的参数的类型</li>
-<li>Result: 这个泛型指定的异步任务执行完后返回给UI线程的结果的类型</li>
-</ul>
-<p>这基本都是字面意思的翻译…</p>
-<p>下来就是AsyncTask执行时的必要步骤</p>
-<ul>
-<li>onPreExecute(): 这个方法是在执行异步任务之前的时候执行，并且是在UI Thread当中执行的，通常我们在这个方法里做一些UI控件的初始化的操作，例如弹出要给ProgressDialog</li>
-<li>doInBackground(Params… params): 在onPreExecute()方法执行完之后，会马上执行这个方法，这个方法就是来处理异步任务的方法，Android操作系统会在后台的线程池当中开启一个worker thread来执行我们的这个方法，所以这个方法是在worker thread当中执行的，这个方法执行完之后就可以将我们的执行结果发送给我们的最后一个onPostExecute 方法，在这个方法里，我们可以从网络当中获取数据等一些耗时的操作</li>
-<li>onProgressUpdate(Progess… values): 这个方法也是在UI Thread当中执行的，我们在异步任务执行的时候，有时候需要将执行的进度返回给我们的UI界面，例如下载一张网络图片，我们需要时刻显示其下载的进度，就可以使用这个方法来更新我们的进度。这个方法在调用之前，我们需要在 <strong> doInBackground 方法中调用一个 publishProgress(Progress) </strong>的方法来将我们的进度时时刻刻传递给 onProgressUpdate 方法来更新</li>
-<li>onPostExecute(Result… result): 当我们的异步任务执行完之后，就会将结果返回给这个方法，这个方法也是在UI Thread当中调用的，我们可以将返回的结果显示在UI控件上</li>
-</ul>
-<p>其中，我们必须要实现的方法是doInBackground，其实我们可以把它看做一个线程来用。为啥必须要实现这个方法呢？因为不实现这个方法的话那还用个毛AsyncTask。。。下面举例来说明这写方法的使用:</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">    class TestTask extends AsyncTask&lt;Void, Integer, Integer&gt; &#123;</div><div class="line">        //开启线程处理</div><div class="line">        @Override</div><div class="line">        protected Integer doInBackground(Void... params) &#123;</div><div class="line">            int result = 8;</div><div class="line">            while (true) &#123;</div><div class="line">            	   publishProgress(result);</div><div class="line">                result += 1;</div><div class="line">                SystemClock.sleep(1000);</div><div class="line">                if (result == 10) &#123;</div><div class="line">                    break;</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            return result;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        //在doInBackground执行时调用publishProgress()来执行,运行在UI线程里</div><div class="line">        @Override</div><div class="line">        protected void onProgressUpdate(Integer... values) &#123;</div><div class="line">            super.onProgressUpdate(values);</div><div class="line">            ToastUtil.showToast(&quot;&quot; + values[0]);</div><div class="line">        &#125;</div><div class="line"></div><div class="line">        //执行完后再主线程处理的任务</div><div class="line">        @Override</div><div class="line">        protected void onPostExecute(Integer integer) &#123;</div><div class="line">            super.onPostExecute(integer);</div><div class="line">            ToastUtil.showToast(&quot;&quot;+integer);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
-<p>这是一个下拉加载隐藏ViewHead的一个异步处理，result初始值为8，每1秒来执行onProgressUpdate，显示一下result的值。最后当result到10的话，执行onPostExecute来显示此时的值。其中onProgressUpdata和onPostExecute都是在UI线程里面执行的。<br>AsyncTask的重要知识点</p>
-<p>AsyncTask的一些其他知识点：</p>
-<p>1.Cancelling a Task</p>
-<p>我们可以在任何时刻来取消我们的异步任务的执行，通过调用 cancel(boolean)方法，调用完这个方法后系统会随后调用 isCancelled() 方法并且返回true。如果调用了这个方法，那么在 doInBackgroud() 方法执行完之后，就不会调用 onPostExecute() 方法了，取而代之的是调用 onCancelled() 方法。为了确保Task已经被取消了，我们需要经常调用 isCancelled() 方法来判断，如果有必要的话。</p>
-<p>2.在使用AsyncTask做异步任务的时候必须要遵循的原则：</p>
-<p>AsyncTask类必须在UI Thread当中加载，在Android Jelly_Bean版本后这些都是自动完成的<br>AsyncTask的对象必须在UI Thread当中实例化<br>execute方法必须在UI Thread当中调用<br>不要手动的去调用AsyncTask的onPreExecute, doInBackground, publishProgress, onProgressUpdate, onPostExecute方法，这些都是由Android系统自动调用的<br>AsyncTask任务只能被执行一次。这个只能执行一次的意思是：每一个new出的AsyncTask只能执行一次execute()方法，多次运行将会报错，如需多次，需要新new一个AsyncTask。至于为什么会这样呢？看源码吧…</p>
-
-          
+          <p>在Android中，我们将线程大体上分为两种，一种是UI线程，即主线程，在应用启动的时候就分配的线程。它是我们加载UI界面，完成用户交互的线程。另一个就是WorkerThread，除了UI线程外的所有线程都可以这么称呼。在多线程编程中，我们必须遵循这么几个原则：
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/10/21/AsyncTask/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -2654,18 +1823,6 @@ e.printStackTrace();
                   <a href="https://github.com/yangcihang" target="_blank" title="GitHub">
                     
                       <i class="fa fa-fw fa-globe"></i>GitHub</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="http://marklux.cn/" target="_blank" title="MarkLux">
-                    
-                      <i class="fa fa-fw fa-globe"></i>MarkLux</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="https://www.outxu.cn/" target="_blank" title="OutXu">
-                    
-                      <i class="fa fa-fw fa-globe"></i>OutXu</a>
                 </span>
               
             

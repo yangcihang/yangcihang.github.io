@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="问题情形 当ListView外面嵌套一层ScrollView时，内层的ListView会有这样的问题：  ListView的尺寸无法正确测量。如果不将高度固定的话，ListView只会显示一个Item。 ListView的滑动事件被截止。如果内容超过了屏幕的大小的话，会截止ListView的滑动事件。  源码分析 通常情况下，ViewGroup是不拦截事件的，但是ScrollView在onInte">
+<meta name="description" content="问题情形 当ListView外面嵌套一层ScrollView时，内层的ListView会有这样的问题：  ListView的尺寸无法正确测量。如果不将高度固定的话，ListView只会显示一个Item。 ListView的滑动事件被截止。如果内容超过了屏幕的大小的话，会截止ListView的滑动事件。">
 <meta name="keywords" content="Android">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ScrollView嵌套ListView问题">
 <meta property="og:url" content="http://yoursite.com/2017/10/21/ScrollView嵌套ListView问题/index.html">
 <meta property="og:site_name" content="猫的储物间">
-<meta property="og:description" content="问题情形 当ListView外面嵌套一层ScrollView时，内层的ListView会有这样的问题：  ListView的尺寸无法正确测量。如果不将高度固定的话，ListView只会显示一个Item。 ListView的滑动事件被截止。如果内容超过了屏幕的大小的话，会截止ListView的滑动事件。  源码分析 通常情况下，ViewGroup是不拦截事件的，但是ScrollView在onInte">
+<meta property="og:description" content="问题情形 当ListView外面嵌套一层ScrollView时，内层的ListView会有这样的问题：  ListView的尺寸无法正确测量。如果不将高度固定的话，ListView只会显示一个Item。 ListView的滑动事件被截止。如果内容超过了屏幕的大小的话，会截止ListView的滑动事件。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-22T02:55:47.000Z">
+<meta property="og:updated_time" content="2017-10-22T09:01:16.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ScrollView嵌套ListView问题">
-<meta name="twitter:description" content="问题情形 当ListView外面嵌套一层ScrollView时，内层的ListView会有这样的问题：  ListView的尺寸无法正确测量。如果不将高度固定的话，ListView只会显示一个Item。 ListView的滑动事件被截止。如果内容超过了屏幕的大小的话，会截止ListView的滑动事件。  源码分析 通常情况下，ViewGroup是不拦截事件的，但是ScrollView在onInte">
+<meta name="twitter:description" content="问题情形 当ListView外面嵌套一层ScrollView时，内层的ListView会有这样的问题：  ListView的尺寸无法正确测量。如果不将高度固定的话，ListView只会显示一个Item。 ListView的滑动事件被截止。如果内容超过了屏幕的大小的话，会截止ListView的滑动事件。">
 
 
 
@@ -355,7 +355,7 @@
         <h2 id="问题情形"><a href="#问题情形" class="headerlink" title="问题情形"></a>问题情形</h2><p> 当ListView外面嵌套一层ScrollView时，内层的ListView会有这样的问题：</p>
 <ol>
 <li>ListView的尺寸无法正确测量。如果不将高度固定的话，ListView只会显示一个Item。</li>
-<li>ListView的滑动事件被截止。如果内容超过了屏幕的大小的话，会截止ListView的滑动事件。</li>
+<li>ListView的滑动事件被截止。如果内容超过了屏幕的大小的话，会截止ListView的滑动事件。<a id="more"></a></li>
 </ol>
 <h2 id="源码分析"><a href="#源码分析" class="headerlink" title="源码分析"></a>源码分析</h2><p> 通常情况下，ViewGroup是不拦截事件的，但是ScrollView在onInterceptTouchEvent方法中，有这么几句：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div></pre></td><td class="code"><pre><div class="line">if ((action == MotionEvent.ACTION_MOVE) &amp;&amp; (mIsBeingDragged)) &#123;</div><div class="line">        return true;</div><div class="line">    &#125;</div><div class="line">//在动作事件中:</div><div class="line">  case MotionEvent.ACTION_MOVE: &#123;</div><div class="line"></div><div class="line">            final int activePointerId = mActivePointerId;</div><div class="line">            if (activePointerId == INVALID_POINTER) &#123;</div><div class="line">                // If we don&apos;t have a valid id, the touch down wasn&apos;t on content.</div><div class="line">                break;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            final int pointerIndex = ev.findPointerIndex(activePointerId);</div><div class="line">            if (pointerIndex == -1) &#123;</div><div class="line">                Log.e(TAG, &quot;Invalid pointerId=&quot; + activePointerId+ &quot; in onInterceptTouchEvent&quot;);</div><div class="line">                break;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            final int y = (int) ev.getY(pointerIndex);</div><div class="line">            final int yDiff = Math.abs(y - mLastMotionY);</div><div class="line">            if (yDiff &gt; mTouchSlop &amp;&amp; (getNestedScrollAxes() &amp; SCROLL_AXIS_VERTICAL) == 0) &#123;</div><div class="line">                mIsBeingDragged = true;</div><div class="line">                mLastMotionY = y;</div><div class="line">                initVelocityTrackerIfNotExists();</div><div class="line">                mVelocityTracker.addMovement(ev);</div><div class="line">                mNestedYOffset = 0;</div><div class="line">                if (mScrollStrictSpan == null) &#123;</div><div class="line">                    mScrollStrictSpan = StrictMode.enterCriticalSpan(&quot;ScrollView-scroll&quot;);</div><div class="line">                &#125;</div><div class="line">                final ViewParent parent = getParent();</div><div class="line">                if (parent != null) &#123;</div><div class="line">                    parent.requestDisallowInterceptTouchEvent(true);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            break;</div><div class="line">        &#125;</div><div class="line"></div><div class="line">         case MotionEvent.ACTION_DOWN: &#123;</div><div class="line">            final int y = (int) ev.getY();</div><div class="line">            if (!inChild((int) ev.getX(), (int) y)) &#123;</div><div class="line">                mIsBeingDragged = false;</div><div class="line">                recycleVelocityTracker();</div><div class="line">                break;</div><div class="line">            &#125;</div><div class="line"></div><div class="line">            /*</div><div class="line">             * Remember location of down touch.</div><div class="line">             * ACTION_DOWN always refers to pointer index 0.</div><div class="line">             */</div><div class="line">            mLastMotionY = y;</div><div class="line">            mActivePointerId = ev.getPointerId(0);</div><div class="line"></div><div class="line">            initOrResetVelocityTracker();</div><div class="line">            mVelocityTracker.addMovement(ev);</div><div class="line"></div><div class="line">            mIsBeingDragged = !mScroller.isFinished();</div><div class="line">            if (mIsBeingDragged &amp;&amp; mScrollStrictSpan == null) &#123;</div><div class="line">                mScrollStrictSpan = StrictMode.enterCriticalSpan(&quot;ScrollView-scroll&quot;);</div><div class="line">            &#125;</div><div class="line">            startNestedScroll(SCROLL_AXIS_VERTICAL);</div><div class="line">            break;</div><div class="line">        &#125;</div></pre></td></tr></table></figure></p>
 <p>这两段代码的意思是：如果ScrollView接收到move事件，并且正在滑动，那么它的onInterceptTouchEvent方法直接就返回true了，也就是拦截了滑动事件。当接收到了按下的事件，那么将 mIsBeingDragged直接置false，<br>mIsBeingDragged就表示当前ScrollView是否在滑动。里面还有这么一句mIsBeingDragged = !mScroller.isFinished();即如ScrollView还在滑动的时候，你想去触摸嵌在里面的ListView，ScrollView滑动还没结束呢，直接return true;<br>再来看看switch里面case MotionEvent.ACTION_MOVE，如果y轴方向上的滑动距离大于最小滑动距离，则将mIsBeingDragged设置为true。也就是说虽然我手指落在了子View里面，但是如果我要滑动的话，根据第一个if判断，会直接被拦截，交给ScrollView去处理。</p>
@@ -530,18 +530,6 @@
                   <a href="https://github.com/yangcihang" target="_blank" title="GitHub">
                     
                       <i class="fa fa-fw fa-globe"></i>GitHub</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="http://marklux.cn/" target="_blank" title="MarkLux">
-                    
-                      <i class="fa fa-fw fa-globe"></i>MarkLux</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="https://www.outxu.cn/" target="_blank" title="OutXu">
-                    
-                      <i class="fa fa-fw fa-globe"></i>OutXu</a>
                 </span>
               
             

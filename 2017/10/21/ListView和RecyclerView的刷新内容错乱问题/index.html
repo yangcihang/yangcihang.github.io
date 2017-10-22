@@ -79,21 +79,21 @@
 
 
 
-<meta name="description" content="一、问题背景ListView和RecyclerView是最常用的控件，但是因为itemView的复用，会导致往返滑动后，EditText编辑或者RadioButton等控件会出现显示不正常的问题。这些问题都是因为第二次加载View的时候，缺少二次刷新后对控件的约束。因此解决问题的办法就是在初始化的时候添加约束。 二、问题展示因为RecyclerView可以适配多种布局，功能比ListView强，因">
+<meta name="description" content="一、问题背景ListView和RecyclerView是最常用的控件，但是因为itemView的复用，会导致往返滑动后，EditText编辑或者RadioButton等控件会出现显示不正常的问题。">
 <meta name="keywords" content="Android">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ListView和RecyclerView的刷新内容错乱问题">
 <meta property="og:url" content="http://yoursite.com/2017/10/21/ListView和RecyclerView的刷新内容错乱问题/index.html">
 <meta property="og:site_name" content="猫的储物间">
-<meta property="og:description" content="一、问题背景ListView和RecyclerView是最常用的控件，但是因为itemView的复用，会导致往返滑动后，EditText编辑或者RadioButton等控件会出现显示不正常的问题。这些问题都是因为第二次加载View的时候，缺少二次刷新后对控件的约束。因此解决问题的办法就是在初始化的时候添加约束。 二、问题展示因为RecyclerView可以适配多种布局，功能比ListView强，因">
+<meta property="og:description" content="一、问题背景ListView和RecyclerView是最常用的控件，但是因为itemView的复用，会导致往返滑动后，EditText编辑或者RadioButton等控件会出现显示不正常的问题。">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://wiki.hrsoft.net/uploads/201705/59258a9abf0e9_59258a9a.png">
 <meta property="og:image" content="http://wiki.hrsoft.net/uploads/201705/59258af4d792e_59258af4.png">
 <meta property="og:image" content="http://wiki.hrsoft.net/uploads/201705/59258b032da49_59258b03.png">
-<meta property="og:updated_time" content="2017-10-22T02:55:35.000Z">
+<meta property="og:updated_time" content="2017-10-22T08:55:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ListView和RecyclerView的刷新内容错乱问题">
-<meta name="twitter:description" content="一、问题背景ListView和RecyclerView是最常用的控件，但是因为itemView的复用，会导致往返滑动后，EditText编辑或者RadioButton等控件会出现显示不正常的问题。这些问题都是因为第二次加载View的时候，缺少二次刷新后对控件的约束。因此解决问题的办法就是在初始化的时候添加约束。 二、问题展示因为RecyclerView可以适配多种布局，功能比ListView强，因">
+<meta name="twitter:description" content="一、问题背景ListView和RecyclerView是最常用的控件，但是因为itemView的复用，会导致往返滑动后，EditText编辑或者RadioButton等控件会出现显示不正常的问题。">
 <meta name="twitter:image" content="http://wiki.hrsoft.net/uploads/201705/59258a9abf0e9_59258a9a.png">
 
 
@@ -356,7 +356,7 @@
       
 
       
-        <h2 id="一、问题背景"><a href="#一、问题背景" class="headerlink" title="一、问题背景"></a>一、问题背景</h2><p>ListView和RecyclerView是最常用的控件，但是因为itemView的复用，会导致往返滑动后，EditText编辑或者RadioButton等控件会出现显示不正常的问题。这些问题都是因为第二次加载View的时候，缺少二次刷新后对控件的约束。因此解决问题的办法就是在初始化的时候添加约束。</p>
+        <h2 id="一、问题背景"><a href="#一、问题背景" class="headerlink" title="一、问题背景"></a>一、问题背景</h2><p>ListView和RecyclerView是最常用的控件，但是因为itemView的复用，会导致往返滑动后，EditText编辑或者RadioButton等控件会出现显示不正常的问题。<a id="more"></a> 这些问题都是因为第二次加载View的时候，缺少二次刷新后对控件的约束。因此解决问题的办法就是在初始化的时候添加约束。</p>
 <h2 id="二、问题展示"><a href="#二、问题展示" class="headerlink" title="二、问题展示"></a>二、问题展示</h2><p>因为RecyclerView可以适配多种布局，功能比ListView强，因此以下例子都用RecyclerView示范。</p>
 <h3 id="RadioButton的错乱。"><a href="#RadioButton的错乱。" class="headerlink" title="RadioButton的错乱。"></a>RadioButton的错乱。</h3><p>布局很简单，List里面是单纯的RadioButton，Activity中单纯的就是RecyclerView，Adapter中，Creat和绑定Holder的代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">@Override</div><div class="line"> public TestHolder onCreateViewHolder(ViewGroup parent, int viewType) &#123;</div><div class="line">        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_rec_item,parent,false);</div><div class="line">        return new TestHolder(view);</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    public void onBindViewHolder(TestHolder holder, int position) &#123;</div><div class="line">        String item = mlist.get(position);</div><div class="line">        holder.testRbtn.setText(item);</div><div class="line">    &#125;</div></pre></td></tr></table></figure></p>
 <p>当点击5个RadioButton时：<br><img src="http://wiki.hrsoft.net/uploads/201705/59258a9abf0e9_59258a9a.png" alt=""><br>下拉后会发现：<br><img src="http://wiki.hrsoft.net/uploads/201705/59258af4d792e_59258af4.png" alt=""><br>然后再拉回：<br><img src="http://wiki.hrsoft.net/uploads/201705/59258b032da49_59258b03.png" alt=""><br>会发现没有选择过的button被选中了，拉回后选中的却又没了。</p>
@@ -528,18 +528,6 @@
                   <a href="https://github.com/yangcihang" target="_blank" title="GitHub">
                     
                       <i class="fa fa-fw fa-globe"></i>GitHub</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="http://marklux.cn/" target="_blank" title="MarkLux">
-                    
-                      <i class="fa fa-fw fa-globe"></i>MarkLux</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="https://www.outxu.cn/" target="_blank" title="OutXu">
-                    
-                      <i class="fa fa-fw fa-globe"></i>OutXu</a>
                 </span>
               
             

@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="猫的储物间">
 <meta property="og:description" content="Notification简介Notification是安卓开发中常用的组件之一，不过Notification在每个版本里面都有差别（安卓8.0在前台服务设置Notification的话貌似有点问题，不知道为啥在服务中start不上去…）常见的创建有两种，一种是直接构造，另一种是使用builder模式来创建，最后都用manager来notify出来（不是本文重点）。不过原生的Notification">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-22T02:55:52.000Z">
+<meta property="og:updated_time" content="2017-10-22T09:01:07.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="自定义Notification">
 <meta name="twitter:description" content="Notification简介Notification是安卓开发中常用的组件之一，不过Notification在每个版本里面都有差别（安卓8.0在前台服务设置Notification的话貌似有点问题，不知道为啥在服务中start不上去…）常见的创建有两种，一种是直接构造，另一种是使用builder模式来创建，最后都用manager来notify出来（不是本文重点）。不过原生的Notification">
@@ -352,7 +352,7 @@
       
 
       
-        <h2 id="Notification简介"><a href="#Notification简介" class="headerlink" title="Notification简介"></a>Notification简介</h2><p>Notification是安卓开发中常用的组件之一，不过Notification在每个版本里面都有差别（安卓8.0在前台服务设置Notification的话貌似有点问题，不知道为啥在服务中start不上去…）常见的创建有两种，一种是直接构造，另一种是使用builder模式来创建，最后都用manager来notify出来（不是本文重点）。不过原生的Notification样式肯定不在各个场合都适用，因此我们有时候需要自定义Notification样式来满足不同的需求。在此之前，先简单介绍Notification中需要的一些组件。</p>
+        <h2 id="Notification简介"><a href="#Notification简介" class="headerlink" title="Notification简介"></a>Notification简介</h2><p>Notification是安卓开发中常用的组件之一，不过Notification在每个版本里面都有差别（安卓8.0在前台服务设置Notification的话貌似有点问题，不知道为啥在服务中start不上去…）常见的创建有两种，一种是直接构造，另一种是使用builder模式来创建，最后都用manager来notify出来（不是本文重点）。不过原生的Notification样式肯定不在各个场合都适用，因此我们有时候需要自定义Notification样式来满足不同的需求。在此之前，先简单介绍Notification中需要的一些组件。<a id="more"></a></p>
 <h2 id="RemoteViews简介"><a href="#RemoteViews简介" class="headerlink" title="RemoteViews简介"></a>RemoteViews简介</h2><ul>
 <li>RemoteViews不是当前进程的View,是属于SystemServer进程.因此可以在一些前台操作中来使用，避免一直占用UI线程的资源。应用程序和RemoteViews之间可以通过Binder来实现进程的通信。</li>
 <li>应用程序与RemoteViews之间依赖Binder实现了进程间通信.RemoteViews使用最多的场合是通知栏和桌面小插件.</li>
@@ -569,18 +569,6 @@
                   <a href="https://github.com/yangcihang" target="_blank" title="GitHub">
                     
                       <i class="fa fa-fw fa-globe"></i>GitHub</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="http://marklux.cn/" target="_blank" title="MarkLux">
-                    
-                      <i class="fa fa-fw fa-globe"></i>MarkLux</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="https://www.outxu.cn/" target="_blank" title="OutXu">
-                    
-                      <i class="fa fa-fw fa-globe"></i>OutXu</a>
                 </span>
               
             

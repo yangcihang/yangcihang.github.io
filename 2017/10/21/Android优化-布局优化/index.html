@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="系统在渲染UI界面时将要消耗大量的资源。熟悉View绘制流程的小伙伴们应该知道，View绘制是一层层对子View进行遍历的。因此，布局的好坏影响着用户的体验。 在Android中，系统通过VSYNC信号触发对UI的渲染、重绘。其间隔时间是16ms、如果系统每次渲染的时间都在16ms内，那么我们看到的界面应该是相当流畅的。如果发生帧率和刷新频率不一致的情况时，就会出现卡顿。 避免Overdraw什么">
+<meta name="description" content="系统在渲染UI界面时将要消耗大量的资源。熟悉View绘制流程的小伙伴们应该知道，View绘制是一层层对子View进行遍历的。因此，布局的好坏影响着用户的体验。 在Android中，系统通过VSYNC信号触发对UI的渲染、重绘。其间隔时间是16ms、如果系统每次渲染的时间都在16ms内，那么我们看到的界面应该是相当流畅的。如果发生帧率和刷新频率不一致的情况时，就会出现卡顿。">
 <meta name="keywords" content="Android">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Android优化--布局优化">
 <meta property="og:url" content="http://yoursite.com/2017/10/21/Android优化-布局优化/index.html">
 <meta property="og:site_name" content="猫的储物间">
-<meta property="og:description" content="系统在渲染UI界面时将要消耗大量的资源。熟悉View绘制流程的小伙伴们应该知道，View绘制是一层层对子View进行遍历的。因此，布局的好坏影响着用户的体验。 在Android中，系统通过VSYNC信号触发对UI的渲染、重绘。其间隔时间是16ms、如果系统每次渲染的时间都在16ms内，那么我们看到的界面应该是相当流畅的。如果发生帧率和刷新频率不一致的情况时，就会出现卡顿。 避免Overdraw什么">
+<meta property="og:description" content="系统在渲染UI界面时将要消耗大量的资源。熟悉View绘制流程的小伙伴们应该知道，View绘制是一层层对子View进行遍历的。因此，布局的好坏影响着用户的体验。 在Android中，系统通过VSYNC信号触发对UI的渲染、重绘。其间隔时间是16ms、如果系统每次渲染的时间都在16ms内，那么我们看到的界面应该是相当流畅的。如果发生帧率和刷新频率不一致的情况时，就会出现卡顿。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2017-10-22T02:55:28.000Z">
+<meta property="og:updated_time" content="2017-10-22T09:00:39.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Android优化--布局优化">
-<meta name="twitter:description" content="系统在渲染UI界面时将要消耗大量的资源。熟悉View绘制流程的小伙伴们应该知道，View绘制是一层层对子View进行遍历的。因此，布局的好坏影响着用户的体验。 在Android中，系统通过VSYNC信号触发对UI的渲染、重绘。其间隔时间是16ms、如果系统每次渲染的时间都在16ms内，那么我们看到的界面应该是相当流畅的。如果发生帧率和刷新频率不一致的情况时，就会出现卡顿。 避免Overdraw什么">
+<meta name="twitter:description" content="系统在渲染UI界面时将要消耗大量的资源。熟悉View绘制流程的小伙伴们应该知道，View绘制是一层层对子View进行遍历的。因此，布局的好坏影响着用户的体验。 在Android中，系统通过VSYNC信号触发对UI的渲染、重绘。其间隔时间是16ms、如果系统每次渲染的时间都在16ms内，那么我们看到的界面应该是相当流畅的。如果发生帧率和刷新频率不一致的情况时，就会出现卡顿。">
 
 
 
@@ -353,7 +353,7 @@
 
       
         <p>系统在渲染UI界面时将要消耗大量的资源。熟悉View绘制流程的小伙伴们应该知道，View绘制是一层层对子View进行遍历的。因此，布局的好坏影响着用户的体验。</p>
-<p>在Android中，系统通过VSYNC信号触发对UI的渲染、重绘。其间隔时间是16ms、如果系统每次渲染的时间都在16ms内，那么我们看到的界面应该是相当流畅的。如果发生帧率和刷新频率不一致的情况时，就会出现卡顿。</p>
+<p>在Android中，系统通过VSYNC信号触发对UI的渲染、重绘。其间隔时间是16ms、如果系统每次渲染的时间都在16ms内，那么我们看到的界面应该是相当流畅的。如果发生帧率和刷新频率不一致的情况时，就会出现卡顿。<a id="more"></a></p>
 <h2 id="避免Overdraw"><a href="#避免Overdraw" class="headerlink" title="避免Overdraw"></a>避免Overdraw</h2><p>什么是overdraw呢？描述的是屏幕上的某个像素在同一帧的时间内被绘制了多次。在多层次的UI结构里面，如果不可见的UI也在做绘制的操作，就会导致某些像素区域被绘制了多次，浪费大量的CPU以及GPU资源。（可以通过开发者选项，打开Show GPU Overdraw的选项，观察UI上的Overdraw情况，红色区域就是过绘制）。例如默认系统会绘制Activity背景，而如果再给布局绘制了重叠的背景，那么默认Activity的背景就属于过度绘制。</p>
 <h2 id="优化布局层级"><a href="#优化布局层级" class="headerlink" title="优化布局层级"></a>优化布局层级</h2><p>一开始已经提到了，View的绘制都是通过对View树的遍历来进行的。如果一个View树太高，就会严重影响其测量、布局、绘制的速度。Google官方建议View树最高不过10层。所以我们为了提高效率，尽量在一些复杂的场合下使用RelativeLayout来降低View树的高度。</p>
 <h2 id="善于使用抽象标签"><a href="#善于使用抽象标签" class="headerlink" title="善于使用抽象标签"></a>善于使用抽象标签</h2><p>使用抽象标签在某些场合下能减少代码量，还能起到优化布局的效果。</p>
@@ -527,18 +527,6 @@
                   <a href="https://github.com/yangcihang" target="_blank" title="GitHub">
                     
                       <i class="fa fa-fw fa-globe"></i>GitHub</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="http://marklux.cn/" target="_blank" title="MarkLux">
-                    
-                      <i class="fa fa-fw fa-globe"></i>MarkLux</a>
-                </span>
-              
-                <span class="links-of-author-item">
-                  <a href="https://www.outxu.cn/" target="_blank" title="OutXu">
-                    
-                      <i class="fa fa-fw fa-globe"></i>OutXu</a>
                 </span>
               
             
